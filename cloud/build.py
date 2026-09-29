@@ -30,19 +30,24 @@ def main(key, names):
         if not f:
             report.append({"clip": name, "ok": False, "why": "nothing was rendered"})
             continue
+        # THE GATE. Every mechanical check there is, run on the finished file: captions
+        # on the sound, nothing drawn over anything, clean opening and ending, and the
+        # damage patterns that transcription actually produces - repeated words,
+        # scrambled phrases, stray full stops. A clip it cannot vouch for is marked, and
+        # a marked clip is not something to hand a reviewer or an account.
+        import kt_qc
+        verdict, why = kt_qc.check(f[0])
         r = vsc_v2_onscreen.check(f[0])
         hit, miss = (r[0], r[1]) if r else (0, 0)
-        caps = [tuple(x) for x in json.load(open(f[0][:-4] + "__caps.json"))]
-        ov = sum(1 for i in range(len(caps) - 1) if caps[i][1] > caps[i + 1][0] + 0.001)
-        ok = bool(r) and hit >= 9 and ov == 0
-        report.append({"clip": name, "ok": ok, "moments": f"{hit}/{hit + miss}",
-                       "overlaps": ov, "file": os.path.basename(f[0])})
+        report.append({"clip": name, "ok": verdict == "pass", "verdict": verdict,
+                       "why": why, "moments": f"{hit}/{hit + miss}",
+                       "file": os.path.basename(f[0])})
         for g in (f[0], f[0][:-4] + "__caps.json"):
             shutil.copy(g, OUT)
     json.dump(report, open(os.path.join(OUT, f"report-{key}-{os.environ.get('SHARD','x')}.json"), "w"), indent=1)
     for x in report:
-        print(f"  {'ok ' if x['ok'] else 'LOOK'} {x['clip']:28} {x.get('moments','')} moments, "
-              f"{x.get('overlaps','?')} overlaps", flush=True)
+        print(f"  {x.get('verdict','?').upper():5} {x['clip']:28} {x.get('moments','')} moments"
+              + (f"  |  {'; '.join(x.get('why', [])[:2])}" if x.get('why') else ""), flush=True)
     print("BUILDOK")
 
 

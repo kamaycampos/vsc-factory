@@ -33,10 +33,10 @@ def main():
     bad = [r for r in rep if not r.get("ok")]
     body = ["# VSC clips", "",
             f"{len(mp4)} clips in this batch. Built in the cloud; the Mac was not involved.", ""]
-    body += ["| clip | word on screen | overlaps | |", "|---|---|---|---|"]
+    body += ["| clip | verdict | word on screen | what the check found |", "|---|---|---|---|"]
     for r in sorted(rep, key=lambda r: (r.get("ok", False), r["clip"])):
-        body.append(f"| {r['clip']} | {r.get('moments','-')} | {r.get('overlaps','-')} | "
-                    f"{'' if r.get('ok') else 'LOOK AT THIS ONE'} |")
+        body.append(f"| {r['clip']} | **{r.get('verdict','?')}** | {r.get('moments','-')} | "
+                    f"{'; '.join(r.get('why', [])) or '-'} |")
     if bad:
         body += ["", "**Read the captions of the ones marked LOOK before they go to Frame.io.**"]
     body += ["", "Still a human's job: read every caption line, and watch the first 3 "
