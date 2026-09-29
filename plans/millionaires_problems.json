@@ -99,7 +99,7 @@
     ],
     [
      12,
-     "he that I know technology. better than",
+     "he that I know technology It's better than",
      "he says, I know technology better than"
     ],
     [
@@ -111,6 +111,11 @@
      29,
      "we would not have The Apple company",
      "we would not have the Apple company"
+    ],
+    [
+     31,
+     "wasn't fired If he wasn't fired",
+     "wasn't fired. If he wasn't fired"
     ],
     [
      32,
@@ -126,10 +131,17 @@
     226
    ],
    "open": "you look at airbnb",
-   "close": "which they all did",
+   "close": "come out stronger than ever before",
    "hook": [
     "THEY LOST 80% AND",
     "CAME BACK STRONGER"
+   ],
+   "fixes": [
+    [
+     14,
+     "the people, in charge looked",
+     "the people in charge looked"
+    ]
    ]
   },
   {
@@ -146,8 +158,8 @@
    ],
    "fixes": [
     [
-     15,
-     "It was Because she was at the bottom",
+     14,
+     "It was It when was she was at the bottom",
      "It was when she was at the bottom"
     ]
    ]
@@ -166,24 +178,19 @@
    ],
    "fixes": [
     [
-     8,
-     "Fires are nature way",
-     "Fires are nature's way"
-    ],
-    [
      14,
-     "It has to be. cleared out",
-     "It has to be cleared out"
+     "It has to be cleared out A forest fire burns",
+     "It has to be cleared out. A forest fire burns"
     ],
     [
      26,
-     "So, a forest fire It is not bad",
-     "So a forest fire is not bad"
+     "So, a forest fire Forest is not Fire bad",
+     "So a forest fire is not bad."
     ],
     [
-     28,
-     "Forest Fire is a blessing",
-     "A forest fire is a blessing"
+     29,
+     "A forest fire is a blessing",
+     "A forest fire is a blessing."
     ]
    ]
   },
@@ -201,14 +208,19 @@
    ],
    "fixes": [
     [
-     11,
-     "is they look Let's look at it as a blessing",
-     "is they look at it as a blessing"
+     10,
+     "But they do it. as a look at it as a blessing",
+     "What they do is they look at it as a blessing"
     ],
     [
-     25,
-     "A failure? A setback? Some adversity?",
-     "a failure, a setback, some adversity,"
+     20,
+     "that Something you that could classify",
+     "that you could classify"
+    ],
+    [
+     36,
+     "The universe doesn't do It things does to us",
+     "The universe doesn't do things to us"
     ]
    ]
   },
@@ -226,14 +238,9 @@
    ],
    "fixes": [
     [
-     26,
-     "And They go, Well, that's not true",
-     "And they go, Well, that's not true"
-    ],
-    [
      29,
-     "Your business-- was taken away",
-     "Your business was taken away"
+     "I go, Yeah, that's a change in conditions",
+     "I go, Yeah, that was a change in conditions"
     ]
    ]
   },
@@ -331,9 +338,14 @@
    ],
    "fixes": [
     [
-     27,
-     "Do you go into failure? defensive mode",
-     "Do you go into defensive mode"
+     12,
+     "probably the number. one difference",
+     "probably the number one difference"
+    ],
+    [
+     31,
+     "It's just not as successful as they want to be",
+     "Somebody who's just not as successful as they want to be"
     ]
    ]
   },
@@ -365,13 +377,13 @@
    "fixes": [
     [
      13,
-     "They're down to goal",
-     "They're down a goal"
+     "They're down a goal Guess what they're doing",
+     "They're down a goal. Guess what they're doing?"
     ],
     [
      21,
-     "And guess what undurably happens",
-     "And guess what invariably happens"
+     "what invariably happens The team that's down",
+     "what invariably happens? The team that's down"
     ]
    ]
   },
@@ -389,9 +401,19 @@
    ],
    "fixes": [
     [
-     11,
-     "They don't... bury Don't their bury head in the sand",
-     "They don't bury their head in the sand"
+     12,
+     "bury their head in the sand They don't cry",
+     "bury their head in the sand. They don't cry"
+    ],
+    [
+     30,
+     "It's the possibility thinkers create",
+     "It's the Possibility Thinkers Creed"
+    ],
+    [
+     43,
+     "or I'll I'll stay and turn the mountain",
+     "or I'll stay and turn the mountain"
     ]
    ]
   },
@@ -406,6 +428,13 @@
    "hook": [
     "YOU CAN'T DELETE A HABIT,",
     "ONLY REPLACE IT"
+   ],
+   "fixes": [
+    [
+     24,
+     "So you We have to, A, be aware",
+     "So you have to, A, be aware"
+    ]
    ]
   },
   {
@@ -422,9 +451,19 @@
    ],
    "fixes": [
     [
-     27,
-     "Someday I'll look back Look at this and laugh",
-     "Someday I'll look back at this and laugh"
+     0,
+     "Today, number one, remember this phrase",
+     "Remember this phrase"
+    ],
+    [
+     1,
+     "Did we hear this phrase",
+     "Did you ever hear this phrase"
+    ],
+    [
+     36,
+     "By doing that, you break up. all the stress",
+     "By doing that, you break up all the stress"
     ]
    ]
   },
@@ -443,12 +482,12 @@
    "fixes": [
     [
      0,
-     "Overcoming adversity.",
-     "It's not overcoming adversity."
+     "It's not It's not overcoming adversity",
+     "It's not overcoming adversity"
     ],
     [
-     12,
-     "The Buddha said it Very well",
+     11,
+     "The Buddha said He it said very well",
      "The Buddha said it very well"
     ]
    ]
@@ -472,14 +511,19 @@
      "picking up huge amounts of dirt, putting"
     ],
     [
-     15,
-     "these wash machines",
-     "these washing machines"
+     17,
+     "these washing machines And I saw them move",
+     "these washing machines. And I saw them move"
+    ],
+    [
+     28,
+     "And unlike, he moved tons of dirt",
+     "And I'm like, he moved tons of dirt"
     ],
     [
      42,
-     "Without pain, Being, there is no growth",
-     "Without pain, there is no growth"
+     "Without Without setbacks, there's no breakthroughs",
+     "Without setbacks, there's no breakthroughs"
     ]
    ]
   }
