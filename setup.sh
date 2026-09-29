@@ -62,8 +62,14 @@ if [ ! -x "$W/whisper-cli" ]; then
   mkdir -p "$W"
   git clone -q https://github.com/ggml-org/whisper.cpp /tmp/whisper.cpp
   git -C /tmp/whisper.cpp checkout -q 2ca53bb45e38748d07b310eeb36245a7157ac882
+  # BUILD IT PORTABLE, NOT FAST. 29 Sept 2026: the binary is built once and CACHED,
+  # and GitHub hands out runners with different CPUs - so a build tuned to the machine
+  # that made it dies with SIGILL (exit -4) on the next machine that restores it. Seven
+  # of ten build shards died that way in one run while three succeeded, which is exactly
+  # what a cache full of the wrong instruction set looks like. GGML_NATIVE=OFF costs a
+  # little speed and makes the binary run anywhere.
   cmake -S /tmp/whisper.cpp -B /tmp/whisper.cpp/build -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF >/dev/null
+        -DGGML_NATIVE=OFF -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF >/dev/null
   cmake --build /tmp/whisper.cpp/build -j"$(nproc)" --config Release --target whisper-cli >/dev/null
   cp /tmp/whisper.cpp/build/bin/whisper-cli "$W/"
 fi

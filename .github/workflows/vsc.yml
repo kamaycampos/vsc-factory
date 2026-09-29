@@ -38,7 +38,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - uses: actions/cache@v4
-        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v1 }
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - run: bash setup.sh
       - run: python cloud/prep.py
         env:
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - uses: actions/cache@v4
-        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v1 }
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - run: bash setup.sh
       - name: Build and check this pair
         run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
