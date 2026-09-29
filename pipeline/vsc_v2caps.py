@@ -181,13 +181,28 @@ def fix_text(words, fixes):
         at = fix[3] if len(fix) > 3 else None
         wt = [norm(x) for x in wrong.split()]
         best = None
+        # MATCH LOOSELY. A correction is written against one transcription and applied
+        # to another: the Mac heard "Stephen Jobs", the server heard "Steven Jobs", and
+        # a letter-perfect comparison skipped every fix in silence - the clips shipped
+        # uncorrected while the run reported success. A run of words that is 80% the
+        # same, in the right place, is the run that was meant.
+        def close_enough(a, b):
+            if a == b:
+                return True
+            if min(len(a), len(b)) < 4:
+                return False
+            return difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.8
+
         for i in range(len(words) - len(wt) + 1):
-            if [norm(words[i + k][2]) for k in range(len(wt))] == wt:
+            got = [norm(words[i + k][2]) for k in range(len(wt))]
+            same = sum(1 for a, b in zip(got, wt) if close_enough(a, b))
+            if same == len(wt) or (len(wt) >= 4 and same >= len(wt) - 1):
                 d = abs(words[i][0] - near)
                 if best is None or d < best[0]:
                     best = (d, i)
-        if best is None or best[0] > 6.0:
-            print(f"    !! fix not applied, '{wrong}' not found near {near}s", flush=True)
+        if best is None or best[0] > 12.0:
+            print(f"    !! CORRECTION NOT APPLIED: '{wrong[:60]}' not found near {near}s "
+                  f"- the caption will keep the transcribed wording", flush=True)
             continue
         i = best[1]
         rw = right.split()

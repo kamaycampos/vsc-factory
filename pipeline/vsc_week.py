@@ -142,8 +142,17 @@ def main(only=None):
         os.path.join(WORK, "v2_fixes.json")) else {}
     # every clip's corrections, read from the plans themselves
     plan_fixes = {}
-    _plandirs = [os.path.expanduser("~/Desktop/VSC/vsc-machine/plans"),
+    # WHERE THE PLANS ARE, FROM THE SERVER'S POINT OF VIEW. setup.sh copies this file
+    # into ~/Kamay so the pipeline runs unchanged, which means __file__ is no longer
+    # inside the checkout - looking for "../plans" found ~/plans, which does not exist,
+    # so every caption correction was silently skipped and the clips shipped uncorrected
+    # while everything reported success. The checkout is named explicitly.
+    _plandirs = [os.environ.get("GITHUB_WORKSPACE", "") + "/plans",
+                 os.environ.get("VSC_PLANS", ""),
+                 os.path.expanduser("~/vsc-factory/plans"),
+                 os.path.expanduser("~/Desktop/VSC/vsc-machine/plans"),
                  os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "plans")]
+    _plandirs = [d for d in _plandirs if d and os.path.isdir(d)]
     for _f in sorted(sum([glob.glob(os.path.join(_d, "*.json")) for _d in _plandirs], [])):
         try:
             for _c in json.load(open(_f)).get("clips", []):
@@ -189,6 +198,7 @@ def main(only=None):
             # bankruptcy", a line of TV footage spliced into a story. A correction that
             # is not versioned beside the plan is a correction that gets lost.
             clip_fixes = list(fixes.get(name, [])) + plan_fixes.get(name, [])
+            print(f"      {len(clip_fixes)} caption correction(s) for this clip", flush=True)
             vsc_v2caps.build(name, a, b, src, last, clip_fixes)
             vsc_v2_time.retime(name, src, a, b)
             vsc_v2_render.HOOKS[name] = hook
