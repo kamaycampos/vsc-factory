@@ -1,0 +1,491 @@
+{
+ "key": "millionaires_problems",
+ "prefix": "Why Millionaires",
+ "source": "millionaires_problems.mp4.enc",
+ "note": "GIN Project 15, week 2. 18:10, 3840x2160. Ad wall: the testimonial from 17:35 to the end (Peter Saje, YWIYC) is never cut. Four lessons here are also in week 1 - Kamay's call, 27 Sept: affiliates want several tellings of one teaching. | Caption corrections live HERE, with the plan, not on a laptop: the cloud rebuilt these once without them and every clip regressed. Where Kevin misspeaks and the meaning is obvious ('best settle list'), write what he meant.",
+ "clips": [
+  {
+   "name": "YOUR-BIGGEST-DISASTER",
+   "region": [
+    0,
+    32
+   ],
+   "open": "most people think that they can't achieve success",
+   "close": "it doesn't end it, it creates it",
+   "hook": [
+    "THE DAY IT FALLS APART",
+    "IS THE DAY YOU START"
+   ],
+   "fixes": [
+    [
+     22,
+     "That is actually what creates",
+     "that is actually what creates"
+    ]
+   ]
+  },
+  {
+   "name": "MORE-PROBLEMS-THAN-YOU",
+   "region": [
+    27,
+    122
+   ],
+   "open": "one of the biggest misconceptions that people have",
+   "close": "in a million years deal with",
+   "hook": [
+    "SUCCESSFUL PEOPLE HAVE MORE",
+    "PROBLEMS THAN YOU DO"
+   ],
+   "fixes": [
+    [
+     12,
+     "Successful people Successful people don't",
+     "Successful people don't"
+    ],
+    [
+     30,
+     "better than they do. They do. Overcome adversity",
+     "better than they do, overcome adversity"
+    ],
+    [
+     35,
+     "They Deal with challenges",
+     "They deal with challenges"
+    ],
+    [
+     56,
+     "and Everything is just working",
+     "and everything is just working"
+    ],
+    [
+     66,
+     "major -- you can call. it adversity",
+     "major, you can call it adversity"
+    ],
+    [
+     92,
+     "Foul bankruptcy",
+     "Filed bankruptcy"
+    ],
+    [
+     96,
+     "plants burn down",
+     "plants burning down"
+    ],
+    [
+     98,
+     "businesses challenge",
+     "business challenges"
+    ]
+   ]
+  },
+  {
+   "name": "JOBS-WAS-FIRED",
+   "region": [
+    150,
+    196
+   ],
+   "open": "steven jobs was fired",
+   "close": "apple would not be what it is today",
+   "hook": [
+    "APPLE EXISTS BECAUSE",
+    "JOBS GOT FIRED"
+   ],
+   "fixes": [
+    [
+     0,
+     "Stephen Jobs was fired",
+     "Steve Jobs was fired"
+    ],
+    [
+     12,
+     "he that I know technology. better than",
+     "he says, I know technology better than"
+    ],
+    [
+     19,
+     "that he started next, and then next he developed",
+     "that he started NeXT, and at NeXT he developed"
+    ],
+    [
+     29,
+     "we would not have The Apple company",
+     "we would not have the Apple company"
+    ],
+    [
+     32,
+     "if Stephen Jobs wasn't fired",
+     "if Steve Jobs wasn't fired"
+    ]
+   ]
+  },
+  {
+   "name": "LOST-80-PERCENT",
+   "region": [
+    183,
+    226
+   ],
+   "open": "you look at airbnb",
+   "close": "which they all did",
+   "hook": [
+    "THEY LOST 80% AND",
+    "CAME BACK STRONGER"
+   ]
+  },
+  {
+   "name": "SHE-WAS-LIVING-IN-HER-CAR",
+   "region": [
+    236,
+    274
+   ],
+   "open": "she was living out of her car",
+   "close": "learned at the bottom",
+   "hook": [
+    "JK ROWLING WAS LIVING",
+    "OUT OF HER CAR"
+   ],
+   "fixes": [
+    [
+     15,
+     "It was Because she was at the bottom",
+     "It was when she was at the bottom"
+    ]
+   ]
+  },
+  {
+   "name": "THE-FOREST-FIRE",
+   "region": [
+    265,
+    307
+   ],
+   "open": "i remember smokey the bear",
+   "close": "forest fire is a blessing",
+   "hook": [
+    "A FOREST FIRE",
+    "IS A BLESSING"
+   ],
+   "fixes": [
+    [
+     8,
+     "Fires are nature way",
+     "Fires are nature's way"
+    ],
+    [
+     14,
+     "It has to be. cleared out",
+     "It has to be cleared out"
+    ],
+    [
+     26,
+     "So, a forest fire It is not bad",
+     "So a forest fire is not bad"
+    ],
+    [
+     28,
+     "Forest Fire is a blessing",
+     "A forest fire is a blessing"
+    ]
+   ]
+  },
+  {
+   "name": "NOTHING-IS-DONE-TO-YOU",
+   "region": [
+    300,
+    354
+   ],
+   "open": "successful people don't look at obstacles",
+   "close": "is the seed of a greater benefit",
+   "hook": [
+    "NOTHING IS BEING",
+    "DONE TO YOU"
+   ],
+   "fixes": [
+    [
+     11,
+     "is they look Let's look at it as a blessing",
+     "is they look at it as a blessing"
+    ],
+    [
+     25,
+     "A failure? A setback? Some adversity?",
+     "a failure, a setback, some adversity,"
+    ]
+   ]
+  },
+  {
+   "name": "NEVER-HAD-ADVERSITY",
+   "region": [
+    358,
+    404
+   ],
+   "open": "people always come up to me",
+   "close": "it's a change in condition",
+   "hook": [
+    "I HAVE NEVER HAD",
+    "ADVERSITY IN MY LIFE"
+   ],
+   "fixes": [
+    [
+     26,
+     "And They go, Well, that's not true",
+     "And they go, Well, that's not true"
+    ],
+    [
+     29,
+     "Your business-- was taken away",
+     "Your business was taken away"
+    ]
+   ]
+  },
+  {
+   "name": "THE-450-MILLION-BREAKUP",
+   "region": [
+    396,
+    468
+   ],
+   "open": "i had a partner",
+   "close": "dollars on tv around the world",
+   "hook": [
+    "LOSING HIS BUSINESS",
+    "MADE HIM $450 MILLION"
+   ],
+   "fixes": [
+    [
+     36,
+     "I want to-- put you on TV",
+     "I want to put you on TV"
+    ],
+    [
+     44,
+     "- The information is in your memory. - and then we went on",
+     "and then we went on"
+    ],
+    [
+     50,
+     "Out of The breakup",
+     "Out of the breakup"
+    ],
+    [
+     56,
+     "my life fell apart, I didn't look at, came",
+     "my life fell apart. I didn't look at it that way. Came"
+    ],
+    [
+     58,
+     "king and went on To generate billions",
+     "king and went on to generate billions"
+    ]
+   ]
+  },
+  {
+   "name": "BANNED-FOR-LIFE",
+   "region": [
+    458,
+    570
+   ],
+   "open": "i got sued by the federal trade commission",
+   "close": "for 26 weeks in a row",
+   "hook": [
+    "BANNED FROM TV, SO HE",
+    "WROTE A BESTSELLER"
+   ],
+   "fixes": [
+    [
+     6,
+     "which is a form of calcium. We imported",
+     "which is a form of calcium we imported"
+    ],
+    [
+     58,
+     "And now Right I'm now, banned from TV",
+     "And now I'm banned from TV"
+    ],
+    [
+     84,
+     "about, you how know, bad the federal",
+     "about, you know, how bad the federal"
+    ],
+    [
+     92,
+     "We not cannot tell people",
+     "to not tell people"
+    ],
+    [
+     108,
+     "best settle list",
+     "best seller list"
+    ]
+   ]
+  },
+  {
+   "name": "REACT-OR-RESPOND",
+   "region": [
+    595,
+    642
+   ],
+   "open": "there's a big distinction between how rich people",
+   "close": "where the other person is going to attack mode",
+   "hook": [
+    "THE NUMBER ONE DIFFERENCE",
+    "BETWEEN RICH AND BROKE"
+   ],
+   "fixes": [
+    [
+     27,
+     "Do you go into failure? defensive mode",
+     "Do you go into defensive mode"
+    ]
+   ]
+  },
+  {
+   "name": "RUN-AT-THE-PROBLEM",
+   "region": [
+    648,
+    702
+   ],
+   "open": "there's a word, confront",
+   "close": "something better is coming out",
+   "hook": [
+    "RUN AT THE PROBLEM,",
+    "NOT AWAY FROM IT"
+   ]
+  },
+  {
+   "name": "THE-TEAM-THATS-LOSING",
+   "region": [
+    710,
+    750
+   ],
+   "open": "we see this with athletes",
+   "close": "because they're attacking, attacking, attacking",
+   "hook": [
+    "THE TEAM THAT'S",
+    "LOSING WINS"
+   ],
+   "fixes": [
+    [
+     13,
+     "They're down to goal",
+     "They're down a goal"
+    ],
+    [
+     21,
+     "And guess what undurably happens",
+     "And guess what invariably happens"
+    ]
+   ]
+  },
+  {
+   "name": "WINNERS-HATE-LOSING",
+   "region": [
+    742,
+    795
+   ],
+   "open": "show me a good loser and i'll show you a loser",
+   "close": "into a gold mine",
+   "hook": [
+    "WINNERS",
+    "HATE LOSING"
+   ],
+   "fixes": [
+    [
+     11,
+     "They don't... bury Don't their bury head in the sand",
+     "They don't bury their head in the sand"
+    ]
+   ]
+  },
+  {
+   "name": "REPLACE-THE-HABIT",
+   "region": [
+    810,
+    862
+   ],
+   "open": "you have a habit of reacting instead of responding",
+   "close": "start to replace it with a different habit",
+   "hook": [
+    "YOU CAN'T DELETE A HABIT,",
+    "ONLY REPLACE IT"
+   ]
+  },
+  {
+   "name": "LAUGH-NOW",
+   "region": [
+    858,
+    928
+   ],
+   "open": "remember this phrase",
+   "close": "therefore you can look at it differently",
+   "hook": [
+    "LAUGH WHILE IT'S",
+    "STILL A DISASTER"
+   ],
+   "fixes": [
+    [
+     27,
+     "Someday I'll look back Look at this and laugh",
+     "Someday I'll look back at this and laugh"
+    ]
+   ]
+  },
+  {
+   "name": "PAIN-NOT-SUFFERING",
+   "region": [
+    952,
+    1002
+   ],
+   "open": "it's not overcoming adversity",
+   "close": "but you don't have to suffer",
+   "hook": [
+    "PAIN IS CERTAIN.",
+    "SUFFERING IS OPTIONAL."
+   ],
+   "fixes": [
+    [
+     0,
+     "Overcoming adversity.",
+     "It's not overcoming adversity."
+    ],
+    [
+     12,
+     "The Buddha said it Very well",
+     "The Buddha said it very well"
+    ]
+   ]
+  },
+  {
+   "name": "TONS-OF-DIRT-FOR-GOLD",
+   "region": [
+    993,
+    1058
+   ],
+   "open": "people move tons of dirt just to get a few ounces of gold",
+   "close": "that's the day that your success begins",
+   "hook": [
+    "THEY MOVE TONS OF DIRT",
+    "FOR AN OUNCE OF GOLD"
+   ],
+   "fixes": [
+    [
+     12,
+     "picking up huge amounts of gold. dirt, putting",
+     "picking up huge amounts of dirt, putting"
+    ],
+    [
+     15,
+     "these wash machines",
+     "these washing machines"
+    ],
+    [
+     42,
+     "Without pain, Being, there is no growth",
+     "Without pain, there is no growth"
+    ]
+   ]
+  }
+ ],
+ "rumble": "https://rumble.com/v7ed2gy-your-success-starts-on-your-worst-day-what-every-millionaire-knows.html",
+ "duration": 1090,
+ "height": 2160,
+ "rumble_title": "Your Success Starts On Your Worst Day: What Every Millionaire Knows"
+}

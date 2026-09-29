@@ -1,0 +1,95 @@
+# THE VSC CLIP FACTORY - 27 Sept 2026. GIN Project 15 clips get made with the Mac
+# shut, for free, on a schedule, for as many weeks as nobody touches it.
+#   source - the video, from this private repo's `sources` release (or Frame.io).
+#   prep   - transcript, word timings and shot map: once per video, not once per clip.
+#   shard  - split the clips that are not built yet into pairs.
+#   build  - one server per pair, all at once, each reading its own files back.
+#   collect- one release with the batch and a per-clip verdict.
+# Private repository on purpose: 2,000 free minutes a month (a batch is ~200), and
+# it is what allows the approved DIN Condensed font to live here at all.
+name: vsc
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Build only these clip names (space separated). Empty = everything pending."
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths: ["plans/**"]
+  schedule:
+    - cron: "23 6 * * 1"          # Monday morning, after GIN posts the week's work
+permissions:
+  contents: write
+concurrency:
+  group: vsc
+  cancel-in-progress: false
+env:
+  GH_TOKEN: ${{ github.token }}
+  FRAMEIO_TOKEN: ${{ secrets.FRAMEIO_TOKEN }}
+  VSC_KEY: ${{ secrets.VSC_KEY }}      # opens the font and the cached source
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v1 }
+      - run: bash setup.sh
+      - run: python cloud/prep.py
+        env:
+          SOURCE_MAY_CACHE: "1"     # prep runs alone; the parallel shards must never write
+
+  shard:
+    needs: prep
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.s.outputs.matrix }}
+      count: ${{ steps.s.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: s
+        run: python cloud/shard.py
+        env:
+          ONLY: ${{ inputs.only }}
+
+  build:
+    needs: shard
+    if: needs.shard.outputs.count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false            # one bad clip must not take the batch down
+      max-parallel: 10
+      matrix:
+        include: ${{ fromJSON(needs.shard.outputs.matrix) }}
+    env:
+      SHARD: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v1 }
+      - run: bash setup.sh
+      - name: Build and check this pair
+        run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.key }}-${{ matrix.shard }}
+          path: /tmp/shard_out
+          retention-days: 7
+
+  collect:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: /tmp/shards, pattern: shard-* }
+      - run: python cloud/collect.py /tmp/shards
