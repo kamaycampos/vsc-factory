@@ -67,8 +67,19 @@ if [ ! -x "$W/whisper-cli" ]; then
   cmake --build /tmp/whisper.cpp/build -j"$(nproc)" --config Release --target whisper-cli >/dev/null
   cp /tmp/whisper.cpp/build/bin/whisper-cli "$W/"
 fi
-[ -s "$W/ggml-small.en.bin" ] || curl -sL -o "$W/ggml-small.en.bin" \
-  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin
+# THE MODEL MUST BE WHOLE, NOT MERELY PRESENT. `-s` only asks whether a file is
+# non-empty, so a truncated download passes it - and then whisper exits without writing
+# anything, which surfaced as a missing-file error three frames away in a function that
+# had nothing to do with transcription. Nine build shards died of it on this repo's
+# first run, because a new repository has no build cache and fetched the model fresh.
+MODEL="$W/ggml-small.en.bin"
+if [ ! -s "$MODEL" ] || [ "$(stat -c%s "$MODEL" 2>/dev/null || stat -f%z "$MODEL")" -lt 400000000 ]; then
+  rm -f "$MODEL"
+  curl -sL --retry 3 --retry-delay 5 -o "$MODEL" \
+    https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin
+fi
+SZ="$(stat -c%s "$MODEL" 2>/dev/null || stat -f%z "$MODEL")"
+[ "$SZ" -ge 400000000 ] || { echo "speech model is $SZ bytes, expected ~488M - refusing"; exit 1; }
 ln -sf "$W/whisper-cli" "$K/whisper.cpp/build/bin/whisper-cli"
 ln -sf "$W/ggml-small.en.bin" "$K/whisper.cpp/models/ggml-small.en.bin"
 

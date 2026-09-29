@@ -186,10 +186,23 @@ def word_times(src, t0, t1, tag, S):
         wav = f"/tmp/vsc_{tag}_{i}.wav"
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-ss", str(a), "-to", str(b),
                         "-i", src, "-ar", "16000", "-ac", "1", "-c:a", "pcm_s16le", wav], check=True)
-        subprocess.run([WHISPER, "-m", MODEL, "-f", wav, "-ml", "1", "-sow",
-                        "-bs", "5", "-bo", "5", "-oj", "-of", f"/tmp/vsc_{tag}_{i}"],
-                       capture_output=True)
-        j = json.load(open(f"/tmp/vsc_{tag}_{i}.json"))
+        r = subprocess.run([WHISPER, "-m", MODEL, "-f", wav, "-ml", "1", "-sow",
+                            "-bs", "5", "-bo", "5", "-oj", "-of", f"/tmp/vsc_{tag}_{i}"],
+                           capture_output=True, text=True)
+        out = f"/tmp/vsc_{tag}_{i}.json"
+        # SAY WHY IT FAILED. 29 Sept 2026: this swallowed whisper's stderr and then
+        # opened the file whisper was supposed to have written, so a transcription that
+        # never happened surfaced as FileNotFoundError three frames up the stack, in a
+        # function that had nothing to do with it. Nine build shards died that way with
+        # no clue as to the cause. The same shape as every other bug in this project:
+        # the call was not checked, and the artifact was not read back.
+        if r.returncode or not os.path.exists(out):
+            raise SystemExit(
+                f"whisper produced nothing for {tag} chunk {i} (exit {r.returncode}).\n"
+                f"model: {MODEL} "
+                f"({os.path.getsize(MODEL) if os.path.exists(MODEL) else 'MISSING'} bytes)\n"
+                f"{(r.stderr or '')[-600:]}")
+        j = json.load(open(out))
         off = a - t0
         span = b - a
         for seg in j["transcription"]:
