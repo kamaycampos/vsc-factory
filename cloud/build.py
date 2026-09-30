@@ -8,7 +8,7 @@ word Kevin is saying on screen at a dozen random moments, and does any caption
 overlap the next. A clip that fails those is still uploaded, but it is NAMED in the
 report so nobody hands it to a reviewer by accident.
 """
-import glob, json, os, shutil, sys
+import glob, hashlib, json, os, shutil, sys
 
 sys.path.insert(0, os.path.expanduser("~/Kamay"))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,6 +25,8 @@ def _why(w):
 def main(key, names):
     import vsc_week, vsc_v2_onscreen
     plan = [p for p in plans() if p["key"] == key][0]
+    fp = {c["name"]: hashlib.sha1(json.dumps(c, sort_keys=True).encode()).hexdigest()[:12]
+          for c in plan["clips"]}
     fetch(plan)
     os.makedirs(OUT, exist_ok=True)
     vsc_week.main(names)
@@ -45,7 +47,7 @@ def main(key, names):
         hit, miss = (r[0], r[1]) if r else (0, 0)
         report.append({"clip": name, "ok": verdict == "pass", "verdict": verdict,
                        "why": why, "moments": f"{hit}/{hit + miss}",
-                       "file": os.path.basename(f[0])})
+                       "plan": fp.get(name), "file": os.path.basename(f[0])})
         for g in (f[0], f[0][:-4] + "__caps.json"):
             shutil.copy(g, OUT)
     json.dump(report, open(os.path.join(OUT, f"report-{key}-{os.environ.get('SHARD','x')}.json"), "w"), indent=1)

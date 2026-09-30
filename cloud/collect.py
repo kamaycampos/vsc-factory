@@ -45,6 +45,24 @@ def main():
         u = sh("gh", "release", "upload", "clips", f, "--clobber", "-R", REPO)
         if u.returncode:
             print(f"  UPLOAD FAILED {os.path.basename(f)}: {u.stderr[-120:]}", flush=True)
+    # WHICH PLAN EACH PUBLISHED CLIP CAME FROM. Without this, "already built" means
+    # only that a file with that name exists, and a corrected plan rebuilds nothing.
+    built = {}
+    d = sh("gh", "release", "download", "clips", "-R", REPO, "-p", "built.json",
+           "-D", "/tmp/bj", "--clobber")
+    if d.returncode == 0:
+        try:
+            built = json.load(open("/tmp/bj/built.json"))
+        except Exception:
+            built = {}
+    for r in rep:
+        if r.get("ok") is not False and r.get("plan"):
+            built[r["clip"]] = r["plan"]
+    os.makedirs("/tmp/bj", exist_ok=True)
+    json.dump(built, open("/tmp/bj/built.json", "w"), indent=1, sort_keys=True)
+    u = sh("gh", "release", "upload", "clips", "/tmp/bj/built.json", "--clobber", "-R", REPO)
+    if u.returncode:
+        print(f"  could not record which plan these were built from: {u.stderr[-120:]}", flush=True)
     open("/tmp/notes.md", "w").write("\n".join(body))
     sh("gh", "release", "edit", "clips", "-R", REPO, "-F", "/tmp/notes.md")
     print("\n".join(body))
