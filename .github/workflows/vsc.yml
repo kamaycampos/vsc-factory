@@ -79,6 +79,7 @@ jobs:
       - name: Build and check this pair
         run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
       - uses: actions/upload-artifact@v4
+        if: always()            # a red shard still carries the clips that DID build
         with:
           name: shard-${{ matrix.key }}-${{ matrix.shard }}
           path: /tmp/shard_out
@@ -93,3 +94,130 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { path: /tmp/shards, pattern: shard-* }
       - run: python cloud/collect.py /tmp/shards
+
+  # ---------------------------------------------------------------- SECOND ATTEMPT
+  # On 29 Sept two shards were killed mid-render by "the runner has received a
+  # shutdown signal" - GitHub reclaiming the machine, nothing to do with the clips.
+  # Four clips were simply missing from the batch and the only way to notice was to
+  # count them. So the run retries itself: re-shard against the release (shard.py
+  # only ever picks clips that are NOT published yet), build those, publish those.
+  # It cannot recurse - the rounds are written out, so there are exactly three - and
+  # each round costs nothing when there is nothing left to do: count is 0, no build.
+  # Self-dispatch was the other option and does not work: a workflow_dispatch made
+  # with GITHUB_TOKEN is refused on purpose, and a PAT is a secret that expires.
+  shard2:
+    needs: collect
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.s.outputs.matrix }}
+      count: ${{ steps.s.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: s
+        run: python cloud/shard.py
+        env:
+          ONLY: ${{ inputs.only }}
+
+  build2:
+    needs: shard2
+    if: always() && needs.shard2.outputs.count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        include: ${{ fromJSON(needs.shard2.outputs.matrix) }}
+    env:
+      SHARD: r2-${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - run: bash setup.sh
+      - name: Build and check this pair
+        run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shard-${{ matrix.key }}-r2-${{ matrix.shard }}
+          path: /tmp/shard_out
+          retention-days: 7
+
+  collect2:
+    needs: build2
+    if: always() && needs.shard2.outputs.count != '0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: /tmp/shards, pattern: shard-*-r2-* }
+      - run: python cloud/collect.py /tmp/shards
+
+  # ----------------------------------------------------------------- THIRD ATTEMPT
+  shard3:
+    needs: collect2
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.s.outputs.matrix }}
+      count: ${{ steps.s.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: s
+        run: python cloud/shard.py
+        env:
+          ONLY: ${{ inputs.only }}
+
+  build3:
+    needs: shard3
+    if: always() && needs.shard3.outputs.count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        include: ${{ fromJSON(needs.shard3.outputs.matrix) }}
+    env:
+      SHARD: r3-${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - run: bash setup.sh
+      - name: Build and check this pair
+        run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shard-${{ matrix.key }}-r3-${{ matrix.shard }}
+          path: /tmp/shard_out
+          retention-days: 7
+
+  collect3:
+    needs: build3
+    if: always() && needs.shard3.outputs.count != '0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: /tmp/shards, pattern: shard-*-r3-* }
+      - run: python cloud/collect.py /tmp/shards
+
+  # The one line that says whether the batch is actually complete. shard.py asks the
+  # release what exists; if anything in the plans is still not there after three
+  # rounds the run ends RED with the names in it, instead of a green tick over a
+  # batch that is short four clips.
+  verify:
+    needs: [collect, collect2, collect3]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python cloud/verify.py

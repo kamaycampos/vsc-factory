@@ -49,6 +49,16 @@ def main(key, names):
         print(f"  {x.get('verdict','?').upper():5} {x['clip']:28} {x.get('moments','')} moments"
               + (f"  |  {'; '.join(x.get('why', [])[:2])}" if x.get('why') else ""), flush=True)
     print("BUILDOK")
+    # A clip that produced NO FILE is a machine failure, and a machine failure has to
+    # turn the job red. On 29 Sept RUN-AT-THE-PROBLEM rendered nothing, this report
+    # said so, and the job still finished green - so the clip was simply absent from
+    # the batch with nothing anywhere saying it was missing. The artifact is already
+    # uploaded by then (the upload step runs even on failure), so nothing is lost by
+    # failing here. A QC verdict of "look" is NOT this: that is a judgement for a human
+    # and it stays green, named in the release notes.
+    gone = [x["clip"] for x in report if x.get("why") == "nothing was rendered"]
+    if gone:
+        sys.exit("NOT RENDERED: " + ", ".join(gone))
 
 
 if __name__ == "__main__":
