@@ -636,6 +636,34 @@
      "there's no breakthroughs. Without pain"
     ]
    ]
+  },
+  {
+   "name": "FALL-DOWN-SEVEN-TIMES",
+   "region": [
+    920,
+    950
+   ],
+   "open": "there's an old saying",
+   "close": "the seed of a greater benefit",
+   "hook": [
+    "FALL DOWN SEVEN TIMES",
+    "GET UP EIGHT"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "NOT-AFFECTED-BY-ANYTHING",
+   "region": [
+    944,
+    975
+   ],
+   "open": "successful people are not affected by the environment",
+   "close": "that is the critical magical difference",
+   "hook": [
+    "SUCCESSFUL PEOPLE ARE NOT",
+    "AFFECTED BY ANYTHING"
+   ],
+   "fixes": []
   }
  ],
  "rumble": "https://rumble.com/v7ed2gy-your-success-starts-on-your-worst-day-what-every-millionaire-knows.html",
