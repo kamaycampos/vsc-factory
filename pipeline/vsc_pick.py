@@ -16,6 +16,7 @@ clip opens and closes on, and this module's only job is to locate those words in
 the audio precisely. Word timings come from short local chunks, measured on
 6 Sept as accurate to ~0.04s.
 """
+import difflib
 import json, os, re, subprocess, sys
 sys.path.insert(0, os.path.expanduser("~/Kamay"))
 import vsc_clip
@@ -37,15 +38,48 @@ def words_in(src, a, b, tag, S):
     return w
 
 
+def _near(a, b):
+    """Two transcribed words that are the same word. 'NeXT'/'next', 'Steven'/'Stephen'."""
+    if a == b:
+        return True
+    if min(len(a), len(b)) < 4:
+        return False
+    return difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.8
+
+
 def _find(words, phrase, prefer_last=False):
+    """Where this sentence starts. EXACT first, then loosely - never only exactly.
+
+    30 Sept 2026: five clips failed three builds in a row with "missing opening|
+    missing closing", and every one of those sentences was plainly there in the
+    video. The comparison was letter-perfect, so one word the server heard
+    differently from the Mac - where the plan was written - made a whole clip
+    unlocatable. It is the same failure that had already silently skipped the
+    caption corrections, in a second place: a correction that is 80% the same run
+    of words, in the right part of the video, is the run that was meant.
+    Exact wins when it exists, so nothing that already resolves can move.
+    """
     toks = [norm(t) for t in phrase.split() if norm(t)]
-    hits = []
-    for i in range(len(words) - len(toks) + 1):
-        if [words[i + k]["n"] for k in range(len(toks))] == toks:
-            hits.append(i)
-    if not hits:
+    if not toks:
         return None
-    return hits[-1] if prefer_last else hits[0]
+    for loose in (False, True):
+        hits = []
+        for i in range(len(words) - len(toks) + 1):
+            got = [words[i + k]["n"] for k in range(len(toks))]
+            if not loose:
+                if got == toks:
+                    hits.append(i)
+                continue
+            same = sum(1 for a, b in zip(got, toks) if _near(a, b))
+            # one word may be heard differently, never two, and never in a phrase so
+            # short that "one wrong" is most of it
+            if same == len(toks) or (len(toks) >= 4 and same >= len(toks) - 1):
+                hits.append(i)
+        if hits:
+            if loose:
+                print(f"      opening/closing matched loosely: {phrase!r}", flush=True)
+            return hits[-1] if prefer_last else hits[0]
+    return None
 
 
 def locate(src, base, S, region, first_words, last_words, tag, dur=None):

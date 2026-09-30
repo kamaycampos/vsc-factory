@@ -18,6 +18,10 @@ OUT = "/tmp/shard_out"
 CLIPS = os.path.expanduser("~/Desktop/VSC/Clips")
 
 
+def _why(w):
+    return w if isinstance(w, str) else "; ".join(list(w)[:2])
+
+
 def main(key, names):
     import vsc_week, vsc_v2_onscreen
     plan = [p for p in plans() if p["key"] == key][0]
@@ -47,7 +51,7 @@ def main(key, names):
     json.dump(report, open(os.path.join(OUT, f"report-{key}-{os.environ.get('SHARD','x')}.json"), "w"), indent=1)
     for x in report:
         print(f"  {x.get('verdict','?').upper():5} {x['clip']:28} {x.get('moments','')} moments"
-              + (f"  |  {'; '.join(x.get('why', [])[:2])}" if x.get('why') else ""), flush=True)
+              + (f"  |  {_why(x.get('why'))}" if x.get('why') else ""), flush=True)
     print("BUILDOK")
     # A clip that produced NO FILE is a machine failure, and a machine failure has to
     # turn the job red. On 29 Sept RUN-AT-THE-PROBLEM rendered nothing, this report
