@@ -24,7 +24,12 @@ permissions:
   contents: write
 concurrency:
   group: vsc
-  cancel-in-progress: false
+  # A NEWER RUN ALWAYS WINS. 30 Sept 2026: a cancelled run sat in "in_progress" for
+  # forty minutes refusing to die, and because the queue waited politely for it, the
+  # corrected 20-clip batch never started - an hour and a half of nothing rendering,
+  # with every status screen saying the work was underway. A newer run is always the
+  # corrected plan, so there is nothing an older one can still be right about.
+  cancel-in-progress: true
 env:
   GH_TOKEN: ${{ github.token }}
   FRAMEIO_TOKEN: ${{ secrets.FRAMEIO_TOKEN }}
