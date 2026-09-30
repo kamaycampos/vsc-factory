@@ -180,8 +180,18 @@ def main(only=None):
             for _c in _p.get("clips", []):
                 if _c.get("fixes"):
                     plan_fixes[_c["name"]] = _c["fixes"]
-                if _c["name"] in _known or not _c.get("open") or not _c.get("close"):
+                if not _c.get("open") or not _c.get("close"):
                     continue
+                # THE PLAN WINS. 30 Sept 2026: ten clips were re-cut in the plan to end
+                # where the teaching lands, the build ran, and every one of them came
+                # out on its OLD cut - "MORE-PROBLEMS-THAN-YOU 27.49 - 130.19" in the
+                # log, the 102-second version, because a name already in vsc_cuts.py
+                # was left alone. The plan is what is read, reviewed and corrected, so
+                # a plan entry REPLACES the hand-written cut of the same name rather
+                # than being skipped by it.
+                if _c["name"] in _known:
+                    for _pre2, _cl2 in CUTS.items():
+                        _cl2[:] = [t for t in _cl2 if t[0] != _c["name"]]
                 _pre = _p.get("prefix") or _match_prefix(_p, _c)
                 if not _pre:
                     print(f"  !! {_c['name']} is in a plan with no source to cut it from",
