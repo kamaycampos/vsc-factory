@@ -69,7 +69,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false            # one bad clip must not take the batch down
-      max-parallel: 10
+      max-parallel: 20   # every shard at once; 10 meant a second wave and double the wall time
       matrix:
         include: ${{ fromJSON(needs.shard.outputs.matrix) }}
     env:
@@ -131,7 +131,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 20   # every shard at once; 10 meant a second wave and double the wall time
       matrix:
         include: ${{ fromJSON(needs.shard2.outputs.matrix) }}
     env:
@@ -184,7 +184,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 20   # every shard at once; 10 meant a second wave and double the wall time
       matrix:
         include: ${{ fromJSON(needs.shard3.outputs.matrix) }}
     env:
