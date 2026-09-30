@@ -267,7 +267,13 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     # on THE-450-MILLION-BREAKUP, MORE-PROBLEMS-THAN-YOU and BANNED-FOR-LIFE.
     # -ss before -i seeks instead of decoding, and -copyts keeps the timestamps
     # ABSOLUTE so every trim value in the graph still means what it says.
-    base = ["-filter_complex", graph, "-map", "[vo]", "-map", "[ao]",
+    # ONE THREAD PER FILTER. ffmpeg spawns a thread per core per filter and each holds
+    # its own frame buffers, so on a 4-core runner a graph with a hundred filters in it
+    # multiplies its memory by four. That is what kept killing the VM on the clips with
+    # the most shots in them - THE-450-MILLION-BREAKUP is only 60 seconds long and died
+    # as reliably as the 128-second one, which is about graph size, not duration.
+    base = ["-threads", "2", "-filter_complex_threads", "1",
+            "-filter_complex", graph, "-map", "[vo]", "-map", "[ao]",
             "-c:v", "libx264", "-preset", "medium", "-crf", "19",
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
             "-movflags", "+faststart", out, "-loglevel", "error"]
