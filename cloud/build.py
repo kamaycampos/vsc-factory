@@ -8,14 +8,44 @@ word Kevin is saying on screen at a dozen random moments, and does any caption
 overlap the next. A clip that fails those is still uploaded, but it is NAMED in the
 report so nobody hands it to a reviewer by accident.
 """
-import glob, hashlib, json, os, shutil, sys
+import glob, hashlib, json, os, shutil, sys, tarfile
 
 sys.path.insert(0, os.path.expanduser("~/Kamay"))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from cloud.source import fetch, plans                                    # noqa: E402
+from cloud.source import fetch, plans, sh                                # noqa: E402
 
 OUT = "/tmp/shard_out"
 CLIPS = os.path.expanduser("~/Desktop/VSC/Clips")
+WORK = os.path.expanduser("~/Desktop/VSC/.work")
+
+
+def reuse_prep(key, src):
+    """Unpack what prep already worked out for this video: the transcript, the word
+    timings and the shot map.
+
+    30 Sept 2026, the reason a batch took all day. prep builds these once and publishes
+    them - and no build shard ever downloaded them, so all sixteen servers re-did the
+    whole-video work from scratch: face-tracking 1090 seconds, 133 shot cuts, the
+    transcript. Twenty-five minutes of identical work, sixteen times over, before a
+    single frame was rendered - and the long clips were then killed mid-render because
+    the runner's life had already been spent. prep's own log line, "a few minutes,
+    once", was describing something that was happening every time.
+    """
+    tar = f"/tmp/prep-{key}.tar.gz"
+    got = sh("gh", "release", "download", "prep", "-R",
+             os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-factory"),
+             "-p", os.path.basename(tar), "-D", "/tmp", "--clobber")
+    if got.returncode:
+        print(f"  no prep bundle for {key} - this shard has to work it out itself",
+              flush=True)
+        return False
+    import cloud.prep as prep
+    prep.unpack(tar, src)
+    with tarfile.open(tar) as t:
+        names = [n for n in t.getnames() if "/" in n or n]
+    print(f"  prep reused: {len(names)} files, no re-transcribing and no re-framing",
+          flush=True)
+    return True
 
 
 def _why(w):
@@ -27,7 +57,8 @@ def main(key, names):
     plan = [p for p in plans() if p["key"] == key][0]
     fp = {c["name"]: hashlib.sha1(json.dumps(c, sort_keys=True).encode()).hexdigest()[:12]
           for c in plan["clips"]}
-    fetch(plan)
+    src = fetch(plan)
+    reuse_prep(key, src)
     os.makedirs(OUT, exist_ok=True)
     # ONE CLIP AT A TIME, AND COPY IT OUT THE MOMENT IT EXISTS. A shard that is killed
     # while rendering its second clip used to lose the first one too, because the copy

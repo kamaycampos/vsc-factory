@@ -20,6 +20,23 @@ WORK = os.path.expanduser("~/Desktop/VSC/.work")
 REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-machine")
 
 
+def unpack(tar, src):
+    """Put each file back where it was made: .work, or beside the source video."""
+    srcdir = os.path.dirname(src)
+    os.makedirs(WORK, exist_ok=True)
+    with tarfile.open(tar) as t:
+        for m in t.getmembers():
+            if not m.isfile():
+                continue
+            where, _, name = m.name.partition("/")
+            if not name:                      # older bundles: everything was .work
+                where, name = "work", m.name
+            d = srcdir if where == "source" else WORK
+            f = t.extractfile(m)
+            with open(os.path.join(d, os.path.basename(name)), "wb") as out:
+                out.write(f.read())
+
+
 def build(plan):
     """A plan with no clips yet is a STUB: it exists so the cloud will fetch the
     episode and transcribe it, and the transcript comes back for a human to choose the
@@ -32,15 +49,23 @@ def build(plan):
     got = sh("gh", "release", "download", "prep", "-R", REPO,
              "-p", os.path.basename(tar), "-D", "/tmp", "--clobber")
     if got.returncode == 0:
-        with tarfile.open(tar) as t:
-            t.extractall(WORK)
+        unpack(tar, src)
         print(f"  prep reused from the release for {plan['key']}", flush=True)
         return
     vsc_week.ensure_transcript(src, base)                 # transcript + words + shots
-    keep = [f for f in os.listdir(WORK) if f.startswith(base) or f.startswith("TRANSCRIPT")]
+    # THE SHOT MAP IS NOT IN .work. It is written next to the source file, and prep
+    # only ever packed .work - so the one genuinely expensive artifact, face-tracking
+    # 1090 seconds of video, was never shared and every shard redid it. Both places go
+    # in the bundle now, each tagged with where it belongs.
+    srcdir = os.path.dirname(src)
+    keep = [("work", WORK, f) for f in os.listdir(WORK)
+            if f.startswith(base) or f.startswith("TRANSCRIPT")]
+    keep += [("source", srcdir, f) for f in os.listdir(srcdir)
+             if f.startswith(base) and f.endswith(".json")]
     with tarfile.open(tar, "w:gz") as t:
-        for f in keep:
-            t.add(os.path.join(WORK, f), arcname=f)
+        for where, d, f in keep:
+            t.add(os.path.join(d, f), arcname=f"{where}/{f}")
+    print("  prep bundle holds: " + ", ".join(f"{w}/{f}" for w, _, f in keep), flush=True)
     sh("gh", "release", "create", "prep", "-R", REPO, "-t", "prep", "-n",
        "Transcripts, word timings and shot maps, one bundle per source.")
     up = sh("gh", "release", "upload", "prep", tar, "--clobber", "-R", REPO)
