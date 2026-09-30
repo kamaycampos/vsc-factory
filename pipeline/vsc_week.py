@@ -134,6 +134,20 @@ def check_only():
     print("CHECKDONE")
 
 
+def _match_prefix(plan, clip):
+    """Which source this plan's clips are cut from: the prefix already in CUTS whose
+    video is in the folder, matched on the plan key or on the source file it names."""
+    want = (plan.get("source") or plan.get("key") or "").lower().replace("_", " ")
+    for pre in CUTS:
+        if pre.lower() in want or want.split()[0:1] and want.split()[0] in pre.lower():
+            if glob.glob(os.path.join(SRC, pre + "*.mp4")):
+                return pre
+    for pre in CUTS:                       # one source in the folder and one plan: it
+        if glob.glob(os.path.join(SRC, pre + "*.mp4")):   # is that one
+            return pre
+    return None
+
+
 def main(only=None):
     os.makedirs(WORK, exist_ok=True); os.makedirs(OUT, exist_ok=True)
     abp = os.path.join(WORK, "v2_ab.json")
@@ -153,13 +167,32 @@ def main(only=None):
                  os.path.expanduser("~/Desktop/VSC/vsc-machine/plans"),
                  os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "plans")]
     _plandirs = [d for d in _plandirs if d and os.path.isdir(d)]
+    # A CLIP IN THE PLAN IS A CLIP THAT GETS BUILT. Until 30 Sept the plan carried only
+    # the corrections and the cuts lived in vsc_cuts.py, so two clips written into the
+    # plan were counted as missing by the sharder and the verifier, sent to a server,
+    # and then silently skipped by the builder: "0 made, 0 could not be located".
+    # Nothing was wrong with them; nothing was looking for them. Plan entries are merged
+    # into CUTS here, and vsc_cuts.py stays the place a cut can be overridden by hand.
     for _f in sorted(sum([glob.glob(os.path.join(_d, "*.json")) for _d in _plandirs], [])):
         try:
-            for _c in json.load(open(_f)).get("clips", []):
+            _p = json.load(open(_f))
+            _known = {n for cl in CUTS.values() for n, *_r in cl}
+            for _c in _p.get("clips", []):
                 if _c.get("fixes"):
                     plan_fixes[_c["name"]] = _c["fixes"]
-        except Exception:
-            pass
+                if _c["name"] in _known or not _c.get("open") or not _c.get("close"):
+                    continue
+                _pre = _p.get("prefix") or _match_prefix(_p, _c)
+                if not _pre:
+                    print(f"  !! {_c['name']} is in a plan with no source to cut it from",
+                          flush=True)
+                    continue
+                CUTS.setdefault(_pre, []).append(
+                    (_c["name"], tuple(_c["region"]), _c["open"], _c["close"],
+                     _c.get("hook") or ["", ""]))
+                print(f"  + {_c['name']} taken from the plan", flush=True)
+        except Exception as _e:
+            print(f"  !! could not read {os.path.basename(_f)}: {_e}", flush=True)
     done, failed = [], []
     for prefix, clips in CUTS.items():
         hit = glob.glob(os.path.join(SRC, prefix + "*.mp4"))

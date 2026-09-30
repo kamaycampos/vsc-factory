@@ -259,9 +259,24 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
               f"apad=pad_dur={_hold},"
               f"afade=t=out:st={_astart:.3f}:d={max(0.30, _tot - _astart):.3f}[ao]")
 
-    cmd = [FFMPEG, "-y", "-i", src, "-filter_complex", graph,
-           "-map", "[vo]", "-map", "[ao]", "-c:v", "libx264", "-preset", "medium",
-           "-crf", "19", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
-           "-movflags", "+faststart", out, "-loglevel", "error"]
-    subprocess.run(cmd, check=True)
+    # SEEK TO THE CLIP, DO NOT DECODE THE WHOLE FILE. Every shot in the graph is a
+    # separate trim branch off the same decoded input, so ffmpeg buffers frames for all
+    # of them at once - on an 18-minute source that is gigabytes of held frames, and on
+    # 30 Sept 2026 it killed the runner VM outright on every clip over a minute:
+    # "the runner has received a shutdown signal" at six minutes, three attempts each,
+    # on THE-450-MILLION-BREAKUP, MORE-PROBLEMS-THAN-YOU and BANNED-FOR-LIFE.
+    # -ss before -i seeks instead of decoding, and -copyts keeps the timestamps
+    # ABSOLUTE so every trim value in the graph still means what it says.
+    base = ["-filter_complex", graph, "-map", "[vo]", "-map", "[ao]",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
+            "-movflags", "+faststart", out, "-loglevel", "error"]
+    seek = max(0.0, t0 - 4.0)
+    cmd = [FFMPEG, "-y", "-copyts", "-ss", f"{seek:.3f}", "-i", src] + base
+    r = subprocess.run(cmd)
+    if r.returncode:
+        # never let the seek be the reason a clip does not exist
+        print(f"      seeking render failed ({r.returncode}); reading from the top",
+              flush=True)
+        subprocess.run([FFMPEG, "-y", "-i", src] + base, check=True)
     return shots
