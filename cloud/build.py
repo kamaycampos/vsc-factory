@@ -29,9 +29,16 @@ def main(key, names):
           for c in plan["clips"]}
     fetch(plan)
     os.makedirs(OUT, exist_ok=True)
-    vsc_week.main(names)
+    # ONE CLIP AT A TIME, AND COPY IT OUT THE MOMENT IT EXISTS. A shard that is killed
+    # while rendering its second clip used to lose the first one too, because the copy
+    # into the upload folder happened after both were built. Nothing finished is left
+    # sitting where a shutdown signal can take it.
     report = []
     for name in names:
+        try:
+            vsc_week.main([name])
+        except Exception as e:
+            sys.stderr.write(f"  {name}: {type(e).__name__}: {e}\n")
         f = glob.glob(os.path.join(CLIPS, name + "_*.mp4"))
         if not f:
             report.append({"clip": name, "ok": False, "why": "nothing was rendered"})

@@ -10,6 +10,7 @@ import glob, hashlib, json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-machine")
 PER = 2
+SHARD_SECONDS = 95      # a shard's total clip length; one long clip gets a server alone
 
 
 def fingerprint(clip):
@@ -66,8 +67,22 @@ def main():
         if stale:
             print("the plan changed since these were built, so they are built again: "
                   + ", ".join(stale), file=sys.stderr)
-        for i in range(0, len(todo), PER):
-            out.append({"key": p["key"], "shard": str(i // PER), "names": " ".join(todo[i:i + PER])})
+        # PACK BY LENGTH, NOT BY COUNT. 30 Sept 2026: MORE-PROBLEMS-THAN-YOU (122s) and
+        # BANNED-FOR-LIFE (128s) were killed mid-render three runs in a row, and each one
+        # took its shard-mate down with it - YOUR-BIGGEST-DISASTER is 32 seconds long and
+        # failed three times without anything being wrong with it. The two longest clips
+        # in the batch are the two that never survived; everything at 73s and under did.
+        # So length decides who shares a server, and a clip over the budget gets one alone.
+        span = {c["name"]: c["region"][1] - c["region"][0] for c in p["clips"]}
+        group, total = [], 0.0
+        for n in todo:
+            if group and (len(group) >= PER or total + span.get(n, 40) > SHARD_SECONDS):
+                out.append({"key": p["key"], "shard": str(len(out)), "names": " ".join(group)})
+                group, total = [], 0.0
+            group.append(n)
+            total += span.get(n, 40)
+        if group:
+            out.append({"key": p["key"], "shard": str(len(out)), "names": " ".join(group)})
     print(f"{len(out)} shards, {sum(len(s['names'].split()) for s in out)} clips to build",
           file=sys.stderr)
     gh = os.environ.get("GITHUB_OUTPUT")
