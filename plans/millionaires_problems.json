@@ -286,6 +286,11 @@
      41.93,
      "So in every quote, adversity is the seed of a greater benefit.",
      "So, in every, quote, adversity is the seed of a greater benefit."
+    ],
+    [
+     41.0,
+     "it does things for us So, in every",
+     "it does things for us. So, in every"
     ]
    ]
   },
@@ -440,6 +445,13 @@
    "hook": [
     "RUN AT THE PROBLEM,",
     "NOT AWAY FROM IT"
+   ],
+   "fixes": [
+    [
+     12.0,
+     "the sand, not not Face it",
+     "the sand. Not face it"
+    ]
    ]
   },
   {
@@ -600,8 +612,8 @@
   {
    "name": "TONS-OF-DIRT-FOR-GOLD",
    "region": [
-    993,
-    1066.0
+    990,
+    1072
    ],
    "open": "people move tons of dirt just to get a few ounces of gold",
    "close": "that's the day that your success begins",

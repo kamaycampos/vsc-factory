@@ -84,12 +84,20 @@ def text_faults(caps):
         if (norm[i] and norm[i] == norm[i + 2] and norm[i + 1] not in CONNECTORS
                 and norm[i] not in CONNECTORS          # "tons AND tons AND tons"
                 and norm[i] not in REPEATABLE
-                and not flat[i].endswith((",", ".", "!", "?", "-", "...")) and len(norm[i]) > 1):
+                # the stop can be on EITHER word before the repeat: "a huge
+                # distinction. Huge." and "of her life. Her life was" are both a new
+                # sentence starting on the same word, which is how Kevin lands a point.
+                and not flat[i].endswith((",", ".", "!", "?", "-", "..."))
+                and not flat[i + 1].endswith((",", ".", "!", "?", "-", "..."))
+                and len(norm[i]) > 1):
             out.append(f'word repeated after one: "{" ".join(flat[i:i+3])}"')
     for i in range(len(norm) - 3):
         # "said He it said", "It was It when was", "do It things does"
         if (norm[i] and norm[i] == norm[i + 3]
-                and norm[i] not in ("the", "a", "to", "of", "and", "it", "that", "is")
+                # "It was when she was at the bottom" and "What they do is they look
+                # at it" are correct English with a function word recurring. Damage
+                # scrambles CONTENT words - "said He it said", "was It when was".
+                and norm[i] not in REPEATABLE
                 # "every single one, every single one had more" - he repeats a whole
                 # phrase for emphasis, and emphasis is PUNCTUATED. Transcription damage
                 # never is: "said He it said", "was It when was", "do It things does"
