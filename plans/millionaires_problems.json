@@ -18,9 +18,14 @@
    ],
    "fixes": [
     [
-     22,
-     "That is actually what creates",
-     "that is actually what creates"
+     11.24,
+     "your biggest disaster. faster, the day",
+     "your biggest disaster, the day"
+    ],
+    [
+     22.43,
+     "what creates success. success. It doesn't",
+     "what creates success. It doesn't"
     ]
    ]
   },
@@ -36,7 +41,23 @@
     "THERE IS NO SUCH",
     "THING AS ADVERSITY"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     13.14,
+     "adversity 'cause successful people",
+     "adversity because successful people"
+    ],
+    [
+     20.0,
+     "Either They just think",
+     "Either one, they just think"
+    ],
+    [
+     24.22,
+     "better than they they",
+     "better than they do."
+    ]
+   ]
   },
   {
    "name": "MORE-PROBLEMS-THAN-YOU",
@@ -52,44 +73,29 @@
    ],
    "fixes": [
     [
-     12,
-     "Successful people Successful people don't",
-     "Successful people don't"
+     0.0,
+     "every single successful person successful people have",
+     "Every single successful person. Successful people have"
     ],
     [
-     30,
-     "better than they do. They do. Overcome adversity",
-     "better than they do, overcome adversity"
+     21.49,
+     "foul bankruptcy",
+     "filed bankruptcy"
     ],
     [
-     35,
-     "They Deal with challenges",
-     "They deal with challenges"
+     23.89,
+     "plants burning down. regulations change businesses challenge all these things",
+     "plants burned down, regulations change, businesses challenge, all these things"
     ],
     [
-     56,
-     "and Everything is just working",
-     "and everything is just working"
+     8.21,
+     "somebody let's say you as a net worth of ten million dollars or more that every single one",
+     "somebody, let's say, who has a net worth of ten million dollars or more. You look at every single one"
     ],
     [
-     66,
-     "major -- you can call. it adversity",
-     "major, you can call it adversity"
-    ],
-    [
-     92,
-     "Foul bankruptcy",
-     "Filed bankruptcy"
-    ],
-    [
-     96,
-     "plants burn down",
-     "plants burning down"
-    ],
-    [
-     98,
-     "businesses challenge",
-     "business challenges"
+     31.93,
+     "could never in a million years deal with so successful people are not people with problems",
+     "could never in a million years deal with. So successful people are not people WITHOUT problems."
     ]
    ]
   },
@@ -107,44 +113,24 @@
    ],
    "fixes": [
     [
-     0,
-     "Stephen Jobs was fired",
-     "Steve Jobs was fired"
+     0.0,
+     "Steven Jobs was fired. Apple by the board he was kicked out the founder of Apple was fired but he always says",
+     "Steve Jobs was fired from Apple by the board. He was kicked out. The founder of Apple was fired, but he always says"
     ],
     [
-     12,
-     "he that I know technology It's better than",
-     "he says, I know technology better than"
+     8.05,
+     "it was that firing and him starting next because he that I know technology the guys at Apple, I'm the genius.",
+     "it was that firing and him starting NeXT, because he says, I know technology better than the guys at Apple. I'm the genius."
     ],
     [
-     19,
-     "that he started next, and then next he developed",
-     "that he started NeXT, and at NeXT he developed"
+     18.15,
+     "he started Next, and in Next he developed",
+     "he started NeXT, and at NeXT he developed"
     ],
     [
-     29,
-     "we would not have The Apple company",
-     "we would not have the Apple company"
-    ],
-    [
-     31,
-     "wasn't fired If he wasn't fired",
-     "wasn't fired. If he wasn't fired"
-    ],
-    [
-     32,
-     "if Stephen Jobs wasn't fired",
-     "if Steve Jobs wasn't fired"
-    ],
-    [
-     9.76,
-     "and him starting next because",
-     "and him starting NeXT because"
-    ],
-    [
-     31.16,
-     "wasn't fired If he wasn't fired Apple",
-     "wasn't fired, if he wasn't fired, Apple"
+     27.94,
+     "today if it wasn't if Steven Jobs wasn't fired.",
+     "today. If it wasn't, if Steve Jobs wasn't fired,"
     ]
    ]
   },
@@ -162,14 +148,9 @@
    ],
    "fixes": [
     [
-     14,
-     "the people, in charge looked",
-     "the people in charge looked"
-    ],
-    [
-     21.64,
-     "stronger than ever before,",
-     "stronger than ever before."
+     1.41,
+     "you look at Uber, different companies",
+     "you look at Uber, Lyft, different companies"
     ]
    ]
   },
@@ -182,24 +163,19 @@
    "open": "she was living out of her car",
    "close": "learned at the bottom",
    "hook": [
-    "JK ROWLING WAS LIVING",
+    "J.K. ROWLING WAS LIVING",
     "OUT OF HER CAR"
    ],
    "fixes": [
     [
-     14,
-     "It was It when was she was at the bottom",
-     "It was when she was at the bottom"
+     9.8,
+     "her life was was a complete wreck",
+     "her life was a complete wreck"
     ],
     [
-     8.57,
-     "the disaster of her life, her life was",
-     "the disaster of her life. Her life was"
-    ],
-    [
-     14.14,
-     "at the bottom that's when she made",
-     "at the bottom. That's when she made"
+     12.54,
+     "It was when she was at the bottom. That's when she made the decision. I'm going",
+     "It was when she was at the bottom. That's when she made the decision: I'm going"
     ]
    ]
   },
@@ -217,34 +193,19 @@
    ],
    "fixes": [
     [
-     14,
-     "It has to be cleared out A forest fire burns",
-     "It has to be cleared out. A forest fire burns"
+     6.22,
+     "fires are nature way of clearing out. out all of the rubble",
+     "fires are nature's way of clearing out all of the rubble"
     ],
     [
-     26,
-     "So, a forest fire Forest is not Fire bad",
-     "So a forest fire is not bad."
-    ],
-    [
-     29,
-     "A forest fire is a blessing",
-     "A forest fire is a blessing."
-    ],
-    [
-     6.21,
-     "Fires are nature way",
-     "Fires are nature's way"
-    ],
-    [
-     9.61,
+     9.5,
      "all of the underbrush. That's been building",
      "all of the underbrush that's been building"
     ],
     [
-     25.82,
-     "So a forest fire is not A forest fire is a blessing.",
-     "So a forest fire is not bad. A forest fire is a blessing."
+     15.57,
+     "burns that all off and seeds germinate. which can only",
+     "burns that all off, and seeds germinate, which can only"
     ]
    ]
   },
@@ -262,49 +223,19 @@
    ],
    "fixes": [
     [
-     10,
-     "But they do it. as a look at it as a blessing",
-     "What they do is they look at it as a blessing"
+     5.65,
+     "or disasters, or [BLANK_AUDIO] failures",
+     "or disasters, or failures"
     ],
     [
-     20,
-     "that Something you that could classify",
-     "that you could classify"
+     29.54,
+     "a setback, some it's not giving us",
+     "a setback, some adversity. It's not giving us"
     ],
     [
-     36,
-     "The universe doesn't do It things does to us",
-     "The universe doesn't do things to us"
-    ],
-    [
-     14.89,
-     "as a blessing as an opportunity",
-     "as a blessing, as an opportunity"
-    ],
-    [
-     22.53,
-     "an obstacle or a challenge or a major",
-     "an obstacle, or a challenge, or a major"
-    ],
-    [
-     30.67,
-     "some adversity? It's not giving",
-     "some adversity. It's not giving"
-    ],
-    [
-     38.99,
-     "do things to us it does things for us",
-     "do things to us, it does things for us"
-    ],
-    [
-     41.93,
-     "So in every quote, adversity is the seed of a greater benefit.",
-     "So, in every, quote, adversity is the seed of a greater benefit."
-    ],
-    [
-     41.0,
-     "it does things for us So, in every",
-     "it does things for us. So, in every"
+     41.86,
+     "So in every quote adversity, is the seed",
+     "So, in every, quote, adversity is the seed"
     ]
    ]
   },
@@ -322,14 +253,14 @@
    ],
    "fixes": [
     [
-     29,
-     "I go, Yeah, that's a change in conditions",
-     "I go, Yeah, that was a change in conditions"
+     0.84,
+     "\"Kevin, you face so much adversity.\" in your life? How did you overcome",
+     "\"Kevin, you faced so much adversity in your life. How did you overcome"
     ],
     [
-     28.29,
-     "a change in conditions I always say",
-     "a change in conditions. I always say"
+     26.68,
+     "I go, \"Yeah.\" That was a change in conditions. I always say it's",
+     "I go, Yeah, that was a change in conditions. I always say, it's"
     ]
    ]
   },
@@ -347,29 +278,29 @@
    ],
    "fixes": [
     [
-     36,
-     "I want to-- put you on TV",
-     "I want to put you on TV"
+     2.09,
+     "launching the American memory Institute, taught live seminars all over the world. world.",
+     "launching the American Memory Institute, taught live seminars all over the world."
     ],
     [
-     44,
-     "- The information is in your memory. - and then we went on",
-     "and then we went on"
+     15.8,
+     "Now people would say you lost your business. your livelihood, your life fell apart. No it didn't.",
+     "Now people would say, you lost your business, your livelihood, your life fell apart. No, it didn't."
     ],
     [
-     50,
-     "Out of The breakup",
-     "Out of the breakup"
+     23.28,
+     "Carnegie Belly in New York City",
+     "Carnegie Deli in New York City"
     ],
     [
-     56,
-     "my life fell apart, I didn't look at, came",
-     "my life fell apart. I didn't look at it that way. Came"
+     28.69,
+     "He goes, \"I want to put you--\" you on TV, on TV infomercials,",
+     "He goes, I want to put you on TV, on TV infomercials."
     ],
     [
-     58,
-     "king and went on To generate billions",
-     "king and went on to generate billions"
+     46.92,
+     "the disaster, my life fell apart, I didn't look at, came $450 million in sales",
+     "the disaster, my life fell apart. I didn't look at it that way. Came $450 million in sales"
     ]
    ]
   },
@@ -387,29 +318,19 @@
    ],
    "fixes": [
     [
-     6,
-     "which is a form of calcium. We imported",
-     "which is a form of calcium we imported"
+     2.19,
+     "because I was selling a called Coral Calcium",
+     "because I was selling a product called Coral Calcium"
     ],
     [
-     58,
-     "And now Right I'm now, banned from TV",
-     "And now I'm banned from TV"
+     13.46,
+     "unsubstantiated claims. gave him all the substantiation",
+     "unsubstantiated claims. I gave them all the substantiation"
     ],
     [
-     84,
-     "about, you how know, bad the federal",
-     "about, you know, how bad the federal"
-    ],
-    [
-     92,
-     "We not cannot tell people",
-     "to not tell people"
-    ],
-    [
-     108,
-     "best settle list",
-     "best seller list"
+     39.6,
+     "They go, yes, that's a great headline. I go, good, ban me",
+     "They go, Yes, that\u2019s a great headline. I go, Good, ban me"
     ]
    ]
   },
@@ -425,7 +346,28 @@
     "BANNED FROM TV, SO HE",
     "WROTE A BOOK INSTEAD"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     0.0,
+     "that means books I said you know I should write a book to expose them I should write a book I should write a book about you know how bad the federal government and how they're",
+     "That means books. I said, you know, I should write a book to expose them. I should write a book about how bad the federal government is, and the FTC, and how they're"
+    ],
+    [
+     18.18,
+     "prevent and cure a disease without drugs and surgery. I should call it the the natural cures. that the government",
+     "prevent and cure disease without drugs and surgery. I should call it the natural cures that the government"
+    ],
+    [
+     26.14,
+     "don't want you to know about it. And we're sitting in the room",
+     "don't want you to know about. And we're sitting in the room"
+    ],
+    [
+     33.86,
+     "And I thought, how about this one? Natural Cures. they don't want you to know about.",
+     "And I thought, how about this one? Natural Cures They Don't Want You To Know About."
+    ]
+   ]
   },
   {
    "name": "BEAT-HARRY-POTTER",
@@ -439,7 +381,23 @@
     "THE BOOK THAT BEAT",
     "J.K. ROWLING"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     3.74,
+     "New York Times best settle list",
+     "New York Times bestseller list"
+    ],
+    [
+     14.02,
+     "the year it came out, beat Harry Potter",
+     "the year it came out. Beat Harry Potter"
+    ],
+    [
+     17.67,
+     "in hardback, out of the adversity. became the greater benefit",
+     "in hardback. Out of the adversity came the greater benefit."
+    ]
+   ]
   },
   {
    "name": "REACT-OR-RESPOND",
@@ -455,24 +413,14 @@
    ],
    "fixes": [
     [
-     12,
-     "probably the number. one difference",
-     "probably the number one difference"
+     12.01,
+     "really probably the the number one difference",
+     "This is really probably the number one difference"
     ],
     [
-     31,
-     "It's just not as successful as they want to be",
-     "Somebody who's just not as successful as they want to be"
-    ],
-    [
-     31.13,
-     "as they want to be They're always",
-     "as they want to be, they're always"
-    ],
-    [
-     36.3,
-     "is going to attack mode",
-     "is going to attack mode."
+     22.08,
+     "So do you react to situations? you respond?",
+     "So do you react to situations, or do you respond?"
     ]
    ]
   },
@@ -515,14 +463,9 @@
    ],
    "fixes": [
     [
-     13,
-     "They're down a goal Guess what they're doing",
-     "They're down a goal. Guess what they're doing?"
-    ],
-    [
-     21,
-     "what invariably happens The team that's down",
-     "what invariably happens? The team that's down"
+     15.09,
+     "They're down a goal. what they're doing. We are going to attack. We need the score. And guess what endurably happens?",
+     "They're down a goal. Guess what they're doing? We are going to attack. We need to score. And guess what invariably happens?"
     ]
    ]
   },
@@ -540,29 +483,14 @@
    ],
    "fixes": [
     [
-     12,
-     "bury their head in the sand They don't cry",
-     "bury their head in the sand. They don't cry"
+     20.95,
+     "That's the programming of a success. person.",
+     "That's the programming of a successful person."
     ],
     [
-     30,
-     "It's the possibility thinkers create",
-     "It's the Possibility Thinkers Creed"
-    ],
-    [
-     43,
-     "or I'll I'll stay and turn the mountain",
-     "or I'll stay and turn the mountain"
-    ],
-    [
-     13.16,
-     "They don't bury Don't their bury head in the sand.",
-     "They don't bury their head in the sand."
-    ],
-    [
-     31.45,
-     "the Possibility Thinkers Creed When faced",
-     "the Possibility Thinker's Creed. When faced"
+     30.95,
+     "It's the possibility thinkers create. When faced and I will not quit.",
+     "It's the Possibility Thinker's Creed. When faced with a mountain, I will not quit."
     ]
    ]
   },
@@ -580,9 +508,9 @@
    ],
    "fixes": [
     [
-     24,
-     "So you We have to, A, be aware",
-     "So you have to, A, be aware"
+     19.72,
+     "You have to change. that habit you don't eliminate habits you replace them with something else so you have to a be aware that that's going to be your habit that's number one and number have to with deliberate intent",
+     "You have to change that habit. You don't eliminate habits, you replace them with something else. So you have to, A, be aware that that's going to be your habit. That's number one. And number two, you have to, with deliberate intent,"
     ]
    ]
   },
@@ -600,29 +528,14 @@
    ],
    "fixes": [
     [
-     0,
-     "Today, number one, remember this phrase",
-     "Remember this phrase"
+     2.6,
+     "Someday we'll look back. back at this and laugh",
+     "Someday we'll look back at this and laugh"
     ],
     [
-     1,
-     "Did we hear this phrase",
-     "Did you ever hear this phrase"
-    ],
-    [
-     36,
-     "By doing that, you break up. all the stress",
-     "By doing that, you break up all the stress"
-    ],
-    [
-     1.53,
-     "Remember this phrase Did you ever hear this phrase Someday",
-     "Remember this phrase. Did you ever hear this phrase? Someday"
-    ],
-    [
-     23.37,
-     "facing a big challenge. Is actually state out loud.",
-     "facing a big challenge is actually state out loud."
+     24.89,
+     "is actually state out loud. day I look back at this and laugh",
+     "is actually state out loud: someday I'll look back at this and laugh"
     ]
    ]
   },
@@ -640,19 +553,19 @@
    ],
    "fixes": [
     [
-     0,
-     "It's not It's not overcoming adversity",
-     "It's not overcoming adversity"
+     2.8,
+     "It's first law. looking at that bad thing",
+     "It's first looking at that bad thing"
     ],
     [
-     11,
-     "The Buddha said He it said very well",
-     "The Buddha said it very well"
+     13.6,
+     "He said, \"Everyone will experience it.\" pain, but suffering is an option.",
+     "He said, everyone will experience pain, but suffering is an option."
     ],
     [
-     12.46,
-     "said it very well He said",
-     "said it very well. He said"
+     24.5,
+     "you may experience pain painful, but you don't have to suffer",
+     "you may experience pain because it's painful, but you don't have to suffer"
     ]
    ]
   },
@@ -670,29 +583,24 @@
    ],
    "fixes": [
     [
-     12,
-     "picking up huge amounts of gold. dirt, putting",
-     "picking up huge amounts of dirt, putting"
+     5.44,
+     "I heard this. phrase a long time ago but I didn't visualize it.",
+     "I heard this phrase a long time ago, but I didn't visualize it."
     ],
     [
-     17,
-     "these washing machines And I saw them move",
-     "these washing machines. And I saw them move"
+     12.86,
+     "putting it through these wash machines",
+     "putting it through these washing machines"
     ],
     [
-     28,
-     "And unlike, he moved tons of dirt",
-     "And I'm like, he moved tons of dirt"
+     28.59,
+     "just to get a few. little ounces of gold",
+     "just to get a few little ounces of gold"
     ],
     [
-     42,
-     "Without Without setbacks, there's no breakthroughs",
-     "Without setbacks, there's no breakthroughs"
-    ],
-    [
-     38.67,
-     "there's no breakthroughs Without pain",
-     "there's no breakthroughs. Without pain"
+     38.15,
+     "there's no breakthroughs. Without pain, there's no no growth",
+     "there's no breakthroughs. Without pain, there's no growth"
     ]
    ]
   },
@@ -708,7 +616,13 @@
     "FALL DOWN SEVEN TIMES",
     "GET UP EIGHT"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     13.78,
+     "or challenges or failures in every adversity is the seed",
+     "or challenges or failures. And every adversity is the seed"
+    ]
+   ]
   },
   {
    "name": "NOT-AFFECTED-BY-ANYTHING",
