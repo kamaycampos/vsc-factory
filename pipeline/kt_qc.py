@@ -69,8 +69,11 @@ def text_faults(caps):
 
     for i in range(len(norm) - 1):
         # "Without Without setbacks", "or I'll I'll stay", "It's not It's not"
+        # ...but not across a sentence end. "I'll tell you what. What if I am banned",
+        # "I published it. It became number one" - a sentence ending on a word and the
+        # next beginning with it is ordinary English, and it held back two good clips.
         if (norm[i] and norm[i] == norm[i + 1] and norm[i] not in ("that", "had", "very", "no")
-                and not flat[i].endswith((",", "-", "..."))):
+                and not flat[i].endswith((",", ".", "!", "?", "-", "..."))):
             out.append(f'word repeated: "{flat[i]} {flat[i+1]}"')
     for i in range(len(norm) - 2):
         # "It's not It's not", "forest fire Forest is". A word repeated one word later.
