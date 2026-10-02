@@ -1,0 +1,71 @@
+# VSC CLIP FACTORY - start here
+
+GIN Volunteer Service Corps, **Project 15**: Kevin Trudeau's "Classified" interviews
+cut into vertical clips for the **Trudeau Group Affiliate Portal**. Built on GitHub's
+servers; Kamay downloads the finished batch from the `clips` release and uploads it
+to Frame.io for GIN's reviewers. This is a JOB for GIN - it never feeds Kamay's or
+Yaren's own accounts, and their content never comes here.
+
+**The Connector** (Kamay's 4th chat, Claude Code session
+`session_018UdrEfWJonXGVYkZvfByj6`) keeps every project in sync. When you finish a
+batch, fix a bug, or learn a rule, tell it with the `send_message` tool so the fix
+reaches the other projects.
+
+## Making a batch (the whole loop)
+
+1. **Source.** The assignment video comes from GIN / Frame.io. Find the same episode
+   on Rumble by DURATION, not title: `python3 cloud/rumble_match.py <key> <seconds>`.
+   Put the Rumble URL in the plan; `prep` fetches it and caches it encrypted in the
+   `sources` release, so nothing depends on Rumble twice. Source must be >= 1080p.
+   Fallbacks: the `sources` release (upload `<key>.mp4.enc`, needs `VSC_KEY`), or
+   Frame.io when `FRAMEIO_TOKEN` is set.
+2. **Plan.** `plans/<key>.json` - see `plans/millionaires_problems.json` for the shape:
+   `key, prefix, source, note, rumble, duration, height, clips[]`, and per clip
+   `name, region [s,e], open "<first words>", close "<last words>",
+   hook ["LINE ONE","LINE TWO"], fixes [[t, "wrong", "right"]]`.
+   A plan entry REPLACES any hand-written cut of the same name in `vsc_cuts.py`.
+3. **Push to main.** `vsc.yml` runs prep -> shard -> build (every pair on its own
+   server, all at once) -> collect -> two automatic retry rounds. Result: the `clips`
+   release with a per-clip verdict table.
+   **Every push to `plans/` cancels the build that is running** (newer run wins), so
+   batch your corrections into ONE push.
+4. **Read every caption line** of every clip in the verdict table (`<clip>__caps.json`
+   in the release is what the SERVER burned in). Write corrections as `fixes` against
+   THOSE captions, not the Mac's transcript - they must match letter for letter.
+   Push once. Unchanged clips are skipped by content hash.
+5. Watch the **first 3 seconds and the last 2** of every clip. Then it goes to Kamay.
+
+## The rules (from GIN's reviewers, Kamay and Yaren - all hard)
+
+- **Open on the start of a complete thought.** Never mid-sentence.
+- **Close where the teaching LANDS** - on meaning, not grammar. Never end with Kevin
+  about to say something, and never cut the proof or the twist ("which they all did").
+- **Never freeze the picture while Kevin is still talking** (mouth open, sound fading).
+- **Read every caption line before submission** (Naomi, Week-1 reviewer). Whisper
+  breaks names: Steve Jobs (not Steven), NeXT, New York Times bestseller list,
+  Carnegie Deli, American Memory Institute, the Possibility Thinker's Creed. Where
+  Kevin misspeaks and the meaning is obvious, write what he meant.
+- No `[BLANK_AUDIO]`, no words whisper invented ("Sorry."), no speech from someone else.
+- Emphasis capitals never cost a word.
+- **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
+- **Length ~20-60 s.** A clip with many shots or over ~60 s kills the runner - split it
+  into two clips that each carry a full idea.
+- Never cut the ad wall / testimonial at the end of an episode (e.g. 17:35-end in
+  millionaires_problems).
+
+## Do not reintroduce (already fixed, each cost hours)
+
+- Render seeks with `-ss` before `-i` and uses ONE filter thread - decoding the whole
+  film per clip ran the VM out of memory.
+- "Already built" means the content hash matches, not that a file with the name exists.
+- A cancelled run must never hold the queue (`cancel-in-progress: true`).
+- The `clips` release can hold two files for one clip name (e.g.
+  `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
+
+## Shared engine
+
+Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
+`QC_AGENT.md`) come from `kamaycampos/kt-machine/shared/`, pulled live at setup.
+**Never keep a local copy of a shared file here** - a local copy overrides the shared
+one and forks silently (this happened twice on 30 Sept). Improve the shared file in
+kt-machine instead, and tell the Connector.
