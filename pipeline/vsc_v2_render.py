@@ -91,6 +91,44 @@ def next_onset(src, after, look=3.0):
     return None
 
 
+def pause_after(src, said, back=0.6, ahead=0.5):
+    """The silence Kevin leaves after the close, from the sound: (start, end) or None.
+
+    Whisper's word times cannot show it - on YOUR-BIGGEST-DISASTER "it." runs 26.97-27.68
+    and "One" starts at 27.68, the pause swallowed into the word before it. The
+    quiet stretch nearest the end of the close is the pause between the two."""
+    import numpy as np
+    a0 = max(0.0, said - 1.2)
+    raw = subprocess.run([FF, "-y", "-loglevel", "error", "-ss", f"{a0:.3f}", "-t", "2.6",
+                          "-i", src, "-ar", "16000", "-ac", "1", "-f", "s16le", "-"],
+                         capture_output=True).stdout
+    x = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
+    st = 160
+    if len(x) < st * 40:
+        return None
+    db = 20 * np.log10(np.array([np.sqrt(np.mean(x[i:i + st] ** 2) + 1e-9)
+                                 for i in range(0, len(x) - st, st)]) + 1e-9)
+    lo, hi = np.percentile(db, 15), np.percentile(db, 90)
+    q = db <= lo + (hi - lo) * 0.40
+    runs, k = [], 0
+    while k < len(q):
+        if q[k]:
+            j = k
+            while j < len(q) and q[j]:
+                j += 1
+            if j - k >= 6:
+                runs.append((a0 + k * 0.01, a0 + j * 0.01))
+            k = j
+        else:
+            k += 1
+    # a quiet that ENDS well before the close's last word is a gap inside the close
+    # ("creates | it"), not the pause after it - he spoke again before the boundary
+    runs = [r for r in runs if said - back <= r[0] <= said + ahead and r[1] >= said - 0.15]
+    if not runs:
+        return None
+    return min(runs, key=lambda r: 0.0 if r[0] <= said <= r[1] else min(abs(r[0] - said), abs(r[1] - said)))
+
+
 def finish_close(words, close_words, close_phrase, span, name=""):
     """THE LAST CAPTION IS THE CLOSE. Checked on what is about to be burned.
 
@@ -168,25 +206,45 @@ def main(only=None):
         close_end = cap["close_end"] if cap.get("close_end") is not None else (
             max(w[1] for w in cap["words"]) if cap.get("words") else b - a)
         close_abs = a + close_end
-        # NEVER TRIM INTO THE CLOSE. The caption pass's close drifts at the tail (worst
-        # +2.80s on YOUR-BIGGEST-DISASTER), and next_onset then hears Kevin still saying
-        # the closing words and cuts them as "speech after the close" - which is how
-        # "It doesn't end it, it creates it" shipped as "It doesn't end". The locator
-        # measured where he finishes the close; nothing ends before that.
-        said = r.get("speech_end")
-        if said is not None and close_abs < said - 0.05:
-            print(f"      close held to the cut: caption pass said +{close_abs - a:.2f}s, "
-                  f"he finishes at +{said - a:.2f}s", flush=True)
-            close_abs = said
-            close_end = said - a
-        onset = next_onset(src, close_abs)
-        tail = 0.30 if onset is None else max(0.10, min(0.30, (onset - close_abs) * 0.6))
+        # WHERE THE CLIP ENDS: on the close, and never on a word after it. 2 Oct 2026,
+        # Kamay: YOUR-BIGGEST-DISASTER ended on "one of the" and WINNERS-HATE-LOSING on
+        # "there is a". The caption pass's idea of the close drifts BOTH ways (+2.80s,
+        # +1.95s), and both failures came from trusting it: trimmed into the close one
+        # day, "extended so the last word finishes" past it the next. The locator heard
+        # the close in short chunks and decides where he finishes, in both directions;
+        # the next word he says - in the sound and in the word times - is a ceiling.
+        said, nxt = r.get("speech_end"), r.get("next_word")
+        if said is not None:
+            close_abs, close_end = said, said - a
         note = ""
-        if onset is not None and onset < b - 0.05:
-            # SPEECH after the closing sentence - the defect Naomi flagged on three clips
-            b, note = close_abs + tail, f"trimmed: speech after the close at +{onset - close_abs:.2f}s"
-        elif close_abs > b - 0.10:
-            b, note = close_abs + tail, "extended so the last word finishes"
+        # END IN THE PAUSE HE LEAVES AFTER THE CLOSE, heard in the sound. Whisper's
+        # times cannot be trusted at a word boundary: on YOUR-BIGGEST-DISASTER "it."
+        # runs to 27.68 and "One" starts at 27.68 - the pause swallowed whole.
+        pz = pause_after(src, close_abs) if said is not None else None
+        if pz is not None:
+            close_abs, close_end = pz[0], pz[0] - a      # he has stopped: the fades start here
+            new_b = pz[0] + min(0.12, (pz[1] - pz[0]) / 2)
+            note = f"ends in the pause after the close (+{pz[0] - a:.2f}s to +{pz[1] - a:.2f}s)"
+        elif said is not None:
+            new_b = (nxt - 0.08) if nxt is not None and nxt > said + 0.05 else said
+            note = "no pause heard after the close"
+        else:
+            onset = next_onset(src, close_abs)
+            tail = 0.30 if onset is None else max(0.10, min(0.30, (onset - close_abs) * 0.6))
+            new_b = close_abs + tail
+            note = "no locator close: caption pass close"
+        b = min(new_b, said + 0.60) if said is not None else new_b
+        # THE TAIL CHECK. Nothing he says after the close may be in the clip: a clip
+        # whose close runs straight into the next word, with no pause to end in, is a
+        # FAIL for a person to hear - never a silent pass.
+        tail_bad = said is not None and pz is None and nxt is not None and b > nxt - 0.03
+        json.dump({"close": round(close_abs - a, 3), "end": round(b - a, 3),
+                   "pause": None if pz is None else [round(pz[0] - a, 3), round(pz[1] - a, 3)],
+                   "next_word": None if nxt is None else round(nxt - a, 3),
+                   "speech_after_close": bool(tail_bad)},
+                  open(os.path.join(OUT, name + "__tail.json"), "w"))
+        if tail_bad:
+            print(f"  !! {name}: NO PAUSE after the close - the next word may be audible", flush=True)
         span = b - a
         words = [{"text": t, "a": s, "b": min(e, span)} for s, e, t in cap["bursts"] if s < span]
         close_phrase = [c2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]

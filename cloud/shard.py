@@ -9,6 +9,7 @@ import glob, hashlib, json, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-machine")
+RULES = "tail-2026-10-02"      # see fingerprint()
 PER = 2
 SHARD_SECONDS = 95      # a shard's total clip length; one long clip gets a server alone
 
@@ -22,7 +23,11 @@ def fingerprint(clip):
     whole day's clips were the uncorrected ones, and the run was green. A clip is only
     already built if it was built from the plan entry that is in the repository NOW.
     """
-    return hashlib.sha1(json.dumps(clip, sort_keys=True).encode()).hexdigest()[:12]
+    # ...and the RULES it was built by. 2 Oct 2026: the end-of-clip rule changed and
+    # every clip built under the old one could carry Kevin's next words, but no plan
+    # entry changed, so nothing would have been rebuilt. Bump RULES when a change to
+    # the factory means every clip must be made again.
+    return hashlib.sha1((json.dumps(clip, sort_keys=True) + RULES).encode()).hexdigest()[:12]
 
 
 def already_built():

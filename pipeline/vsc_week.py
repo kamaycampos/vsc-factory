@@ -243,7 +243,8 @@ def main(only=None):
                            for x in vsc_pick.LAST_WORDS if x["b"] <= b + 0.05]
             ab[name] = {"a": a, "b": b, "src": os.path.basename(src),
                         "vis_end": VIS_OVERRIDE.get(name), "speech_end": said,
-                        "close_words": close_words[-20:]}
+                        "close_words": close_words[-20:],
+                        "next_word": vsc_pick.LAST_NEXT_WORD}
             json.dump(ab, open(abp, "w"), indent=1)
             print(f"  {name:30} {a:8.2f} - {b:8.2f}  ({b - a:5.1f}s)", flush=True)
             # CORRECTIONS COME WITH THE PLAN. 29 Sept: the cloud rebuilt this batch

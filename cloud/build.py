@@ -55,8 +55,8 @@ def _why(w):
 def main(key, names):
     import vsc_week, vsc_v2_onscreen
     plan = [p for p in plans() if p["key"] == key][0]
-    fp = {c["name"]: hashlib.sha1(json.dumps(c, sort_keys=True).encode()).hexdigest()[:12]
-          for c in plan["clips"]}
+    from cloud.shard import fingerprint    # ONE definition of "built from this"
+    fp = {c["name"]: fingerprint(c) for c in plan["clips"]}
     src = fetch(plan)
     reuse_prep(key, src)
     os.makedirs(OUT, exist_ok=True)
@@ -81,6 +81,15 @@ def main(key, names):
         # a marked clip is not something to hand a reviewer or an account.
         import kt_qc
         verdict, why = kt_qc.check(f[0])
+        # SPEECH AFTER THE CLOSE IS A FAIL, never a LOOK. 2 Oct 2026: Kamay heard "one
+        # of the" and "there is a" at the end of two clips the checks had passed.
+        tj = os.path.join(CLIPS, name + "__tail.json")
+        if os.path.exists(tj) and json.load(open(tj)).get("speech_after_close"):
+            t = json.load(open(tj))
+            verdict = "fail"
+            why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
+                f"no pause after the close: the next word starts +{t['next_word']:.2f}s, "
+                f"clip ends +{t['end']:.2f}s - listen to the last second"]
         r = vsc_v2_onscreen.check(f[0])
         hit, miss = (r[0], r[1]) if r else (0, 0)
         report.append({"clip": name, "ok": verdict == "pass", "verdict": verdict,
