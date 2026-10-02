@@ -91,6 +91,64 @@ def next_onset(src, after, look=3.0):
     return None
 
 
+def finish_close(words, close_words, close_phrase, span, name=""):
+    """THE LAST CAPTION IS THE CLOSE. Checked on what is about to be burned.
+
+    2 Oct 2026, run 24: the picture now ran on to the end of the teaching, and on
+    two clips the captions still stopped short - "It doesn't end", "not people
+    without" - with Kevin saying the rest under no caption at all. The words had
+    been lost somewhere between the caption pass, the corrections, the re-timing
+    and the line breaks. Whatever the stage, this is the one place it can be seen
+    whole: if the captions do not reach the close, the missing words are added from
+    the locator's own hearing, at its times.
+    """
+    import vsc_v2caps
+    have = [vsc_v2caps.norm(t) for w in words for t in w["text"].split()]
+    miss = vsc_v2caps.missing_tail(have, [tuple(x) for x in close_words], close_phrase)
+    if not miss:
+        if miss is None and words:
+            print(f"  !! {name}: last caption {words[-1]['text']!r} does not reach the close "
+                  f"{close_phrase!r} - READ THIS ENDING", flush=True)
+        return words
+    texts = [m[2] for m in miss]
+    # THE WORDS FROM THE PLAN, THE TIMES FROM THE LOCATOR. The plan's close is what a
+    # person read Kevin say; the locator found it "loosely" on YOUR-BIGGEST-DISASTER,
+    # i.e. it heard one of those words differently, and that word must not be burned.
+    ptoks = close_phrase.split()
+    pn = [vsc_v2caps.norm(t) for t in ptoks]
+    for k in range(min(6, len(have)), 0, -1):
+        hit = [p for p in range(len(pn) - k, -1, -1) if pn[p:p + k] == have[-k:] and p + k < len(pn)]
+        if hit:
+            rest = ptoks[hit[0] + k:]
+            t0, t1 = miss[0][0], miss[-1][1]
+            tot = sum(len(t) for t in rest) or 1
+            miss, t = [], t0
+            for tx in rest:
+                d = (t1 - t0) * len(tx) / tot
+                miss.append((t, t + d, tx)); t += d
+            texts = list(rest)
+            break
+    texts[-1] = texts[-1].rstrip(",;:")
+    if not texts[-1].endswith((".", "!", "?")):
+        texts[-1] += "."                          # the close ends the sentence
+    out = [dict(w) for w in words]
+    # a lone word that ends a clause ("it," / "it.") belongs on the line it completes
+    if len(texts) > 1 and texts[0].endswith((".", ",")) and len(out[-1]["text"]) + len(texts[0]) < 30:
+        out[-1]["text"] += " " + texts[0]
+        texts, miss = texts[1:], miss[1:]
+    if out[-1]["text"].rstrip().endswith((".", "!", "?")):
+        texts[0] = texts[0][:1].upper() + texts[0][1:]
+    s0 = max(miss[0][0], out[-1]["a"] + 0.25)
+    e0 = min(span, max(miss[-1][1] + 0.2, s0 + 0.6))
+    if s0 >= span - 0.1:
+        print(f"  !! {name}: no room to caption {' '.join(texts)!r} - READ THIS ENDING", flush=True)
+        return words
+    out[-1]["b"] = s0                             # each caption ends where the next begins
+    out.append({"text": " ".join(texts), "a": round(s0, 3), "b": round(e0, 3)})
+    print(f"      captions finished to the close: {' '.join(texts)!r} at +{s0:.2f}s", flush=True)
+    return out
+
+
 def main(only=None):
     ab = json.load(open(os.path.join(WORK, "v2_ab.json")))
     _ovp = os.path.join(WORK, "v2_overrides.json")
@@ -131,6 +189,9 @@ def main(only=None):
             b, note = close_abs + tail, "extended so the last word finishes"
         span = b - a
         words = [{"text": t, "a": s, "b": min(e, span)} for s, e, t in cap["bursts"] if s < span]
+        close_phrase = [c2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]
+        if close_phrase and r.get("close_words"):
+            words = finish_close(words, r["close_words"], close_phrase[0], span, name)
         vis = r.get("vis_end")
         if name == "VIKTOR-FRANKL":
             vis = None     # the "new scene" is another angle of Kevin, still talking

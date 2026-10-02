@@ -239,8 +239,11 @@ def main(only=None):
             # Kevin still saying the close as "speech after the close".
             said = vsc_pick.LAST_SPEECH_END
             said = None if said is None else round(min(said, b), 3)
+            close_words = [(round(x["a"] - a, 3), round(x["b"] - a, 3), x["t"])
+                           for x in vsc_pick.LAST_WORDS if x["b"] <= b + 0.05]
             ab[name] = {"a": a, "b": b, "src": os.path.basename(src),
-                        "vis_end": VIS_OVERRIDE.get(name), "speech_end": said}
+                        "vis_end": VIS_OVERRIDE.get(name), "speech_end": said,
+                        "close_words": close_words[-20:]}
             json.dump(ab, open(abp, "w"), indent=1)
             print(f"  {name:30} {a:8.2f} - {b:8.2f}  ({b - a:5.1f}s)", flush=True)
             # CORRECTIONS COME WITH THE PLAN. 29 Sept: the cloud rebuilt this batch
@@ -250,9 +253,7 @@ def main(only=None):
             # is not versioned beside the plan is a correction that gets lost.
             clip_fixes = list(fixes.get(name, [])) + plan_fixes.get(name, [])
             print(f"      {len(clip_fixes)} caption correction(s) for this clip", flush=True)
-            close_words = [(x["a"] - a, x["b"] - a, x["t"]) for x in vsc_pick.LAST_WORDS
-                           if x["b"] <= b + 0.05]
-            vsc_v2caps.build(name, a, b, src, last, clip_fixes, close_words=close_words)
+            vsc_v2caps.build(name, a, b, src, last, clip_fixes)
             vsc_v2_time.retime(name, src, a, b)
             vsc_v2_render.HOOKS[name] = hook
             vsc_v2_render.OUT = OUT
