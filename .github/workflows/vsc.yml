@@ -23,7 +23,11 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: vsc
+  # RENAMED 2 Oct 2026, 22:35 UTC: run 28's last retry job ignored its cancel and held
+  # the "vsc" group, so run 29 sat "pending" for 40 minutes with a deadline that night.
+  # A cancelled job can be killed only with force-cancel, which needs a token; a new
+  # group name frees the queue. If this happens again: rename again, and say so here.
+  group: vsc-2
   # A NEWER RUN ALWAYS WINS. 30 Sept 2026: a cancelled run sat in "in_progress" for
   # forty minutes refusing to die, and because the queue waited politely for it, the
   # corrected 20-clip batch never started - an hour and a half of nothing rendering,
