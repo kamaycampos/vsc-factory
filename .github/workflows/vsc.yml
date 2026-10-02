@@ -23,11 +23,13 @@ on:
 permissions:
   contents: write
 concurrency:
-  # RENAMED 2 Oct 2026, 22:35 UTC: run 28's last retry job ignored its cancel and held
-  # the "vsc" group, so run 29 sat "pending" for 40 minutes with a deadline that night.
-  # A cancelled job can be killed only with force-cancel, which needs a token; a new
-  # group name frees the queue. If this happens again: rename again, and say so here.
-  group: vsc-2
+  # WHY CANCELLED RUNS NEVER DIED (30 Sept, and runs 28 and 30 on 2 Oct): every retry
+  # and collect job was gated on `if: always()`, and always() is true for a CANCELLED
+  # run too - so a cancel stopped nothing, the run kept the group, and the newer run
+  # sat "pending" behind it for 40 minutes. They are gated on `!cancelled()` now: they
+  # still run after a failed job, and stop on a cancel. The group was renamed twice
+  # that night to get past runs that were already stuck; vsc-3 is the clean one.
+  group: vsc-3
   # A NEWER RUN ALWAYS WINS. 30 Sept 2026: a cancelled run sat in "in_progress" for
   # forty minutes refusing to die, and because the queue waited politely for it, the
   # corrected 20-clip batch never started - an hour and a half of nothing rendering,
@@ -88,7 +90,7 @@ jobs:
       - name: Build and check this pair
         run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
       - uses: actions/upload-artifact@v4
-        if: always()            # a red shard still carries the clips that DID build
+        if: ${{ !cancelled() }}            # a red shard still carries the clips that DID build
         with:
           name: shard-${{ matrix.key }}-${{ matrix.shard }}
           path: /tmp/shard_out
@@ -96,7 +98,7 @@ jobs:
 
   collect:
     needs: build
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -116,7 +118,7 @@ jobs:
   # with GITHUB_TOKEN is refused on purpose, and a PAT is a secret that expires.
   shard2:
     needs: collect
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
@@ -130,7 +132,7 @@ jobs:
 
   build2:
     needs: shard2
-    if: always() && needs.shard2.outputs.count != '0'
+    if: ${{ !cancelled() && needs.shard2.outputs.count != '0' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -150,7 +152,7 @@ jobs:
       - name: Build and check this pair
         run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
           name: shard-${{ matrix.key }}-r2-${{ matrix.shard }}
           path: /tmp/shard_out
@@ -158,7 +160,7 @@ jobs:
 
   collect2:
     needs: build2
-    if: always() && needs.shard2.outputs.count != '0'
+    if: ${{ !cancelled() && needs.shard2.outputs.count != '0' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -169,7 +171,7 @@ jobs:
   # ----------------------------------------------------------------- THIRD ATTEMPT
   shard3:
     needs: collect2
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
@@ -183,7 +185,7 @@ jobs:
 
   build3:
     needs: shard3
-    if: always() && needs.shard3.outputs.count != '0'
+    if: ${{ !cancelled() && needs.shard3.outputs.count != '0' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -203,7 +205,7 @@ jobs:
       - name: Build and check this pair
         run: python cloud/build.py "${{ matrix.key }}" ${{ matrix.names }}
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
           name: shard-${{ matrix.key }}-r3-${{ matrix.shard }}
           path: /tmp/shard_out
@@ -211,7 +213,7 @@ jobs:
 
   collect3:
     needs: build3
-    if: always() && needs.shard3.outputs.count != '0'
+    if: ${{ !cancelled() && needs.shard3.outputs.count != '0' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -225,7 +227,7 @@ jobs:
   # batch that is short four clips.
   verify:
     needs: [collect, collect2, collect3]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

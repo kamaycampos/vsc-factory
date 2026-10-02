@@ -64,7 +64,12 @@ reaches the other projects.
 - Render seeks with `-ss` before `-i` and uses ONE filter thread - decoding the whole
   film per clip ran the VM out of memory.
 - "Already built" means the content hash matches, not that a file with the name exists.
-- A cancelled run must never hold the queue (`cancel-in-progress: true`).
+- A cancelled run must never hold the queue (`cancel-in-progress: true`), and no job may be
+  gated on `if: always()` - always() is true for a CANCELLED run, so the run never dies and
+  the newer run waits behind it. Use `if: ${{ !cancelled() }}` (2 Oct, runs 28 and 30).
+- Clips start and end inside the silence either side of the plan's words, found in the
+  SOUND (whisper's word times swallow pauses; the source has muted gaps). Quiet means
+  35 dB below the speech around it. `<clip>__head.json` / `__tail.json` decide FAIL.
 - The renderer never trims before `speech_end` (where the locator measured Kevin
   finishing the close). Trimming to the caption pass's close cut "It doesn't end it,
   it creates it" to "It doesn't end" (1 Oct). The caption pass drifts at the tail.
