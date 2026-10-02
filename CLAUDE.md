@@ -48,8 +48,12 @@ reaches the other projects.
 - No `[BLANK_AUDIO]`, no words whisper invented ("Sorry."), no speech from someone else.
 - Emphasis capitals never cost a word.
 - **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
-- **Length ~20-60 s.** A clip with many shots or over ~60 s kills the runner - split it
-  into two clips that each carry a full idea.
+- **Format 1080x1920 (9:16), hard maximum 120 s** (Naomi's ceiling; `MAX_LEN = 118`).
+  In practice ~20-60 s: a clip with many shots or over ~60 s kills the runner - split
+  it into two clips that each carry a full idea.
+- **Framing is checked across the WHOLE clip**, not just the first frame - the
+  interviews cut between 2-4 camera angles.
+- **One caption size per clip.** Reviewers: Cali and Naomi, on GIN's Frame.io.
 - Never cut the ad wall / testimonial at the end of an episode (e.g. 17:35-end in
   millionaires_problems).
 
