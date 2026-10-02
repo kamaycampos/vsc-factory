@@ -124,20 +124,50 @@ def _nearest(runs, t):
     return min(runs, key=lambda r: 0.0 if r[0] <= t <= r[1] else min(abs(r[0] - t), abs(r[1] - t)))
 
 
+def _longest(runs, lo, hi, real=0.15):
+    """Of the quiet runs that overlap [lo, hi], the longest real one (>= `real` s);
+    failing that, the longest at all; None when there is none."""
+    runs = [r for r in runs if r[1] >= lo and r[0] <= hi]
+    if not runs:
+        return None
+    big = [r for r in runs if r[1] - r[0] >= real]
+    return max(big or runs, key=lambda r: r[1] - r[0])
+
+
+def valley(src, t, back=0.35, ahead=0.10):
+    """The quietest 30ms in [t - back, t + ahead]: where two words that run together
+    are furthest apart. The cut when there is no pause to cut in."""
+    import numpy as np
+    a0 = max(0.0, t - back)
+    raw = subprocess.run([FF, "-y", "-loglevel", "error", "-ss", f"{a0:.3f}", "-t", f"{back + ahead:.3f}",
+                          "-i", src, "-ar", "16000", "-ac", "1", "-f", "s16le", "-"],
+                         capture_output=True).stdout
+    x = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
+    st = 480
+    if len(x) < st * 3:
+        return None
+    e = [float(np.sqrt(np.mean(x[i:i + st] ** 2))) for i in range(0, len(x) - st, 80)]
+    k = int(np.argmin(e))
+    return a0 + (k * 80 + st / 2) / 16000.0
+
+
 def pause_after(src, said, back=0.6, ahead=0.5):
     """The silence Kevin leaves after the close, from the sound: (start, end) or None.
 
     Whisper's word times cannot show it - on YOUR-BIGGEST-DISASTER "it." runs 26.97-27.68
     and "One" starts at 27.68, the pause swallowed into the word before it. The
     quiet stretch nearest the end of the close is the pause between the two."""
-    # a quiet that ENDS well before the close's last word is a gap inside the close
-    # ("creates | it"), not the pause after it - he spoke again before the boundary
-    runs = [r for r in quiet_runs(src, said)
-            if said - back <= r[0] <= said + ahead and r[1] >= said - 0.15]
-    return _nearest(runs, said) if runs else None
+    # THE LONGEST REAL SILENCE NEAR THE BOUNDARY, not the nearest. A gap inside the
+    # close ("creates | it") is short; the pause after it - and the MUTED gaps this
+    # source carries (YOUR-BIGGEST-DISASTER: digital silence 26.85-27.45 after "it
+    # creates it", whisper's boundary at 27.68, "One" at 27.50) - are long.
+    # ...but never a pause INSIDE the close: a silence followed by speech that ends
+    # well before the close does ("end it. | It creates it.") would cut the punchline.
+    return _longest([r for r in quiet_runs(src, said, before=1.4, length=2.8) if r[1] >= said - 0.25],
+                    said - 1.0, said + ahead)
 
 
-def pause_before(src, first, back=0.5, ahead=0.6):
+def pause_before(src, first, back=2.5, ahead=0.6):
     """The silence just before the plan's first word, from the sound: (start, end) or None.
 
     The mirror of pause_after. 2 Oct 2026, Kamay: "it starts on an off moment: a word
@@ -146,10 +176,12 @@ def pause_before(src, first, back=0.5, ahead=0.6):
     pause before it, so the quiet nearest that start is where the clip begins - never
     on the tail of the sentence before."""
     # a quiet that STARTS well after the first word's start is a gap inside the opening
-    # words, not the pause before them
-    runs = [r for r in quiet_runs(src, first, before=1.4, length=2.4)
-            if first - ahead <= r[1] <= first + back and r[0] <= first + 0.15]
-    return _nearest(runs, first) if runs else None
+    # words, not the pause before them. It may END long after it: TONS-OF-DIRT-FOR-GOLD
+    # (2 Oct) had 2.0s of DIGITAL SILENCE over a shot of Kevin mid-gesture before he
+    # says "People" - the locator had put the word inside it, and a clip that opens on
+    # a mouth moving without sound is the worst first 3 seconds there is.
+    return _longest([r for r in quiet_runs(src, first, before=1.4, length=4.4) if r[0] <= first + 0.15],
+                    first - ahead, first + back)
 
 
 def finish_close(words, close_words, close_phrase, span, name=""):
@@ -238,9 +270,10 @@ def main(only=None):
                 a = max(0.0, hz[1] - min(0.12, (hz[1] - hz[0]) / 2))
                 head_note = f"starts in the pause before the open (+{hz[0] - a:.2f}s to +{hz[1] - a:.2f}s)"
             else:
-                a = max(ow - 0.05, (pe + 0.02) if pe is not None and pe < ow - 0.05 else ow - 0.05)
+                v = valley(src, ow, back=0.35, ahead=0.05)
+                a = v if v is not None else max(ow - 0.05, (pe + 0.02) if pe is not None and pe < ow - 0.05 else ow - 0.05)
                 head_bad = True
-                head_note = "NO PAUSE heard before the open"
+                head_note = f"NO PAUSE heard before the open - starts at the quietest point, +{(v or a) - ow:+.2f}s from the first word"
         shift = a_cap - a
         close_end = cap["close_end"] if cap.get("close_end") is not None else (
             max(w[1] for w in cap["words"]) if cap.get("words") else b - a)
@@ -266,8 +299,14 @@ def main(only=None):
             new_b = pz[0] + min(0.12, (pz[1] - pz[0]) / 2)
             note = f"ends in the pause after the close (+{pz[0] - a:.2f}s to +{pz[1] - a:.2f}s)"
         elif said is not None:
-            new_b = (nxt - 0.08) if nxt is not None and nxt > said + 0.05 else said
-            note = "no pause heard after the close"
+            # Whisper's boundary can run LATE: on YOUR-BIGGEST-DISASTER the sound is already
+            # rising into "One" 0.3s before the 27.68 whisper gives, so the real pause ends
+            # before the strict window above allows. Take the latest quiet in the last
+            # 0.6s of the close; failing that, the quietest instant between the words.
+            v = valley(src, said, back=0.35, ahead=0.10)
+            new_b = v if v is not None else ((nxt - 0.08) if nxt is not None and nxt > said + 0.05 else said)
+            close_abs, close_end = new_b, new_b - a
+            note = f"no pause heard after the close - ends at the quietest point between the words ({new_b - said:+.2f}s)"
         else:
             onset = next_onset(src, close_abs)
             tail = 0.30 if onset is None else max(0.10, min(0.30, (onset - close_abs) * 0.6))
@@ -298,8 +337,20 @@ def main(only=None):
         open_phrase = [f2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]
         want = vsc_v2caps.norm(open_phrase[0].split()[0]) if open_phrase else ""
         got = vsc_v2caps.norm(words[0]["text"].split()[0]) if words else ""
-        first_ok = bool(want) and (got == want or (min(len(got), len(want)) >= 4 and
-                                   difflib.SequenceMatcher(a=got, b=want).ratio() >= 0.8))
+        same = lambda g: g == want or (min(len(g), len(want)) >= 4 and
+                                       difflib.SequenceMatcher(a=g, b=want).ratio() >= 0.8)
+        first_ok = bool(want) and same(got)
+        if want and not first_ok:
+            # A CLIP MAY START AT THE BEGINNING OF THE SENTENCE THAT HOLDS THE OPEN.
+            # BEAT-HARRY-POTTER: Kevin says "I said, you know, I'm gonna write that book"
+            # and the plan opens on "I'm" - the clip starting on "I said" is the right
+            # start. Allowed only within the first six words and with no sentence end
+            # before the plan's word; anything else is a start in the wrong place.
+            lead = [t for w in words[:3] for t in w["text"].split()][:6]
+            for k, t in enumerate(lead):
+                if same(vsc_v2caps.norm(t)):
+                    first_ok = k > 0 and not any(x.rstrip().endswith((".", "!", "?")) for x in lead[:k])
+                    break
         json.dump({"start": round(a, 3), "open_word": None if ow is None else round(ow - a, 3),
                    "pause": None if hz is None else [round(hz[0] - a, 3), round(hz[1] - a, 3)],
                    "first_caption_word": got, "plan_first_word": want,
