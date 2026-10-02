@@ -110,6 +110,17 @@ def main(only=None):
         close_end = cap["close_end"] if cap.get("close_end") is not None else (
             max(w[1] for w in cap["words"]) if cap.get("words") else b - a)
         close_abs = a + close_end
+        # NEVER TRIM INTO THE CLOSE. The caption pass's close drifts at the tail (worst
+        # +2.80s on YOUR-BIGGEST-DISASTER), and next_onset then hears Kevin still saying
+        # the closing words and cuts them as "speech after the close" - which is how
+        # "It doesn't end it, it creates it" shipped as "It doesn't end". The locator
+        # measured where he finishes the close; nothing ends before that.
+        said = r.get("speech_end")
+        if said is not None and close_abs < said - 0.05:
+            print(f"      close held to the cut: caption pass said +{close_abs - a:.2f}s, "
+                  f"he finishes at +{said - a:.2f}s", flush=True)
+            close_abs = said
+            close_end = said - a
         onset = next_onset(src, close_abs)
         tail = 0.30 if onset is None else max(0.10, min(0.30, (onset - close_abs) * 0.6))
         note = ""

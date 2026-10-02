@@ -109,13 +109,23 @@
     ],
     [
      31.93,
-     "could never in a million years deal with so successful people are not people with problems",
-     "could never in a million years deal with. So successful people are not people WITHOUT problems."
+     "could never in a million years deal with so successful people are not people with without problems",
+     "could never in a million years deal with. So successful people are not people without problems."
     ],
     [
-     35.27,
-     "So successful people are not people WITHOUT",
-     "So successful people are not people without problems."
+     31.93,
+     "could never in a million years deal with so successful people are not people with problems",
+     "could never in a million years deal with. So successful people are not people without problems."
+    ],
+    [
+     12.67,
+     "or more you look at every single one",
+     "or more. You look at every single one,"
+    ],
+    [
+     21.66,
+     "filed bankruptcy lawsuits",
+     "filed bankruptcy, lawsuits,"
     ]
    ]
   },
@@ -151,6 +161,21 @@
      27.94,
      "today if it wasn't if Steven Jobs wasn't fired.",
      "today. If it wasn't, if Steve Jobs wasn't fired,"
+    ],
+    [
+     0.0,
+     "Steven Jobs was fired from Apple",
+     "Steve Jobs was fired from Apple"
+    ],
+    [
+     8.57,
+     "him starting next because he that I know technology It's better than the guys at Apple",
+     "him starting NeXT, because he says, I know technology better than the guys at Apple."
+    ],
+    [
+     28.9,
+     "If it wasn't if Steve Jobs wasn't fired If he wasn't fired Apple",
+     "If it wasn't, if Steve Jobs wasn't fired, if he wasn't fired, Apple"
     ]
    ]
   },
@@ -281,6 +306,21 @@
      37.92,
      "The universe doesn't do It things does to us, it does things for us",
      "The universe doesn't do things to us, it does things for us"
+    ],
+    [
+     14.15,
+     "a blessing as an opportunity",
+     "a blessing, as an opportunity,"
+    ],
+    [
+     30.67,
+     "a setback some adversity It's not giving",
+     "a setback, some adversity, it's not giving"
+    ],
+    [
+     41.34,
+     "it does things for us So in every quote adversity",
+     "it does things for us. So in every, quote, adversity"
     ]
    ]
   },
@@ -306,6 +346,11 @@
      26.68,
      "I go, \"Yeah.\" That was a change in conditions. I always say it's",
      "I go, Yeah, that was a change in conditions. I always say, it's"
+    ],
+    [
+     0.6,
+     "up to me Kevin you faced",
+     "up to me, Kevin, you faced"
     ]
    ]
   },
@@ -361,6 +406,21 @@
      47.0,
      "The information is in your memory.",
      ""
+    ],
+    [
+     7.46,
+     "had a disagreement We decided to part ways in that parting",
+     "had a disagreement. We decided to part ways. In that parting,"
+    ],
+    [
+     30.39,
+     "I want to put you on TV on TV infomercials",
+     "I want to put you on TV, on TV infomercials."
+    ],
+    [
+     34.36,
+     "We went on television - - and then we went",
+     "We went on television, and then we went"
     ]
    ]
   },
@@ -406,6 +466,11 @@
      39.51,
      "Is that your job? headline?",
      "Is that your headline?"
+    ],
+    [
+     12.73,
+     "stop this show You're making",
+     "stop this show. You're making"
     ]
    ]
   },
@@ -441,6 +506,16 @@
      33.86,
      "And I thought, how about this one? Natural Cures. they don't want you to know about.",
      "And I thought, how about this one? Natural Cures They Don't Want You To Know About."
+    ],
+    [
+     12.26,
+     "working with the drug companies to not tell people about the truth about ways",
+     "working with the drug companies to not tell people the truth about ways"
+    ],
+    [
+     27.12,
+     "We are sitting in the room",
+     "We were sitting in the room"
     ]
    ]
   },
@@ -511,6 +586,11 @@
      29.47,
      "It's just not as successful as they want to be.",
      "Somebody who's just not as successful as they want to be,"
+    ],
+    [
+     31.1,
+     "as they want to be They're always",
+     "as they want to be, they're always"
     ]
    ]
   },
@@ -556,6 +636,21 @@
      15.09,
      "They're down a goal. what they're doing. We are going to attack. We need the score. And guess what endurably happens?",
      "They're down a goal. Guess what they're doing? We are going to attack. We need to score. And guess what invariably happens?"
+    ],
+    [
+     15.46,
+     "They're down the goal",
+     "They're down a goal."
+    ],
+    [
+     19.87,
+     "We need the score",
+     "We need to score."
+    ],
+    [
+     21.71,
+     "guess what undurably happens",
+     "guess what invariably happens?"
     ]
    ]
   },
@@ -581,6 +676,21 @@
      30.95,
      "It's the possibility thinkers create. When faced and I will not quit.",
      "It's the Possibility Thinker's Creed. When faced with a mountain, I will not quit."
+    ],
+    [
+     13.16,
+     "They don't bury Don't their bury head in the sand",
+     "They don't bury their head in the sand."
+    ],
+    [
+     30.77,
+     "It's the possibility thinkers create",
+     "It's the Possibility Thinker's Creed."
+    ],
+    [
+     41.28,
+     "or I'll I'll stay and turn",
+     "or I'll stay and turn"
     ]
    ]
   },
@@ -651,6 +761,16 @@
      43.79,
      "change the brain chemistry and change the way you feel,",
      "change the brain chemistry and change the way you feel."
+    ],
+    [
+     12.03,
+     "you do is when the disaster hits Laugh",
+     "you do is when the disaster hits, laugh."
+    ],
+    [
+     29.43,
+     "I'm not going to wait I'm going to laugh now",
+     "I'm not going to wait. I'm going to laugh now."
     ]
    ]
   },
@@ -786,7 +906,13 @@
     "SUCCESSFUL PEOPLE ARE NOT",
     "AFFECTED BY ANYTHING"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     16.21,
+     "Successful people are a cause over them",
+     "Successful people are at cause over them."
+    ]
+   ]
   }
  ],
  "rumble": "https://rumble.com/v7ed2gy-your-success-starts-on-your-worst-day-what-every-millionaire-knows.html",

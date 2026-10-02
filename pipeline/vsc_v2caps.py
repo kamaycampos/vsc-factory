@@ -221,7 +221,38 @@ def fix_text(words, fixes):
     return words
 
 
-def build(name, a, b, src, close_phrase, fixes=()):
+def complete_close(words, close_words, close_phrase):
+    """The caption pass never heard the close: finish it from the locator's words.
+
+    1 Oct 2026, YOUR-BIGGEST-DISASTER: the cut was located on "It doesn't end it. It
+    creates it." and the caption pass - one whisper run over the whole clip, which
+    drops speech at the very end of its audio - stopped at "It doesn't end". With no
+    close found, the clip was closed on the last word it HAD heard, and the teaching
+    itself was cut off. The locator heard the close in short chunks; its words are
+    joined on where the two passes overlap, and nowhere else.
+    """
+    toks = [norm(t) for t in close_phrase.split() if norm(t)]
+    tail = [w for w in close_words if norm(w[2])][-len(toks):] if toks else []
+    if not tail or not words:
+        return words, None
+    have = [norm(w[2]) for w in words]
+    want = [norm(w[2]) for w in tail]
+    for k in range(len(want) - 1, 0, -1):            # longest overlap first
+        if have[-k:] == want[:k]:
+            out, t = list(words), words[-1][1]
+            for s0, e0, txt in tail[k:]:
+                s0 = max(s0, t)
+                e0 = max(e0, s0 + 0.12)
+                out.append((round(s0, 3), round(e0, 3), txt)); t = e0
+            print(f"    closing words finished from the cut: "
+                  f"{' '.join(w[2] for w in tail[k:])!r}", flush=True)
+            return out, out[-1][1]
+    print(f"    !! CLOSE NOT IN THE CAPTIONS and no overlap with the cut's words - "
+          f"the last caption is {words[-1][2]!r}. Read this clip's ending.", flush=True)
+    return words, None
+
+
+def build(name, a, b, src, close_phrase, fixes=(), close_words=()):
     words = accurate_words(src, a, b, f"VSC2/{name}")
     # quote marks come from EITHER pass and hide sentence ends from the line breaker
     words = [(x, y, w.strip('"\u201c\u201d')) for x, y, w in words if w.strip('"\u201c\u201d')]
@@ -229,6 +260,8 @@ def build(name, a, b, src, close_phrase, fixes=()):
     # found while whisper still had it as "There is just news."
     words = fix_text(words, fixes)
     words, close_end = cut_after_close(words, close_phrase)
+    if close_end is None and close_words:
+        words, close_end = complete_close(words, list(close_words), close_phrase)
     bursts = kt_render.phrases_from_words(words)
     os.makedirs(OUT, exist_ok=True)
     json.dump({"words": words, "bursts": bursts, "close_end": close_end},

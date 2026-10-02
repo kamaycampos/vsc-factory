@@ -63,6 +63,13 @@ reaches the other projects.
   film per clip ran the VM out of memory.
 - "Already built" means the content hash matches, not that a file with the name exists.
 - A cancelled run must never hold the queue (`cancel-in-progress: true`).
+- The renderer never trims before `speech_end` (where the locator measured Kevin
+  finishing the close). Trimming to the caption pass's close cut "It doesn't end it,
+  it creates it" to "It doesn't end" (1 Oct). The caption pass drifts at the tail.
+- A fix that does not match is SKIPPED with only a log line ("CORRECTION NOT
+  APPLIED"). Write fixes against `<clip>__caps.json`, never the Mac transcript, and
+  never write a second fix over text an earlier fix produced (they stack: "without
+  problems. problems. problems,").
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

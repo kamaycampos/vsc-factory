@@ -23,6 +23,11 @@ import vsc_clip
 
 LEAD  = 0.18
 TAIL  = 0.60
+# Where Kevin FINISHES the closing word, and the words around it, as the last locate()
+# measured them (absolute seconds). The caption pass re-times the clip on its own and
+# drifts at the tail; these are what the cut was decided on.
+LAST_SPEECH_END = None
+LAST_WORDS = []
 
 
 def norm(t):
@@ -94,6 +99,8 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     So when the words are not in the window, the whole video is searched. The
     sentences identify the clip; the region only says where to look first.
     """
+    global LAST_SPEECH_END, LAST_WORDS
+    LAST_SPEECH_END, LAST_WORDS = None, []          # never hand on the previous clip's
     a0, b0 = max(0.0, region[0] - 22), region[1] + 28
     w = words_in(src, a0, b0, tag, S)
     i = _find(w, first_words)
@@ -109,6 +116,7 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
         return None, "closing lands before opening"
     start = w[i]["a"] - LEAD
     end = w[j_end]["b"]
+    LAST_SPEECH_END, LAST_WORDS = round(end, 3), w[i:j_end + 1]
     nxt = w[j_end + 1]["a"] if j_end + 1 < len(w) else end + 2.0
     end = end + min(TAIL, max(0.18, (nxt - end) * 0.75))   # never bleed into the next word
     return (round(max(0.0, start), 3), round(end, 3)), "ok"
