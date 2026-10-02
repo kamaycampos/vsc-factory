@@ -9,7 +9,7 @@ import glob, hashlib, json, os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-machine")
-RULES = "head-tail-2026-10-02b"      # see fingerprint()
+RULES = "head-tail-2026-10-02c"      # see fingerprint()
 PER = 2
 SHARD_SECONDS = 95      # a shard's total clip length; one long clip gets a server alone
 

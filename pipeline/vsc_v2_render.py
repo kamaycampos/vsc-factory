@@ -105,7 +105,12 @@ def quiet_runs(src, t, before=1.2, length=2.6):
     db = 20 * np.log10(np.array([np.sqrt(np.mean(x[i:i + st] ** 2) + 1e-9)
                                  for i in range(0, len(x) - st, st)]) + 1e-9)
     lo, hi = np.percentile(db, 15), np.percentile(db, 90)
-    q = db <= lo + (hi - lo) * 0.40
+    # QUIET IS QUIET, NOT "QUIETER THAN THE REST". 2 Oct 2026, run 30, measured on the
+    # released files: real pauses sit at or below 15 dB against 55-70 dB of speech, but
+    # where no silence is near, a threshold relative to the window alone called a 50 dB
+    # dip in his voice a pause, and nine clips were cut while he was still audible.
+    # A pause must also be 35 dB below the speech around it.
+    q = db <= min(lo + (hi - lo) * 0.40, hi - 35.0)
     runs, k = [], 0
     while k < len(q):
         if q[k]:
@@ -267,7 +272,7 @@ def main(only=None):
         if ow is not None and ow > 0.5:
             hz = pause_before(src, ow)
             if hz is not None:
-                a = max(0.0, hz[1] - min(0.12, (hz[1] - hz[0]) / 2))
+                a = max(0.0, hz[1] - min(0.12, (hz[1] - hz[0]) * 0.4))
                 head_note = f"starts in the pause before the open (+{hz[0] - a:.2f}s to +{hz[1] - a:.2f}s)"
             else:
                 v = valley(src, ow, back=0.35, ahead=0.05)
@@ -296,7 +301,7 @@ def main(only=None):
         pz = pause_after(src, close_abs) if said is not None else None
         if pz is not None:
             close_abs, close_end = pz[0], pz[0] - a      # he has stopped: the fades start here
-            new_b = pz[0] + min(0.12, (pz[1] - pz[0]) / 2)
+            new_b = pz[0] + min(0.12, (pz[1] - pz[0]) * 0.4)
             note = f"ends in the pause after the close (+{pz[0] - a:.2f}s to +{pz[1] - a:.2f}s)"
         elif said is not None:
             # Whisper's boundary can run LATE: on YOUR-BIGGEST-DISASTER the sound is already
