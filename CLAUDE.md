@@ -32,6 +32,8 @@ reaches the other projects.
 4. **Read every caption line** of every clip in the verdict table (`<clip>__caps.json`
    in the release is what the SERVER burned in). Write corrections as `fixes` against
    THOSE captions, not the Mac's transcript - they must match letter for letter.
+   Never let a second fix rewrite text a first fix produced: fixes apply once, in
+   order, and a stacked pair duplicates words.
    Push once. Unchanged clips are skipped by content hash.
 5. Watch the **first 3 seconds and the last 2** of every clip. Then it goes to Kamay.
 
