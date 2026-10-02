@@ -244,7 +244,9 @@ def main(only=None):
             ab[name] = {"a": a, "b": b, "src": os.path.basename(src),
                         "vis_end": VIS_OVERRIDE.get(name), "speech_end": said,
                         "close_words": close_words[-20:],
-                        "next_word": vsc_pick.LAST_NEXT_WORD}
+                        "next_word": vsc_pick.LAST_NEXT_WORD,
+                        "open_word": vsc_pick.LAST_OPEN_WORD,
+                        "prev_end": vsc_pick.LAST_PREV_END}
             json.dump(ab, open(abp, "w"), indent=1)
             print(f"  {name:30} {a:8.2f} - {b:8.2f}  ({b - a:5.1f}s)", flush=True)
             # CORRECTIONS COME WITH THE PLAN. 29 Sept: the cloud rebuilt this batch

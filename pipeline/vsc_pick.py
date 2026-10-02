@@ -28,6 +28,8 @@ TAIL  = 0.60
 # drifts at the tail; these are what the cut was decided on.
 LAST_SPEECH_END = None
 LAST_NEXT_WORD = None
+LAST_OPEN_WORD = None      # where the plan's first word starts, and where the word before it ends
+LAST_PREV_END = None
 LAST_WORDS = []
 
 
@@ -100,8 +102,9 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     So when the words are not in the window, the whole video is searched. The
     sentences identify the clip; the region only says where to look first.
     """
-    global LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS
+    global LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS, LAST_OPEN_WORD, LAST_PREV_END
     LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS = None, None, []   # never the previous clip's
+    LAST_OPEN_WORD = LAST_PREV_END = None
     a0, b0 = max(0.0, region[0] - 22), region[1] + 28
     w = words_in(src, a0, b0, tag, S)
     i = _find(w, first_words)
@@ -120,8 +123,12 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     LAST_SPEECH_END, LAST_WORDS = round(end, 3), w[i:j_end + 1]
     nxt = w[j_end + 1]["a"] if j_end + 1 < len(w) else end + 2.0
     LAST_NEXT_WORD = round(nxt, 3) if j_end + 1 < len(w) else None
-    # NEVER INTO THE NEXT WORD. 2 Oct 2026, Kamay: YOUR-BIGGEST-DISASTER ended on "one
-    # of the" - "it." ends at 27.68 and "One" starts at 27.68, and a tail of at least
-    # 0.18s was added anyway. The tail is a share of a REAL gap, or nothing.
-    end = end + (min(TAIL, (nxt - end) * 0.6) if nxt > end else 0.0)
+    LAST_OPEN_WORD = round(w[i]["a"], 3)
+    LAST_PREV_END = round(w[i - 1]["b"], 3) if i > 0 else None
+    # THIS WINDOW IS WHAT THE CAPTIONS ARE TRANSCRIBED OVER, so it does not move: a new
+    # window is a new transcription, and every correction written against the old one
+    # would silently stop matching. Where the clip really starts and ends - in the
+    # pauses either side, heard in the sound - is decided at render time
+    # (vsc_v2_render), from LAST_OPEN_WORD / LAST_SPEECH_END / LAST_NEXT_WORD.
+    end = end + min(TAIL, max(0.18, (nxt - end) * 0.75))
     return (round(max(0.0, start), 3), round(end, 3)), "ok"

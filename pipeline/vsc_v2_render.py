@@ -7,7 +7,7 @@ caption rebuilt and read line by line (vsc_v2caps.py), two crops fixed. The in/o
 points are the ones on disk, recovered by matching audio - NOT from the logs,
 which were wrong for 7 clips and would have moved edges he had approved.
 """
-import glob, json, os, re, subprocess, sys
+import difflib, glob, json, os, re, subprocess, sys
 sys.path.insert(0, os.path.expanduser("~/Kamay"))
 import vsc_render as R                                          # noqa: E402
 from vsc_cuts import CUTS                                       # noqa: E402
@@ -91,21 +91,17 @@ def next_onset(src, after, look=3.0):
     return None
 
 
-def pause_after(src, said, back=0.6, ahead=0.5):
-    """The silence Kevin leaves after the close, from the sound: (start, end) or None.
-
-    Whisper's word times cannot show it - on YOUR-BIGGEST-DISASTER "it." runs 26.97-27.68
-    and "One" starts at 27.68, the pause swallowed into the word before it. The
-    quiet stretch nearest the end of the close is the pause between the two."""
+def quiet_runs(src, t, before=1.2, length=2.6):
+    """Stretches of quiet (>= 60ms) in the sound around t, as absolute (start, end)."""
     import numpy as np
-    a0 = max(0.0, said - 1.2)
-    raw = subprocess.run([FF, "-y", "-loglevel", "error", "-ss", f"{a0:.3f}", "-t", "2.6",
+    a0 = max(0.0, t - before)
+    raw = subprocess.run([FF, "-y", "-loglevel", "error", "-ss", f"{a0:.3f}", "-t", f"{length:.2f}",
                           "-i", src, "-ar", "16000", "-ac", "1", "-f", "s16le", "-"],
                          capture_output=True).stdout
     x = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
     st = 160
     if len(x) < st * 40:
-        return None
+        return []
     db = 20 * np.log10(np.array([np.sqrt(np.mean(x[i:i + st] ** 2) + 1e-9)
                                  for i in range(0, len(x) - st, st)]) + 1e-9)
     lo, hi = np.percentile(db, 15), np.percentile(db, 90)
@@ -121,12 +117,39 @@ def pause_after(src, said, back=0.6, ahead=0.5):
             k = j
         else:
             k += 1
+    return runs
+
+
+def _nearest(runs, t):
+    return min(runs, key=lambda r: 0.0 if r[0] <= t <= r[1] else min(abs(r[0] - t), abs(r[1] - t)))
+
+
+def pause_after(src, said, back=0.6, ahead=0.5):
+    """The silence Kevin leaves after the close, from the sound: (start, end) or None.
+
+    Whisper's word times cannot show it - on YOUR-BIGGEST-DISASTER "it." runs 26.97-27.68
+    and "One" starts at 27.68, the pause swallowed into the word before it. The
+    quiet stretch nearest the end of the close is the pause between the two."""
     # a quiet that ENDS well before the close's last word is a gap inside the close
     # ("creates | it"), not the pause after it - he spoke again before the boundary
-    runs = [r for r in runs if said - back <= r[0] <= said + ahead and r[1] >= said - 0.15]
-    if not runs:
-        return None
-    return min(runs, key=lambda r: 0.0 if r[0] <= said <= r[1] else min(abs(r[0] - said), abs(r[1] - said)))
+    runs = [r for r in quiet_runs(src, said)
+            if said - back <= r[0] <= said + ahead and r[1] >= said - 0.15]
+    return _nearest(runs, said) if runs else None
+
+
+def pause_before(src, first, back=0.5, ahead=0.6):
+    """The silence just before the plan's first word, from the sound: (start, end) or None.
+
+    The mirror of pause_after. 2 Oct 2026, Kamay: "it starts on an off moment: a word
+    or words that aren't the right start... the most important thing of all in clips
+    is the FIRST 3 SECONDS." Whisper hands the first word a start that may swallow the
+    pause before it, so the quiet nearest that start is where the clip begins - never
+    on the tail of the sentence before."""
+    # a quiet that STARTS well after the first word's start is a gap inside the opening
+    # words, not the pause before them
+    runs = [r for r in quiet_runs(src, first, before=1.4, length=2.4)
+            if first - ahead <= r[1] <= first + back and r[0] <= first + 0.15]
+    return _nearest(runs, first) if runs else None
 
 
 def finish_close(words, close_words, close_phrase, span, name=""):
@@ -203,9 +226,26 @@ def main(only=None):
               if os.path.basename(x).startswith(pre[name])][0]
         cap = json.load(open(os.path.join(WORK, "v2caps", name + ".json")))
         # last resort: close on the final word, never crash on a missing match
+        # WHERE THE CLIP STARTS: inside the pause before the plan's first word, heard
+        # in the sound. The captions were transcribed over [a_cap, b] and keep that
+        # clock; they are shifted onto the clip's real start below.
+        a_cap = a
+        ow, pe = r.get("open_word"), r.get("prev_end")
+        hz, head_note, head_bad = None, "", False
+        if ow is not None and ow > 0.5:
+            hz = pause_before(src, ow)
+            if hz is not None:
+                a = max(0.0, hz[1] - min(0.12, (hz[1] - hz[0]) / 2))
+                head_note = f"starts in the pause before the open (+{hz[0] - a:.2f}s to +{hz[1] - a:.2f}s)"
+            else:
+                a = max(ow - 0.05, (pe + 0.02) if pe is not None and pe < ow - 0.05 else ow - 0.05)
+                head_bad = True
+                head_note = "NO PAUSE heard before the open"
+        shift = a_cap - a
         close_end = cap["close_end"] if cap.get("close_end") is not None else (
             max(w[1] for w in cap["words"]) if cap.get("words") else b - a)
-        close_abs = a + close_end
+        close_abs = a_cap + close_end
+        close_end = close_abs - a
         # WHERE THE CLIP ENDS: on the close, and never on a word after it. 2 Oct 2026,
         # Kamay: YOUR-BIGGEST-DISASTER ended on "one of the" and WINNERS-HATE-LOSING on
         # "there is a". The caption pass's idea of the close drifts BOTH ways (+2.80s,
@@ -246,11 +286,33 @@ def main(only=None):
         if tail_bad:
             print(f"  !! {name}: NO PAUSE after the close - the next word may be audible", flush=True)
         span = b - a
-        words = [{"text": t, "a": s, "b": min(e, span)} for s, e, t in cap["bursts"] if s < span]
+        words = [{"text": t, "a": max(0.0, s + shift), "b": min(e + shift, span)}
+                 for s, e, t in cap["bursts"] if s + shift < span and e + shift > 0.05]
         close_phrase = [c2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]
         if close_phrase and r.get("close_words"):
-            words = finish_close(words, r["close_words"], close_phrase[0], span, name)
+            words = finish_close(words, [(x[0] + shift, x[1] + shift, x[2]) for x in r["close_words"]],
+                                 close_phrase[0], span, name)
+        # THE HEAD CHECK. The first word on screen is the plan's first word, and there
+        # is a pause to start in. Either failing is a FAIL for a person to watch.
+        import vsc_v2caps
+        open_phrase = [f2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]
+        want = vsc_v2caps.norm(open_phrase[0].split()[0]) if open_phrase else ""
+        got = vsc_v2caps.norm(words[0]["text"].split()[0]) if words else ""
+        first_ok = bool(want) and (got == want or (min(len(got), len(want)) >= 4 and
+                                   difflib.SequenceMatcher(a=got, b=want).ratio() >= 0.8))
+        json.dump({"start": round(a, 3), "open_word": None if ow is None else round(ow - a, 3),
+                   "pause": None if hz is None else [round(hz[0] - a, 3), round(hz[1] - a, 3)],
+                   "first_caption_word": got, "plan_first_word": want,
+                   "first_caption_at": round(words[0]["a"], 3) if words else None,
+                   "bad": bool(head_bad or not first_ok),
+                   "why": ("no pause before the open" if head_bad else "") +
+                          ("" if first_ok else f"; first caption word {got!r} is not the plan's {want!r}")},
+                  open(os.path.join(OUT, name + "__head.json"), "w"))
+        if head_note or not first_ok:
+            print(f"      {head_note}" + ("" if first_ok else f"  !! first caption word {got!r}, plan says {want!r}"),
+                  flush=True)
         vis = r.get("vis_end")
+        vis = None if vis is None else vis + shift          # clip-relative, like the captions
         if name == "VIKTOR-FRANKL":
             vis = None     # the "new scene" is another angle of Kevin, still talking
         if vis is not None and vis >= span - 0.05:

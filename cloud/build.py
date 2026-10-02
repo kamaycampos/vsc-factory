@@ -83,6 +83,12 @@ def main(key, names):
         verdict, why = kt_qc.check(f[0])
         # SPEECH AFTER THE CLOSE IS A FAIL, never a LOOK. 2 Oct 2026: Kamay heard "one
         # of the" and "there is a" at the end of two clips the checks had passed.
+        hj = os.path.join(CLIPS, name + "__head.json")
+        if os.path.exists(hj) and json.load(open(hj)).get("bad"):
+            verdict = "fail"
+            why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
+                "opening: " + json.load(open(hj)).get("why", "").strip("; ") +
+                " - watch the first 3 seconds"]
         tj = os.path.join(CLIPS, name + "__tail.json")
         if os.path.exists(tj) and json.load(open(tj)).get("speech_after_close"):
             t = json.load(open(tj))
