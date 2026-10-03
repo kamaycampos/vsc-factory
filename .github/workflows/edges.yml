@@ -1,0 +1,30 @@
+# LISTEN TO THE EDGES of rendered clips (cloud/edges.py): whisper on the first and last
+# 3 s of the files in the clips release. Run on demand; it changes nothing it reads.
+name: edges
+on:
+  workflow_dispatch:
+    inputs:
+      files:
+        description: "Release mp4 names (space separated), or 'delivered'"
+        required: false
+        default: "delivered"
+permissions:
+  contents: read
+jobs:
+  edges:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VSC_KEY: ${{ secrets.VSC_KEY }}      # setup.sh opens the font with it
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - run: bash setup.sh
+      - run: python cloud/edges.py ${{ inputs.files }}
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with: { name: edges, path: /tmp/edges/edges.json, retention-days: 7 }
