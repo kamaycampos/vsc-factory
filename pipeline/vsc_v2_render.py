@@ -377,7 +377,13 @@ def main(only=None):
             # rising into "One" 0.3s before the 27.68 whisper gives, so the real pause ends
             # before the strict window above allows. Take the latest quiet in the last
             # 0.6s of the close; failing that, the quietest instant between the words.
-            v = valley(src, said, back=0.35, ahead=0.10)
+            # no PAUSE, but maybe a short REAL silence (>= 60 ms, 35 dB under the voice):
+            # MORE-PROBLEMS-THAN-YOU, 3 Oct, dipped to 5 dB just after "problems" and
+            # the quietest-point search, 0.35 s wide, missed it and cut later - into a
+            # faint rise. The latest real silence in the last 0.6 s comes first.
+            short = [r for r in quiet_runs(src, said) if said - 0.6 <= r[1] <= said + 0.15 and r[0] <= said + 0.1]
+            v = (max(short)[0] + min(0.06, (max(short)[1] - max(short)[0]) * 0.5)) if short \
+                else valley(src, said, back=0.35, ahead=0.10)
             new_b = v if v is not None else ((nxt - 0.08) if nxt is not None and nxt > said + 0.05 else said)
             close_abs, close_end = new_b, new_b - a
             note = f"no pause heard after the close - ends at the quietest point between the words ({new_b - said:+.2f}s)"
