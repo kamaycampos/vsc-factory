@@ -204,20 +204,30 @@ def card_spans(src, a, b, step=0.1):
                           "-vf", f"fps={1 / step:.0f},scale={w_}:{h_},format=gray",
                           "-f", "rawvideo", "-"], capture_output=True).stdout
     n = len(raw) // (w_ * h_)
-    spans, cur = [], None
+    dark = []
     for k in range(n):
         y = np.frombuffer(raw[k * w_ * h_:(k + 1) * w_ * h_], dtype=np.uint8).reshape(h_, w_)[15:75]
-        card = (y < 14).mean() > 0.70 or (y > 225).mean() > 0.70
-        t = k * step
-        if card and cur is None:
-            cur = [max(0.0, t - step / 2), t + step / 2]
-        elif card:
-            cur[1] = t + step / 2
-        elif cur is not None:
-            spans.append(tuple(cur)); cur = None
-    if cur is not None:
-        spans.append((cur[0], b - a))
-    return [s for s in spans if s[1] - s[0] >= 0.15]
+        dark.append(max((y < 14).mean(), (y > 225).mean()))
+    spans, k = [], 0
+    while k < n:
+        if dark[k] > 0.70:
+            j = k
+            while j < n and dark[j] > 0.70:
+                j += 1
+            # A REAL CARD (>= 0.4 s) DISSOLVES in and out: grow its span through every
+            # frame still partly card (THE-450-MILLION-BREAKUP, 3 Oct: 0.90 -> 0.53 -> 0.14
+            # -> 0.01 over 1.8-2.2 s, and the 0.53 frame was cropped like a face). Not for
+            # a short dark start - that is a fade from black, lifted elsewhere.
+            if (j - k) * step >= 0.4:
+                while k > 0 and dark[k - 1] > 0.05:
+                    k -= 1
+                while j < n and dark[j] > 0.05:
+                    j += 1
+            spans.append((max(0.0, k * step - step / 2), min(b - a, j * step - step / 2)))
+            k = j
+        else:
+            k += 1
+    return spans
 
 
 def fade_in_lift(src, a, look=2.0, step=0.1):
@@ -442,8 +452,19 @@ def main(only=None):
         # FRAMING THAT AUDIO CANNOT SEE: cards shown whole, a fade from black undone
         ovs = list(ov.get(name) or [])
         cards = card_spans(src, a, b)
+        span_ = b - a
         for c0, c1 in cards:
-            ovs.append({"t0": round(c0, 3), "t1": round(c1, 3), "fit": True})
+            # A SLIVER of a card at the very start or end (BANNED-FOR-LIFE, 3 Oct: the
+            # first 4 frames) would only flash, whole or cropped: hold Kevin's nearest
+            # clean frame over it instead - 0.13 s of stillness is not seen.
+            # sampled every 0.1 s, so the card may run up to one sample past what was seen
+            if c1 - c0 <= 0.3 and c0 < 0.05 and fade_in_lift(src, a) is None:
+                ovs.append({"t0": 0.0, "t1": round(c1 + 0.1, 3), "freeze_at": round(a + c1 + 0.15, 3)})
+            elif c1 - c0 <= 0.3 and c1 > span_ - 0.05:
+                ovs.append({"t0": round(max(0.0, c0 - 0.1), 3), "t1": round(span_, 3),
+                            "freeze_at": round(a + c0 - 0.17, 3)})
+            elif c1 - c0 >= 0.15:
+                ovs.append({"t0": round(c0, 3), "t1": round(c1, 3), "fit": True})
         lift = fade_in_lift(src, a)
         # a clip that OPENS ON A CARD is dark because of the card, not a fade from black
         # (THE-FOREST-FIRE, REACT-OR-RESPOND read as fades) - the card is shown whole

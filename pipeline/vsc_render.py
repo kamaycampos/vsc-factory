@@ -177,6 +177,15 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     parts, labels = [], []
     for i, s in enumerate(shots):
         trim = f"[0:v]trim=start={s['start']:.3f}:end={s['end']:.3f},setpts=PTS-STARTPTS,"
+        if s.get("freeze_at") is not None:
+            # hold ONE clean frame of Kevin over a card sliver (see card_spans' caller)
+            cw, ch, x, y, _b = crop_for(s, sw, sh)
+            fz = s["freeze_at"]
+            parts.append(f"[0:v]trim=start={fz:.3f}:end={fz + 0.04:.3f},setpts=PTS-STARTPTS,"
+                         f"crop={cw}:{ch}:{x}:{y},scale={W}:{H}:flags=lanczos,setsar=1,fps=30,"
+                         f"tpad=stop_mode=clone:stop_duration={s['end'] - s['start']:.3f},"
+                         f"trim=duration={s['end'] - s['start']:.3f}[v{i}];")
+            labels.append(f"[v{i}]"); continue
         if s.get("lift"):
             # THE EPISODE FADES IN FROM BLACK while Kevin is already speaking (YOUR-
             # BIGGEST-DISASTER opens on the episode's first words). Starting later
