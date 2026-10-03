@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       files:
-        description: "Release mp4 names (space separated), or 'delivered'"
+        description: "Release mp4 names (space separated), 'delivered', or 'probe <key> t0:t1 ...'"
         required: false
         default: "delivered"
 permissions:
