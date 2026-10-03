@@ -218,10 +218,15 @@ def card_spans(src, a, b, step=0.1):
             # frame still partly card (THE-450-MILLION-BREAKUP, 3 Oct: 0.90 -> 0.53 -> 0.14
             # -> 0.01 over 1.8-2.2 s, and the 0.53 frame was cropped like a face). Not for
             # a short dark start - that is a fade from black, lifted elsewhere.
+            # ...but only while the darkness keeps FALLING, and for at most 0.5 s: in the
+            # full 16:9 frame the dark studio around Kevin reads as partly black too, and
+            # run 37 letterboxed whole stretches of him (MORE-PROBLEMS-THAN-YOU 0-2.9 s).
             if (j - k) * step >= 0.4:
-                while k > 0 and dark[k - 1] > 0.05:
+                g = int(round(0.5 / step))
+                k0, j0 = k, j
+                while k > 0 and k0 - k < g and dark[k - 1] > 0.05 and dark[k - 1] < dark[k]:
                     k -= 1
-                while j < n and dark[j] > 0.05:
+                while j < n and j - j0 < g and dark[j] > 0.05 and dark[j] < dark[j - 1]:
                     j += 1
             spans.append((max(0.0, k * step - step / 2), min(b - a, j * step - step / 2)))
             k = j
