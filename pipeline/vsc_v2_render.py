@@ -224,9 +224,15 @@ def card_spans(src, a, b, step=0.1):
             if (j - k) * step >= 0.4:
                 g = int(round(0.5 / step))
                 k0, j0 = k, j
-                while k > 0 and k0 - k < g and dark[k - 1] > 0.05 and dark[k - 1] < dark[k]:
+                # A sample is MID-DISSOLVE only if the darkness keeps falling past it (or
+                # it is still mostly card). Run 39: MORE-PROBLEMS-THAN-YOU cuts HARD from a
+                # 0.3 s wide shot to its card, and the wide shot's steady dark studio was
+                # taken for the dissolve and letterboxed.
+                def mid(x, beyond):
+                    return dark[x] > 0.4 or (dark[x] > 0.05 and (beyond is None or dark[beyond] < dark[x] - 0.03))
+                while k > 0 and k0 - k < g and dark[k - 1] < dark[k] and mid(k - 1, k - 2 if k >= 2 else None):
                     k -= 1
-                while j < n and j - j0 < g and dark[j] > 0.05 and dark[j] < dark[j - 1]:
+                while j < n and j - j0 < g and dark[j] < dark[j - 1] and mid(j, j + 1 if j + 1 < n else None):
                     j += 1
             spans.append((max(0.0, k * step - step / 2), min(b - a, j * step - step / 2)))
             k = j
@@ -262,17 +268,42 @@ def fade_in_lift(src, a, look=2.0, crop=None):
     if n < 10 or m[0] > 0.6 * max(m):
         return None
     top = max(m)
-    # where the fade ARRIVES: rising stops (within 2% for 3 frames), in the same shot
-    k_end = next((k for k in range(1, n - 3) if m[k] > 0.3 * top and
-                  all(abs(m[k + q] - m[k]) <= 0.02 * m[k] for q in (1, 2, 3))), None)
+    frames = [np.frombuffer(raw[k * sz:(k + 1) * sz], dtype=np.uint8).astype(float) for k in range(n)]
+    # A CUT INSIDE THE FADE. 3 Oct, run 39: YOUR-BIGGEST-DISASTER fades in on a WIDE shot
+    # and cuts to the close-up at 0.83 s, still rising - the shot map holds one segment
+    # for both. Its level after the cut is another shot's, never the fade's target (run
+    # 38 took it as the target and blew the wide shot out to 153). The fade ends AT the
+    # cut and arrives at the last frame before it.
+    k_cut = None
+    for k in range(3, n):
+        d = m[k] - m[k - 1]
+        if m[k] > 0.3 * top and d > 0.12 * m[k - 1] and d > 2.5 * max(1.0, max(m[q] - m[q - 1] for q in range(max(1, k - 6), k))):
+            k_cut = k
+            break
+    if k_cut is not None:
+        k_end = k_cut - 1
+    else:
+        # where the fade ARRIVES: rising stops (within 2% for 3 frames), in the same shot
+        k_end = next((k for k in range(1, n - 3) if m[k] > 0.3 * top and
+                      all(abs(m[k + q] - m[k]) <= 0.02 * m[k] for q in (1, 2, 3))), None)
     if k_end is None or k_end / fps < 0.2:
         return None
+    # A FADE IS THE SAME PICTURE GETTING BRIGHTER. A card that cuts to Kevin is not one
+    # (THE-FOREST-FIRE, REACT-OR-RESPOND open on cards): every visible frame of a fade
+    # matches the one it arrives at.
+    # ...and a fade RISES: a dark card held still, then a cut (THE-FOREST-FIRE: 15-17 for
+    # 1.5 s, then 83), is a card, shown whole by card_spans.
+    if min(m[:k_end + 1]) > 0.5 * m[k_end]:
+        return None
+    for k in range(k_end):
+        if m[k] > 0.5 * m[k_end] and np.corrcoef(frames[k], frames[k_end])[0, 1] < 0.7:
+            return None
     ref = m[k_end]
     pts = [(k / fps, max(1.0, min(5.0, ref / max(m[k], 1.0)))) for k in range(k_end + 1)]
     expr = f"{pts[-1][1]:.3f}"
     for (ta, ga), (tb, gb) in reversed(list(zip(pts, pts[1:]))):
         expr = f"if(lt(T,{tb:.3f}),{ga:.3f}+({gb - ga:.3f})*(T-{ta:.3f})/{tb - ta:.3f},{expr})"
-    return k_end / fps, expr
+    return (k_cut if k_cut is not None else k_end) / fps, expr
 
 
 def finish_close(words, close_words, close_phrase, span, name=""):
@@ -483,6 +514,15 @@ def main(only=None):
             _crop = None
         lift = fade_in_lift(src, a, crop=_crop)
         cards = card_spans(src, a, b)
+        if lift is not None and cards and cards[0][0] < 0.05:
+            if cards[0][1] <= lift[0] + 0.15:
+                # the "card" at the start IS the fade from black (run 39: 0-0.85 s of
+                # YOUR-BIGGEST-DISASTER letterboxed as a card, and the lift switched off)
+                cards = cards[1:]
+            else:
+                # a clip that OPENS ON A CARD is dark because of the card, not a fade from
+                # black (THE-FOREST-FIRE, REACT-OR-RESPOND) - the card is shown whole
+                lift = None
         span_ = b - a
         for c0, c1 in cards:
             # A SLIVER of a card at the very start or end (BANNED-FOR-LIFE, 3 Oct: the
@@ -496,10 +536,6 @@ def main(only=None):
                             "freeze_at": round(a + c0 - 0.17, 3)})
             elif c1 - c0 >= 0.15:
                 ovs.append({"t0": round(c0, 3), "t1": round(c1, 3), "fit": True})
-        # a clip that OPENS ON A CARD is dark because of the card, not a fade from black
-        # (THE-FOREST-FIRE, REACT-OR-RESPOND read as fades) - the card is shown whole
-        if lift is not None and cards and cards[0][0] < 0.05 and cards[0][1] - cards[0][0] > 0.4:
-            lift = None
         if lift is not None:
             ovs.append({"t0": 0.0, "t1": round(lift[0], 3), "lift": lift[1]})
         if cards or lift:
