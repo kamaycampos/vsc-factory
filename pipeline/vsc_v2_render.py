@@ -189,6 +189,65 @@ def pause_before(src, first, back=2.5, ahead=0.6):
                     first - ahead, first + back)
 
 
+def card_spans(src, a, b, step=0.1):
+    """Where the source shows a TITLE CARD or a SCREEN GRAB instead of Kevin: clip-relative
+    (t0, t1) spans, to be shown in FULL instead of cropped like a face.
+
+    3 Oct 2026, the Connector's frame review: six clips opened on the episode's 16:9
+    text cards centre-cropped to 9:16 ("...ON'T STOP SUC... / CREATE IT."), and two
+    ended on them or on a cropped web page. The shot map's segments run 60-130s and
+    never see a 1-second card. Measured on the released frames: cards are 85-93% pure
+    black (< 14), the web page 97% near-white (> 225), Kevin at most 1-2% of either."""
+    import numpy as np
+    w_, h_ = 160, 90
+    raw = subprocess.run([FF, "-v", "error", "-ss", f"{a:.3f}", "-t", f"{b - a:.3f}", "-i", src,
+                          "-vf", f"fps={1 / step:.0f},scale={w_}:{h_},format=gray",
+                          "-f", "rawvideo", "-"], capture_output=True).stdout
+    n = len(raw) // (w_ * h_)
+    spans, cur = [], None
+    for k in range(n):
+        y = np.frombuffer(raw[k * w_ * h_:(k + 1) * w_ * h_], dtype=np.uint8).reshape(h_, w_)[15:75]
+        card = (y < 14).mean() > 0.70 or (y > 225).mean() > 0.70
+        t = k * step
+        if card and cur is None:
+            cur = [max(0.0, t - step / 2), t + step / 2]
+        elif card:
+            cur[1] = t + step / 2
+        elif cur is not None:
+            spans.append(tuple(cur)); cur = None
+    if cur is not None:
+        spans.append((cur[0], b - a))
+    return [s for s in spans if s[1] - s[0] >= 0.15]
+
+
+def fade_in_lift(src, a, look=2.0, step=0.1):
+    """If the picture fades up from black at the clip's start, the gain that undoes it:
+    (end, expr) with expr a function of the segment's time T, or None."""
+    import numpy as np
+    raw = subprocess.run([FF, "-v", "error", "-ss", f"{a:.3f}", "-t", f"{look:.3f}", "-i", src,
+                          "-vf", f"fps={1 / step:.0f},scale=160:90,format=gray",
+                          "-f", "rawvideo", "-"], capture_output=True).stdout
+    n = len(raw) // (160 * 90)
+    m = [float(np.frombuffer(raw[k * 14400:(k + 1) * 14400], dtype=np.uint8)[2400:12000].mean()) for k in range(n)]
+    if n < 8 or m[0] > 0.6 * max(m):
+        return None
+    # the level the fade ARRIVES at, in the same shot - not the brightest frame in the
+    # window, which can belong to the next camera angle and over-lifts the fade
+    top = max(m)
+    k_end = next((k for k in range(1, n - 1) if m[k] > 0.3 * top and m[k + 1] <= m[k] * 1.03), None)
+    if k_end is None:
+        return None
+    ref, end = m[k_end], k_end * step
+    if end < 0.2:
+        return None
+    # 85% of the correction: a touch under is invisible, a touch over looks washed out
+    pts = [(k * step, 1 + 0.85 * (min(5.0, ref / max(m[k], 1.0)) - 1)) for k in range(int(round(end / step)) + 1)]
+    expr = f"{pts[-1][1]:.3f}"
+    for (ta, ga), (tb, gb) in reversed(list(zip(pts, pts[1:]))):
+        expr = f"if(lt(T,{tb:.2f}),{ga:.3f}+({gb - ga:.3f})*(T-{ta:.2f})/{tb - ta:.2f},{expr})"
+    return end, expr
+
+
 def finish_close(words, close_words, close_phrase, span, name=""):
     """THE LAST CAPTION IS THE CLOSE. Checked on what is about to be burned.
 
@@ -380,8 +439,23 @@ def main(only=None):
         dest = os.path.join(OUT, f"{name}_{int(round(span))}s.mp4")
         hook = HOOKS.get(name) or [h for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl
                                   if n2 == name][0]
+        # FRAMING THAT AUDIO CANNOT SEE: cards shown whole, a fade from black undone
+        ovs = list(ov.get(name) or [])
+        cards = card_spans(src, a, b)
+        for c0, c1 in cards:
+            ovs.append({"t0": round(c0, 3), "t1": round(c1, 3), "fit": True})
+        lift = fade_in_lift(src, a)
+        # a clip that OPENS ON A CARD is dark because of the card, not a fade from black
+        # (THE-FOREST-FIRE, REACT-OR-RESPOND read as fades) - the card is shown whole
+        if lift is not None and cards and cards[0][0] < 0.05 and cards[0][1] - cards[0][0] > 0.4:
+            lift = None
+        if lift is not None:
+            ovs.append({"t0": 0.0, "t1": round(lift[0], 3), "lift": lift[1]})
+        if cards or lift:
+            print(f"      shown whole: {[(round(x, 2), round(y, 2)) for x, y in cards]}"
+                  + (f"; fade from black lifted to +{lift[0]:.2f}s" if lift else ""), flush=True)
         R.build(src, fj, a, b, two_lines(hook), words, dest,
-                speech_end=min(close_end, span), vis_end=vis, overrides=ov.get(name),
+                speech_end=min(close_end, span), vis_end=vis, overrides=ovs or None,
                 fade_out_by=span if tail_bad else None, fade_in=0.08 if head_bad else 0.0)
         # exactly what was burned, for kt_sync_check
         json.dump([[w["a"], w["b"], w["text"]] for w in words],

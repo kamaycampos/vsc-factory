@@ -177,6 +177,18 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     parts, labels = [], []
     for i, s in enumerate(shots):
         trim = f"[0:v]trim=start={s['start']:.3f}:end={s['end']:.3f},setpts=PTS-STARTPTS,"
+        if s.get("lift"):
+            # THE EPISODE FADES IN FROM BLACK while Kevin is already speaking (YOUR-
+            # BIGGEST-DISASTER opens on the episode's first words). Starting later
+            # would cut "Most"; the picture is lifted to full level instead.
+            g = s["lift"]
+            parts.append(trim + f"crop={int(round(sh * 9 / 16)) // 2 * 2}:{sh}:"
+                         f"{max(0, min(int(round(s['cx'] * sw - int(round(sh * 9 / 16)) / 2)), sw - int(round(sh * 9 / 16)))) // 2 * 2}:0,"
+                         f"scale={W}:{H}:flags=lanczos,format=yuv420p,"
+                         # video black is 16, not 0: lift ABOVE black, or black turns grey
+                         f"geq=lum='clip(16+(lum(X,Y)-16)*({g}),16,235)':cb='clip(128+(cb(X,Y)-128)*({g}),16,240)'"
+                         f":cr='clip(128+(cr(X,Y)-128)*({g}),16,240)',setsar=1,fps=30[v{i}];")
+            labels.append(f"[v{i}]"); continue
         if s.get("fit"):
             # fit_w: show only the central band that holds the text, so it reads larger
             fw_ = int(s.get("fit_w", sw)) // 2 * 2
@@ -233,7 +245,7 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     for w_ in words:
         draws.append(f"drawtext=fontfile='{FONT}':text='{esc(w_['text'].upper())}':fontsize={ws}"
                      f":fontcolor=white{SHADOW}:x=(w-tw)/2:y={CAP_Y}"
-                     f":enable='between(t,{w_['a']:.3f},{w_['b']:.3f})'")
+                     f":enable='gte(t,{w_['a']:.3f})*lt(t,{w_['b']:.3f})'")
     # 10 Sept, Kamay: "so many of the videos still end when kevin's mouth is
     # still open or you can tell he is about to say something." The WORDS end
     # correctly - verified by transcribing the rendered files - but the picture
