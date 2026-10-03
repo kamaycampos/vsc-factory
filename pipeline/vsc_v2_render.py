@@ -299,7 +299,13 @@ def fade_in_lift(src, a, look=2.0, crop=None):
         if m[k] > 0.5 * m[k_end] and np.corrcoef(frames[k], frames[k_end])[0, 1] < 0.7:
             return None
     ref = m[k_end]
-    pts = [(k / fps, max(1.0, min(5.0, ref / max(m[k], 1.0)))) for k in range(k_end + 1)]
+    # ROBUST TO WHERE THE RENDER'S FRAMES LAND. Run 40: the server's render sat a frame or
+    # two later in the fade than this measurement, and a steep fade turned that into a
+    # flash (91 against 77; a 2-frame offset reproduced 110 against 99 here). Each gain
+    # answers the brightest of the next 4 frames, so an offset can leave a frame a little
+    # dark, never too bright.
+    pts = [(k / fps, max(1.0, min(5.0, ref / max(max(m[k:min(k + 4, k_end + 1)]), 1.0))))
+           for k in range(k_end + 1)]
     expr = f"{pts[-1][1]:.3f}"
     for (ta, ga), (tb, gb) in reversed(list(zip(pts, pts[1:]))):
         expr = f"if(lt(T,{tb:.3f}),{ga:.3f}+({gb - ga:.3f})*(T-{ta:.3f})/{tb - ta:.3f},{expr})"
