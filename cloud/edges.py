@@ -129,6 +129,13 @@ def probe(key, spans):
         print(f"=== {t0:.1f}-{t1:.1f}")
         print("  silences >= 60 ms: " + "  ".join(f"{a:.2f}-{b:.2f}({b - a:.2f})" for a, b in runs))
         print("  words: " + " ".join(f"{t0 + a:.2f}:{x}" for a, b, x in w), flush=True)
+        if t1 - t0 <= 3.0:          # a short span: its level every 20 ms, to see dips under a music bed
+            import numpy as np
+            raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", "/tmp/probe.wav", "-f", "s16le", "-"],
+                                 capture_output=True).stdout
+            x = np.frombuffer(raw, dtype=np.int16).astype(float)
+            db = [20 * np.log10(np.sqrt(np.mean(x[i:i + 320] ** 2)) + 1e-9) for i in range(0, len(x) - 320, 320)]
+            print("  dB/20ms: " + " ".join(f"{t0 + k * 0.02:.2f}:{d:.0f}" for k, d in enumerate(db)), flush=True)
 
 
 if __name__ == "__main__":
