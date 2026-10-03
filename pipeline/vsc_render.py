@@ -190,9 +190,11 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
             # THE EPISODE FADES IN FROM BLACK while Kevin is already speaking (YOUR-
             # BIGGEST-DISASTER opens on the episode's first words). Starting later
             # would cut "Most"; the picture is lifted to full level instead.
+            # the SAME window as the normal path (crop_for): a different crop here made the
+            # picture jump in framing and level the moment the lift ended (3 Oct)
             g = s["lift"]
-            parts.append(trim + f"crop={int(round(sh * 9 / 16)) // 2 * 2}:{sh}:"
-                         f"{max(0, min(int(round(s['cx'] * sw - int(round(sh * 9 / 16)) / 2)), sw - int(round(sh * 9 / 16)))) // 2 * 2}:0,"
+            cw, ch, x, y, _b = crop_for(s, sw, sh)
+            parts.append(trim + f"crop={cw}:{ch}:{x}:{y},"
                          f"scale={W}:{H}:flags=lanczos,format=yuv420p,"
                          # video black is 16, not 0: lift ABOVE black, or black turns grey
                          f"geq=lum='clip(16+(lum(X,Y)-16)*({g}),16,235)':cb='clip(128+(cb(X,Y)-128)*({g}),16,240)'"

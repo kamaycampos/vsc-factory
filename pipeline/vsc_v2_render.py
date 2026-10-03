@@ -235,32 +235,44 @@ def card_spans(src, a, b, step=0.1):
     return spans
 
 
-def fade_in_lift(src, a, look=2.0, step=0.1):
+def fade_in_lift(src, a, look=2.0, crop=None):
     """If the picture fades up from black at the clip's start, the gain that undoes it:
-    (end, expr) with expr a function of the segment's time T, or None."""
+    (end, expr) with expr a function of the segment's time T, or None.
+
+    MEASURED EXACTLY WHERE AND WHEN IT IS APPLIED. 3 Oct 2026, the Connector: the first
+    version measured the whole 16:9 frame ten times a second and lifted the 9:16 crop,
+    and YOUR-BIGGEST-DISASTER flashed to 153 against a normal 77 from 0.43 to 1.15 s,
+    the face blown out. Now every source frame is measured inside the crop that is
+    shown, and each gets target / its own brightness, capped so no frame can exceed
+    the level the fade arrives at."""
     import numpy as np
+    fps = 30.0
+    fp = os.path.join(os.path.dirname(FF), "ffprobe")      # the server's ffprobe lives beside ffmpeg
+    r = subprocess.run([fp if os.path.exists(fp) else "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                        "stream=r_frame_rate", "-of", "csv=p=0", src], capture_output=True, text=True).stdout.strip()
+    if "/" in r:
+        n_, d_ = r.split("/")
+        fps = float(n_) / float(d_) if float(d_) else 30.0
+    vf = (f"crop={crop}," if crop else "") + "scale=54:96,format=gray"
     raw = subprocess.run([FF, "-v", "error", "-ss", f"{a:.3f}", "-t", f"{look:.3f}", "-i", src,
-                          "-vf", f"fps={1 / step:.0f},scale=160:90,format=gray",
-                          "-f", "rawvideo", "-"], capture_output=True).stdout
-    n = len(raw) // (160 * 90)
-    m = [float(np.frombuffer(raw[k * 14400:(k + 1) * 14400], dtype=np.uint8)[2400:12000].mean()) for k in range(n)]
-    if n < 8 or m[0] > 0.6 * max(m):
+                          "-vf", vf, "-f", "rawvideo", "-"], capture_output=True).stdout
+    sz = 54 * 96
+    m = [float(np.frombuffer(raw[k * sz:(k + 1) * sz], dtype=np.uint8).mean()) for k in range(len(raw) // sz)]
+    n = len(m)
+    if n < 10 or m[0] > 0.6 * max(m):
         return None
-    # the level the fade ARRIVES at, in the same shot - not the brightest frame in the
-    # window, which can belong to the next camera angle and over-lifts the fade
     top = max(m)
-    k_end = next((k for k in range(1, n - 1) if m[k] > 0.3 * top and m[k + 1] <= m[k] * 1.03), None)
-    if k_end is None:
+    # where the fade ARRIVES: rising stops (within 2% for 3 frames), in the same shot
+    k_end = next((k for k in range(1, n - 3) if m[k] > 0.3 * top and
+                  all(abs(m[k + q] - m[k]) <= 0.02 * m[k] for q in (1, 2, 3))), None)
+    if k_end is None or k_end / fps < 0.2:
         return None
-    ref, end = m[k_end], k_end * step
-    if end < 0.2:
-        return None
-    # 85% of the correction: a touch under is invisible, a touch over looks washed out
-    pts = [(k * step, 1 + 0.85 * (min(5.0, ref / max(m[k], 1.0)) - 1)) for k in range(int(round(end / step)) + 1)]
+    ref = m[k_end]
+    pts = [(k / fps, max(1.0, min(5.0, ref / max(m[k], 1.0)))) for k in range(k_end + 1)]
     expr = f"{pts[-1][1]:.3f}"
     for (ta, ga), (tb, gb) in reversed(list(zip(pts, pts[1:]))):
-        expr = f"if(lt(T,{tb:.2f}),{ga:.3f}+({gb - ga:.3f})*(T-{ta:.2f})/{tb - ta:.2f},{expr})"
-    return end, expr
+        expr = f"if(lt(T,{tb:.3f}),{ga:.3f}+({gb - ga:.3f})*(T-{ta:.3f})/{tb - ta:.3f},{expr})"
+    return k_end / fps, expr
 
 
 def finish_close(words, close_words, close_phrase, span, name=""):
@@ -462,6 +474,14 @@ def main(only=None):
                                   if n2 == name][0]
         # FRAMING THAT AUDIO CANNOT SEE: cards shown whole, a fade from black undone
         ovs = list(ov.get(name) or [])
+        try:
+            _sw, _sh = R.source_size(src)
+            _sh0 = R.shots_in(json.load(open(fj))["segments"], a, b)[0]
+            _cw, _ch, _x, _y, _bl = R.crop_for(_sh0, _sw, _sh)
+            _crop = f"{_cw}:{_ch}:{_x}:{_y}"
+        except Exception:
+            _crop = None
+        lift = fade_in_lift(src, a, crop=_crop)
         cards = card_spans(src, a, b)
         span_ = b - a
         for c0, c1 in cards:
@@ -469,14 +489,13 @@ def main(only=None):
             # first 4 frames) would only flash, whole or cropped: hold Kevin's nearest
             # clean frame over it instead - 0.13 s of stillness is not seen.
             # sampled every 0.1 s, so the card may run up to one sample past what was seen
-            if c1 - c0 <= 0.3 and c0 < 0.05 and fade_in_lift(src, a) is None:
+            if c1 - c0 <= 0.3 and c0 < 0.05 and lift is None:
                 ovs.append({"t0": 0.0, "t1": round(c1 + 0.1, 3), "freeze_at": round(a + c1 + 0.15, 3)})
             elif c1 - c0 <= 0.3 and c1 > span_ - 0.05:
                 ovs.append({"t0": round(max(0.0, c0 - 0.1), 3), "t1": round(span_, 3),
                             "freeze_at": round(a + c0 - 0.17, 3)})
             elif c1 - c0 >= 0.15:
                 ovs.append({"t0": round(c0, 3), "t1": round(c1, 3), "fit": True})
-        lift = fade_in_lift(src, a)
         # a clip that OPENS ON A CARD is dark because of the card, not a fade from black
         # (THE-FOREST-FIRE, REACT-OR-RESPOND read as fades) - the card is shown whole
         if lift is not None and cards and cards[0][0] < 0.05 and cards[0][1] - cards[0][0] > 0.4:
