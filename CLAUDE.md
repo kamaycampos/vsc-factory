@@ -43,6 +43,11 @@ reaches the other projects.
 - **Close where the teaching LANDS** - on meaning, not grammar. Never end with Kevin
   about to say something, and never cut the proof or the twist ("which they all did").
 - **Never freeze the picture while Kevin is still talking** (mouth open, sound fading).
+- **The end is the first real silence after Kevin FINISHES the sentence in which the teaching
+  lands** - never a fade over live speech to hit a planned close. No pause there? Move the
+  close to the next sentence end that has one (Kamay, 3 Oct: TEAM and FALL ended on his next
+  words, REACT cut "pro|blem", RUN-AT stopped before the lesson).
+- **Openings start in >= 0.15 s of real silence before the first word**, never on its onset.
 - **Read every caption line before submission** (Naomi, Week-1 reviewer). Whisper
   breaks names: Steve Jobs (not Steven), NeXT, New York Times bestseller list,
   Carnegie Deli, American Memory Institute, the Possibility Thinker's Creed. Where
@@ -81,6 +86,14 @@ reaches the other projects.
   `cloud/delivered.json` when the batch goes to GIN; only the workflow's `only` input can
   rebuild one. A FAIL ("listen") verdict is never recorded in `built.json`, so without the
   list Monday's cron rebuilt delivered clips under new shared framing (3 Oct).
+- **Listen to the rendered edges, not the levels.** `cloud/edges.py` (run in every build, and
+  on demand by the `edges` workflow) has whisper transcribe the file's first and last 3 s; the
+  first and last words heard must be the first and last caption words, whole, with nothing
+  after. Every silence/level check had passed NOT-AFFECTED opening on "...people" (3 Oct).
+- **Whisper swallows pauses AND whole words into a neighbour**: "benefit." ran 1.23 s and held
+  the pause plus "Successful". A last word (or the word before the opening) over 0.8 s is
+  searched inside for the real silence. Where word times cannot find a gap at all, the plan's
+  `end_cut` (seconds from the delivered file's start, measured in its sound) names it.
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

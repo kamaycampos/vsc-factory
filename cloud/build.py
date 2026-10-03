@@ -96,6 +96,25 @@ def main(key, names):
             why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
                 f"no pause after the close: the next word starts +{t['next_word']:.2f}s, "
                 f"clip ends +{t['end']:.2f}s - listen to the last second"]
+        # LISTEN TO THE EDGES OF THE FILE (cloud/edges.py). 3 Oct 2026: Kamay found four
+        # delivered clips whose first or last word was cut or followed by the next one,
+        # every one passed by the level and silence checks above.
+        try:
+            from cloud.edges import check as edges
+            cj = f[0][:-4] + "__caps.json"
+            e = edges(f[0], json.load(open(cj)) if os.path.exists(cj) else None,
+                      next((c for c in plan["clips"] if c["name"] == name), None), work=f"/tmp/edges_{name}")
+            json.dump(e, open(os.path.join(OUT, name + "__edges.json"), "w"), indent=1)
+            heard_ = lambda ws: " ".join(w for a_, b_, w in (ws or []))
+            print(f"  EDGES {name}: first heard [{heard_(e['first_heard'])}] caption '{e['caption_first']}' | "
+                  f"last heard [{heard_(e['last_heard'])}] caption '{e['caption_last']}'", flush=True)
+            if not (e["first_ok"] and e["last_ok"]):
+                verdict = "fail"
+                why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
+                    ("" if e["first_ok"] else f"first word heard is not '{e['caption_first']}'; ")
+                    + ("" if e["last_ok"] else f"last word heard is not '{e['caption_last']}'")]
+        except Exception as ex:
+            print(f"  !! edge listening failed for {name}: {ex}", flush=True)
         r = vsc_v2_onscreen.check(f[0])
         hit, miss = (r[0], r[1]) if r else (0, 0)
         report.append({"clip": name, "ok": verdict == "pass", "verdict": verdict,

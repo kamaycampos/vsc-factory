@@ -30,6 +30,7 @@ LAST_SPEECH_END = None
 LAST_NEXT_WORD = None
 LAST_OPEN_WORD = None      # where the plan's first word starts, and where the word before it ends
 LAST_PREV_END = None
+LAST_PREV_START = None
 LAST_WORDS = []
 
 
@@ -102,9 +103,9 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     So when the words are not in the window, the whole video is searched. The
     sentences identify the clip; the region only says where to look first.
     """
-    global LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS, LAST_OPEN_WORD, LAST_PREV_END
+    global LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS, LAST_OPEN_WORD, LAST_PREV_END, LAST_PREV_START
     LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS = None, None, []   # never the previous clip's
-    LAST_OPEN_WORD = LAST_PREV_END = None
+    LAST_OPEN_WORD = LAST_PREV_END = LAST_PREV_START = None
     a0, b0 = max(0.0, region[0] - 22), region[1] + 28
     w = words_in(src, a0, b0, tag, S)
     i = _find(w, first_words)
@@ -125,6 +126,7 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     LAST_NEXT_WORD = round(nxt, 3) if j_end + 1 < len(w) else None
     LAST_OPEN_WORD = round(w[i]["a"], 3)
     LAST_PREV_END = round(w[i - 1]["b"], 3) if i > 0 else None
+    LAST_PREV_START = round(w[i - 1]["a"], 3) if i > 0 else None
     # THIS WINDOW IS WHAT THE CAPTIONS ARE TRANSCRIBED OVER, so it does not move: a new
     # window is a new transcription, and every correction written against the old one
     # would silently stop matching. Where the clip really starts and ends - in the

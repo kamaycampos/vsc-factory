@@ -156,7 +156,7 @@ def valley(src, t, back=0.35, ahead=0.10):
     return a0 + (k * 80 + st / 2) / 16000.0
 
 
-def pause_after(src, said, back=0.6, ahead=0.5):
+def pause_after(src, said, back=0.6, ahead=0.5, word_start=None):
     """The silence Kevin leaves after the close, from the sound: (start, end) or None.
 
     Whisper's word times cannot show it - on YOUR-BIGGEST-DISASTER "it." runs 26.97-27.68
@@ -168,6 +168,20 @@ def pause_after(src, said, back=0.6, ahead=0.5):
     # creates it", whisper's boundary at 27.68, "One" at 27.50) - are long.
     # ...but never a pause INSIDE the close: a silence followed by speech that ends
     # well before the close does ("end it. | It creates it.") would cut the punchline.
+    # ...unless whisper SWALLOWED the next word into the last one. 3 Oct 2026, Kamay on
+    # the delivered FALL-DOWN-SEVEN-TIMES: "benefit." ran 944.81-946.04 - 1.23 s, ending
+    # exactly where "Successful" starts. Measured in the clip: "benefit" ends with its
+    # t-burst at +20.52, 125 ms of silence, then the S-hiss of "Successful" at +20.78 -
+    # all of it inside whisper's "benefit.", so the clip ran on through "Successful".
+    # A last word that long is two words: the FIRST real silence after its first 0.2 s
+    # is where he stopped (>= 0.1 s here: a gap between two words, not a stop consonant).
+    if word_start is not None and said - word_start > 0.8:
+        # the window stays INSIDE the word: a muted gap after it (this source has them)
+        # would drag the 'quiet' threshold down to digital silence and hide room tone
+        inside = [r for r in quiet_runs(src, said, before=said - word_start + 0.1, length=said - word_start + 0.25)
+                  if r[1] >= word_start + 0.2 and r[0] <= said + 0.1 and r[1] - r[0] >= 0.10]
+        if inside:
+            return min(inside)
     return _longest([r for r in quiet_runs(src, said, before=1.4, length=2.8) if r[1] >= said - 0.25],
                     said - 1.0, said + ahead)
 
@@ -392,10 +406,32 @@ def main(only=None):
         a_cap = a
         ow, pe = r.get("open_word"), r.get("prev_end")
         hz, head_note, head_bad = None, "", False
+        if r.get("start_at") is not None:
+            # A START MEASURED IN THE SOURCE'S SOUND (plan "start_at", source seconds) -
+            # NOT-AFFECTED-BY-ANYTHING, 3 Oct: the 0.13 s gap before "Successful" sits
+            # inside whisper's "benefit.", where nothing built on word times can find it.
+            a = float(r["start_at"])
+            head_note = f"starts at the plan's measured start_at {a:.2f} (source seconds)"
+            ow = None
         if ow is not None and ow > 0.5:
             hz = pause_before(src, ow)
+            # THE WORD BEFORE SWALLOWED THE OPENING. 3 Oct 2026, Kamay: NOT-AFFECTED-BY-
+            # ANYTHING opened on "...people" under a SUCCESSFUL PEOPLE caption. Whisper's
+            # "benefit." ran 944.81-946.04 and its "Successful" started 0.7 s late: the
+            # real S-onset (945.33) and the 0.13 s gap before it were inside the word
+            # before. A word before the opening that long is searched for its last real
+            # silence (>= 0.1 s), and the clip starts there.
+            ps = r.get("prev_start")
+            if ps is not None and pe is not None and pe - ps > 0.8 and ow - pe < 0.1:
+                inside = [g for g in quiet_runs(src, ow, before=ow - ps + 0.1, length=ow - ps + 0.3)
+                          if g[0] >= ps + 0.2 and g[1] <= ow + 0.1 and g[1] - g[0] >= 0.10]
+                if inside:
+                    hz = max(inside)
             if hz is not None:
-                a = max(0.0, hz[1] - min(0.12, (hz[1] - hz[0]) * 0.4))
+                # 0.15 s of silence before the first word at least (Connector, 3 Oct: a
+                # clipped first syllable was heard on several delivered openings), and all
+                # of a shorter gap
+                a = max(0.0, hz[0], hz[1] - 0.18)
                 head_note = f"starts in the pause before the open (+{hz[0] - a:.2f}s to +{hz[1] - a:.2f}s)"
             else:
                 v = valley(src, ow, back=0.35, ahead=0.05)
@@ -421,7 +457,9 @@ def main(only=None):
         # END IN THE PAUSE HE LEAVES AFTER THE CLOSE, heard in the sound. Whisper's
         # times cannot be trusted at a word boundary: on YOUR-BIGGEST-DISASTER "it."
         # runs to 27.68 and "One" starts at 27.68 - the pause swallowed whole.
-        pz = pause_after(src, close_abs) if said is not None else None
+        cw = r.get("close_words") or []
+        pz = pause_after(src, close_abs, word_start=(a_cap + cw[-1][0]) if cw else None) \
+            if said is not None else None
         if pz is not None:
             close_abs, close_end = pz[0], pz[0] - a      # he has stopped: the fades start here
             new_b = pz[0] + min(0.12, (pz[1] - pz[0]) * 0.4)
@@ -447,6 +485,16 @@ def main(only=None):
             new_b = close_abs + tail
             note = "no locator close: caption pass close"
         b = min(new_b, said + 0.60) if said is not None else new_b
+        # AN END MEASURED IN THE SOURCE'S SOUND (plan "end_at", source seconds, read off
+        # `cloud/edges.py probe`). 3 Oct 2026: THE-TEAM-THATS-LOSING's third "attacking"
+        # runs into "Vince Lombardi" with 90 ms between them and every word time near it
+        # was half a second off, so no rule built on word times found the gap - Kamay
+        # heard the next words. Where the times cannot see the pause, the plan names it.
+        if r.get("end_at") is not None:
+            b = new_b = float(r["end_at"])
+            close_abs, close_end = b - 0.03, b - 0.03 - a
+            pz = (b - 0.03, b)
+            note = f"ends at the plan's measured end_at {b:.2f} (source seconds)"
         # THE TAIL CHECK. Nothing he says after the close may be in the clip: a clip
         # whose close runs straight into the next word, with no pause to end in, is a
         # FAIL for a person to hear - never a silent pass.
@@ -549,7 +597,10 @@ def main(only=None):
                   + (f"; fade from black lifted to +{lift[0]:.2f}s" if lift else ""), flush=True)
         R.build(src, fj, a, b, two_lines(hook), words, dest,
                 speech_end=min(close_end, span), vis_end=vis, overrides=ovs or None,
-                fade_out_by=span if tail_bad else None, fade_in=0.08 if head_bad else 0.0)
+                # end_fade: the plan's end_at sits in a pause UNDER A MUSIC BED (BANNED-FOR-
+                # LIFE, 3 Oct) - fade the music by the cut, never Kevin
+                fade_out_by=span if (tail_bad or r.get("end_fade")) else None,
+                fade_in=0.08 if head_bad else 0.0)
         # exactly what was burned, for kt_sync_check
         json.dump([[w["a"], w["b"], w["text"]] for w in words],
                   open(dest[:-4] + "__caps.json", "w"))

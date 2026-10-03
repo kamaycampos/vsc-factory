@@ -33,10 +33,10 @@
    "name": "NO-SUCH-THING-AS-ADVERSITY",
    "region": [
     26,
-    66
+    99
    ],
    "open": "one of the biggest misconceptions that people have",
-   "close": "deal with challenges better than they do",
+   "close": "major failures every single successful person",
    "hook": [
     "THERE IS NO SUCH",
     "THING AS ADVERSITY"
@@ -78,10 +78,10 @@
    "name": "MORE-PROBLEMS-THAN-YOU",
    "region": [
     90,
-    140
+    156
    ],
    "open": "every single successful person",
-   "close": "successful people are not people without problems",
+   "close": "which will take them to the next level",
    "hook": [
     "SUCCESSFUL PEOPLE HAVE MORE",
     "PROBLEMS THAN YOU DO"
@@ -241,7 +241,7 @@
     307
    ],
    "open": "i remember smokey the bear",
-   "close": "forest fire is a blessing",
+   "close": "adversity is the seed of a greater benefit",
    "hook": [
     "A FOREST FIRE",
     "IS A BLESSING"
@@ -358,10 +358,10 @@
    "name": "THE-450-MILLION-BREAKUP",
    "region": [
     396,
-    458
+    464
    ],
    "open": "i had a partner",
-   "close": "i became the infomercial king",
+   "close": "of dollars on tv around the world",
    "hook": [
     "A BREAKUP TURNED INTO",
     "450 MILLION DOLLARS"
@@ -428,10 +428,10 @@
    "name": "BANNED-FOR-LIFE",
    "region": [
     460,
-    520
+    532
    ],
    "open": "i got sued by the federal trade commission",
-   "close": "now i'm banned from tv infomercials",
+   "close": "first amendment that means books",
    "hook": [
     "I ASKED THEM TO BAN",
     "ME FOR LIFE"
@@ -472,7 +472,9 @@
      "stop this show You're making",
      "stop this show. You're making"
     ]
-   ]
+   ],
+   "end_at": 529.8,
+   "end_fade": 1
   },
   {
    "name": "WRITE-THE-BOOK",
@@ -561,7 +563,7 @@
     658
    ],
    "open": "there's a big distinction between how rich people",
-   "close": "running toward the problem, not away from the problem",
+   "close": "not away from the problem trying to protect",
    "hook": [
     "THE NUMBER ONE DIFFERENCE",
     "BETWEEN RICH AND BROKE"
@@ -601,7 +603,7 @@
     726
    ],
    "open": "there's a word, confront",
-   "close": "it's all mindset of how you look at the challenge or the problem",
+   "close": "or are you in defensive mode",
    "hook": [
     "RUN AT THE PROBLEM,",
     "NOT AWAY FROM IT"
@@ -652,7 +654,8 @@
      "guess what undurably happens",
      "guess what invariably happens?"
     ]
-   ]
+   ],
+   "end_at": 743.235
   },
   {
    "name": "WINNERS-HATE-LOSING",
@@ -726,7 +729,7 @@
     912
    ],
    "open": "remember this phrase",
-   "close": "change the brain chemistry and change the way you feel",
+   "close": "therefore you can look at it differently",
    "hook": [
     "LAUGH WHILE IT'S",
     "STILL A DISASTER"
@@ -892,7 +895,8 @@
      "what most people call We call adversity",
      "what most people call adversity"
     ]
-   ]
+   ],
+   "end_at": 945.17
   },
   {
    "name": "NOT-AFFECTED-BY-ANYTHING",
@@ -912,7 +916,8 @@
      "Successful people are a cause over them",
      "Successful people are at cause over them."
     ]
-   ]
+   ],
+   "start_at": 945.2
   }
  ],
  "rumble": "https://rumble.com/v7ed2gy-your-success-starts-on-your-worst-day-what-every-millionaire-knows.html",

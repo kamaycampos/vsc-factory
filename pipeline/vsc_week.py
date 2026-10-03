@@ -156,6 +156,7 @@ def main(only=None):
         os.path.join(WORK, "v2_fixes.json")) else {}
     # every clip's corrections, read from the plans themselves
     plan_fixes = {}
+    plan_cut = {}        # edges MEASURED IN THE SOURCE'S SOUND (cloud/edges.py probe; see vsc_v2_render)
     # WHERE THE PLANS ARE, FROM THE SERVER'S POINT OF VIEW. setup.sh copies this file
     # into ~/Kamay so the pipeline runs unchanged, which means __file__ is no longer
     # inside the checkout - looking for "../plans" found ~/plans, which does not exist,
@@ -180,6 +181,9 @@ def main(only=None):
             for _c in _p.get("clips", []):
                 if _c.get("fixes"):
                     plan_fixes[_c["name"]] = _c["fixes"]
+                for _k in ("start_at", "end_at", "end_fade"):
+                    if _c.get(_k) is not None:
+                        plan_cut.setdefault(_c["name"], {})[_k] = float(_c[_k])
                 if not _c.get("open") or not _c.get("close"):
                     continue
                 # THE PLAN WINS. 30 Sept 2026: ten clips were re-cut in the plan to end
@@ -231,6 +235,13 @@ def main(only=None):
             a, b = got
             if name in END_OVERRIDE:
                 b = END_OVERRIDE[name]
+            # an edge measured in the source (plan start_at / end_at) must lie INSIDE the
+            # window the captions are transcribed over, or its words get no caption
+            _pc = plan_cut.get(name, {})
+            if _pc.get("start_at") is not None:
+                a = round(min(a, _pc["start_at"] - 0.05), 3)
+            if _pc.get("end_at") is not None:
+                b = round(max(b, _pc["end_at"] + 0.05), 3)
             # WHERE HE FINISHES THE CLOSING WORD, as the locator measured it. 1 Oct 2026:
             # YOUR-BIGGEST-DISASTER was located 0.00-27.90 and MORE-PROBLEMS-THAN-YOU
             # 94.70-133.59 - both right - and both shipped short ("It doesn't end",
@@ -246,7 +257,11 @@ def main(only=None):
                         "close_words": close_words[-20:],
                         "next_word": vsc_pick.LAST_NEXT_WORD,
                         "open_word": vsc_pick.LAST_OPEN_WORD,
-                        "prev_end": vsc_pick.LAST_PREV_END}
+                        "prev_end": vsc_pick.LAST_PREV_END,
+                        "prev_start": vsc_pick.LAST_PREV_START,
+                        "start_at": plan_cut.get(name, {}).get("start_at"),
+                        "end_at": plan_cut.get(name, {}).get("end_at"),
+                        "end_fade": bool(plan_cut.get(name, {}).get("end_fade"))}
             json.dump(ab, open(abp, "w"), indent=1)
             print(f"  {name:30} {a:8.2f} - {b:8.2f}  ({b - a:5.1f}s)", flush=True)
             # CORRECTIONS COME WITH THE PLAN. 29 Sept: the cloud rebuilt this batch
