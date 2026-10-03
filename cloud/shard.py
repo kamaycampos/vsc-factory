@@ -65,6 +65,8 @@ def main():
         for c in p["clips"]:
             if only and c["name"] not in only:
                 continue
+            if only:                          # named on demand: rebuilt, built or not
+                todo.append(c["name"]); continue
             if c["name"] not in done:
                 todo.append(c["name"]); continue
             if built.get(c["name"]) != fingerprint(c):

@@ -169,7 +169,8 @@ def _pan_expr(keys, sw, cw):
     return f"if(lt(t,{px[0][0]:.3f}),{px[0][1]:.1f},{expr})"
 
 
-def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=None, overrides=None):
+def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=None, overrides=None,
+          fade_out_by=None, fade_in=0.0):
     sw, sh = source_size(src)
     segs = json.load(open(framejson))["segments"]
     shots = apply_overrides(shots_in(segs, t0, t1), t0, overrides)
@@ -255,9 +256,17 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     # Anchored to where he actually STOPS, not to the end of the trim - those
     # differ by the tail, and when the tail was short the fade ate his last word.
     _astart = min(_spend + 0.08, _tot - 0.30)
+    _afade = f"afade=t=out:st={_astart:.3f}:d={max(0.30, _tot - _astart):.3f}"
+    # NO PAUSE TO END IN (2 Oct 2026): Kevin runs the close straight into his next
+    # sentence. The sound is faded to nothing BY the cut, over 0.15s, so the clip
+    # neither stops dead on a live waveform nor lets the next word start.
+    if fade_out_by is not None:
+        _fe = min(max(fade_out_by, 0.2), _d)
+        _afade = f"afade=t=out:st={_fe - 0.15:.3f}:d=0.15"
+    if fade_in:
+        _afade = f"afade=t=in:st=0:d={fade_in:.3f}," + _afade
     graph += (f"[0:a]atrim=start={t0:.3f}:end={t1:.3f},asetpts=PTS-STARTPTS,"
-              f"apad=pad_dur={_hold},"
-              f"afade=t=out:st={_astart:.3f}:d={max(0.30, _tot - _astart):.3f}[ao]")
+              f"apad=pad_dur={_hold},{_afade}[ao]")
 
     # SEEK TO THE CLIP, DO NOT DECODE THE WHOLE FILE. Every shot in the graph is a
     # separate trim branch off the same decoded input, so ffmpeg buffers frames for all

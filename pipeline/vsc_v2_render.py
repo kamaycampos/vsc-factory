@@ -321,7 +321,9 @@ def main(only=None):
         # THE TAIL CHECK. Nothing he says after the close may be in the clip: a clip
         # whose close runs straight into the next word, with no pause to end in, is a
         # FAIL for a person to hear - never a silent pass.
-        tail_bad = said is not None and pz is None and nxt is not None and b > nxt - 0.03
+        # Every no-pause ending is a FAIL to be heard - not only one past the next
+        # word's whisper start: BANNED-FOR-LIFE's quietest point was still 58 dB.
+        tail_bad = said is not None and pz is None
         json.dump({"close": round(close_abs - a, 3), "end": round(b - a, 3),
                    "pause": None if pz is None else [round(pz[0] - a, 3), round(pz[1] - a, 3)],
                    "next_word": None if nxt is None else round(nxt - a, 3),
@@ -379,7 +381,8 @@ def main(only=None):
         hook = HOOKS.get(name) or [h for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl
                                   if n2 == name][0]
         R.build(src, fj, a, b, two_lines(hook), words, dest,
-                speech_end=min(close_end, span), vis_end=vis, overrides=ov.get(name))
+                speech_end=min(close_end, span), vis_end=vis, overrides=ov.get(name),
+                fade_out_by=span if tail_bad else None, fade_in=0.08 if head_bad else 0.0)
         # exactly what was burned, for kt_sync_check
         json.dump([[w["a"], w["b"], w["text"]] for w in words],
                   open(dest[:-4] + "__caps.json", "w"))
