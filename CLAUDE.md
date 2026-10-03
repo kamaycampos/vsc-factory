@@ -77,6 +77,10 @@ reaches the other projects.
   APPLIED"). Write fixes against `<clip>__caps.json`, never the Mac transcript, and
   never write a second fix over text an earlier fix produced (they stack: "without
   problems. problems. problems,").
+- **A delivered clip is never rebuilt by a scheduled or plan-push build.** Its names go in
+  `cloud/delivered.json` when the batch goes to GIN; only the workflow's `only` input can
+  rebuild one. A FAIL ("listen") verdict is never recorded in `built.json`, so without the
+  list Monday's cron rebuilt delivered clips under new shared framing (3 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

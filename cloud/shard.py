@@ -58,15 +58,26 @@ def main():
     # identical to the Mac's, and how a single bad clip gets redone without a batch.
     only = [x for x in os.environ.get("ONLY", "").split() if x]
     done, built = already_built()
+    # DELIVERED CLIPS ARE FINISHED. 3 Oct 2026: four of the 23 delivered to GIN carried a
+    # FAIL "listen" verdict, so collect never recorded their fingerprint, and Monday's
+    # scheduled build would have rebuilt them under new shared framing - a different
+    # file in the release from the one on Frame.io. Only `only` can rebuild one now.
+    try:
+        delivered = json.load(open(os.path.join(HERE, "cloud", "delivered.json")))
+    except Exception:
+        delivered = {}
     out, stale = [], []
     for f in sorted(glob.glob(os.path.join(HERE, "plans", "*.json"))):
         p = json.load(open(f))
         todo = []
+        locked = set(delivered.get(p["key"], []))
         for c in p["clips"]:
             if only and c["name"] not in only:
                 continue
             if only:                          # named on demand: rebuilt, built or not
                 todo.append(c["name"]); continue
+            if c["name"] in locked:
+                continue
             if c["name"] not in done:
                 todo.append(c["name"]); continue
             if built.get(c["name"]) != fingerprint(c):

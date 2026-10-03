@@ -1,0 +1,28 @@
+{
+ "_why": "Delivered to GIN (3 Oct 2026, Frame.io). A delivered clip is never rebuilt by a scheduled or plan-push build: its Frame.io copy and the clips release must stay the same file. Only naming it in the workflow's `only` input rebuilds it.",
+ "millionaires_problems": [
+  "BANNED-FOR-LIFE",
+  "BEAT-HARRY-POTTER",
+  "FALL-DOWN-SEVEN-TIMES",
+  "JOBS-WAS-FIRED",
+  "LAUGH-NOW",
+  "LOST-80-PERCENT",
+  "MORE-PROBLEMS-THAN-YOU",
+  "NEVER-HAD-ADVERSITY",
+  "NO-SUCH-THING-AS-ADVERSITY",
+  "NOT-AFFECTED-BY-ANYTHING",
+  "NOTHING-IS-DONE-TO-YOU",
+  "PAIN-NOT-SUFFERING",
+  "REACT-OR-RESPOND",
+  "REPLACE-THE-HABIT",
+  "RUN-AT-THE-PROBLEM",
+  "SHE-WAS-LIVING-IN-HER-CAR",
+  "THE-450-MILLION-BREAKUP",
+  "THE-FOREST-FIRE",
+  "THE-TEAM-THATS-LOSING",
+  "TONS-OF-DIRT-FOR-GOLD",
+  "WINNERS-HATE-LOSING",
+  "WRITE-THE-BOOK",
+  "YOUR-BIGGEST-DISASTER"
+ ]
+}
