@@ -130,13 +130,13 @@ def _nearest(runs, t):
 
 
 def _longest(runs, lo, hi, real=0.15):
-    """Of the quiet runs that overlap [lo, hi], the longest real one (>= `real` s);
-    failing that, the longest at all; None when there is none."""
-    runs = [r for r in runs if r[1] >= lo and r[0] <= hi]
-    if not runs:
-        return None
-    big = [r for r in runs if r[1] - r[0] >= real]
-    return max(big or runs, key=lambda r: r[1] - r[0])
+    """Of the quiet runs that overlap [lo, hi], the longest REAL one (>= `real` s), or
+    None. 3 Oct 2026, run 33: FALL-DOWN-SEVEN-TIMES "ended in the pause" from +21.82 to
+    +21.89 - a 70 ms gap between two words of running speech, taken because the old
+    fallback accepted the longest gap of any length. That is no pause: it gets the
+    fade and the FAIL that a person listens to, like every other no-pause edge."""
+    big = [r for r in runs if r[1] >= lo and r[0] <= hi and r[1] - r[0] >= real]
+    return max(big, key=lambda r: r[1] - r[0]) if big else None
 
 
 def valley(src, t, back=0.35, ahead=0.10):
