@@ -22,6 +22,7 @@ from PIL import ImageFont
 
 HOME   = os.path.expanduser("~/Kamay")
 FFMPEG = os.path.join(HOME, "bin/ffmpeg")
+FFPROBE = os.path.join(HOME, "bin/ffprobe")
 FONT   = "/System/Library/Fonts/Supplemental/DIN Condensed Bold.ttf"
 W, H   = 1080, 1920
 SAFE_W = 780            # phones crop ~10% off each side of a 9:16 clip
@@ -320,35 +321,59 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     if len(shots) > 1 and os.environ.get("VSC_ONE_PASS") != "1":
         import re as _re, tempfile as _tf
         tmp = _tf.mkdtemp(prefix="vsc_shots_")
-        segs_ok = True
+
+        def _frames(f):
+            q = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-count_packets",
+                                "-show_entries", "stream=nb_read_packets", "-of", "csv=p=0", f],
+                               capture_output=True, text=True)
+            try:
+                return int(q.stdout.strip() or 0) if q.returncode == 0 else 0
+            except ValueError:
+                return 0
+        segfiles = []
         for i, p in enumerate(parts):
             starts = [float(x) for x in _re.findall(r"trim=start=([0-9.]+)", p)]
             ss = max(0.0, min(starts) - 4.0) if starts else seek
-            seg = os.path.join(tmp, f"s{i:03d}.mkv")
-            rr = subprocess.run([FFMPEG, "-y", "-copyts", "-ss", f"{ss:.3f}", "-i", src,
-                                 "-threads", "2", "-filter_complex_threads", "1",
-                                 "-filter_complex", p.rstrip(";"), "-map", f"[v{i}]",
-                                 "-c:v", "libx264", "-preset", "fast", "-crf", "12",
-                                 "-pix_fmt", "yuv420p", seg, "-loglevel", "error"])
-            if rr.returncode or not os.path.exists(seg):
-                segs_ok = False
-                break
-        if segs_ok:
-            g2 = "".join(f"[{i + 1}:v]" for i in range(len(parts))) + \
-                 f"concat=n={len(parts)}:v=1:a=0[vcc];" + graph[_head:]
+            got = None
+            # READ BACK, NOT TRUSTED. Run 43: the runner's ffmpeg wrote NO-SUCH-THING-AS-
+            # ADVERSITY's 0.4 s second shot as an .mkv it then could not open, with exit 0.
+            # Each file is checked for frames; one retry as MPEG-TS.
+            for ext in ("mp4", "ts"):
+                seg = os.path.join(tmp, f"s{i:03d}.{ext}")
+                rr = subprocess.run([FFMPEG, "-y", "-copyts", "-ss", f"{ss:.3f}", "-i", src,
+                                     "-threads", "2", "-filter_complex_threads", "1",
+                                     "-filter_complex", p.rstrip(";"), "-map", f"[v{i}]",
+                                     "-c:v", "libx264", "-preset", "fast", "-crf", "12",
+                                     "-pix_fmt", "yuv420p", seg, "-loglevel", "error"])
+                if rr.returncode == 0 and _frames(seg) > 0:
+                    got = seg
+                    break
+            if got is None:
+                # a shot with no frames at all (a sliver) added nothing in one pass either
+                print(f"      shot {i} has no frames - left out", flush=True)
+            else:
+                segfiles.append(got)
+        if segfiles:
+            g2 = "".join(f"[{k + 1}:v]" for k in range(len(segfiles))) + \
+                 f"concat=n={len(segfiles)}:v=1:a=0[vcc];" + graph[_head:]
             ins = [FFMPEG, "-y", "-copyts", "-ss", f"{seek:.3f}", "-i", src]
-            for i in range(len(parts)):
-                ins += ["-i", os.path.join(tmp, f"s{i:03d}.mkv")]
+            for f_ in segfiles:
+                ins += ["-i", f_]
             b2 = list(base)
             b2[b2.index("-filter_complex") + 1] = g2
             r2 = subprocess.run(ins + b2)
             shutil.rmtree(tmp, ignore_errors=True)
-            if r2.returncode == 0:
+            # and the joined clip must be as long as the clip is
+            dur_ = subprocess.run([FFPROBE, "-v", "error", "-show_entries", "format=duration",
+                                   "-of", "csv=p=0", out], capture_output=True, text=True).stdout.strip()
+            want_ = (t1 - t0) + _hold
+            if r2.returncode == 0 and dur_ and abs(float(dur_) - want_) < 0.3:
                 return shots
-            print(f"      shot-by-shot render failed ({r2.returncode}); one pass", flush=True)
+            print(f"      shot-by-shot render failed ({r2.returncode}, {dur_ or '?'} s of {want_:.2f}); one pass",
+                  flush=True)
         else:
             shutil.rmtree(tmp, ignore_errors=True)
-            print("      a shot failed to render on its own; one pass", flush=True)
+            print("      no shot rendered on its own; one pass", flush=True)
     cmd = [FFMPEG, "-y", "-copyts", "-ss", f"{seek:.3f}", "-i", src] + base
     r = subprocess.run(cmd)
     if r.returncode:
