@@ -56,8 +56,8 @@ reaches the other projects.
 - Emphasis capitals never cost a word.
 - **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
 - **Format 1080x1920 (9:16), hard maximum 120 s** (Naomi's ceiling; `MAX_LEN = 118`).
-  In practice ~20-60 s: a clip with many shots or over ~60 s kills the runner - split
-  it into two clips that each carry a full idea.
+  In practice ~20-60 s; since 4 Oct the renderer handles long clips (see below), but a
+  clip over ~75 s should still be two clips that each carry a full idea.
 - **Framing is checked across the WHOLE clip**, not just the first frame - the
   interviews cut between 2-4 camera angles.
 - **One caption size per clip.** Reviewers: Cali and Naomi, on GIN's Frame.io.
@@ -93,7 +93,12 @@ reaches the other projects.
 - **Whisper swallows pauses AND whole words into a neighbour**: "benefit." ran 1.23 s and held
   the pause plus "Successful". A last word (or the word before the opening) over 0.8 s is
   searched inside for the real silence. Where word times cannot find a gap at all, the plan's
-  `end_cut` (seconds from the delivered file's start, measured in its sound) names it.
+  `start_at` / `end_at` (SOURCE seconds, read off `python cloud/edges.py probe <key> t0:t1`)
+  name it; `end_fade` fades by the cut when that pause sits under a music bed.
+- **Every shot renders in its own ffmpeg, then one pass joins them at 9:16** (vsc_render).
+  Trimming every shot off one decoded 4K stream queued gigabytes of frames and killed the
+  runner on every clip over ~62 s (run 42: NO-SUCH 70.8 s, BANNED 66.5 s, 3 attempts each).
+  Measured locally on a 75 s 4K source: one pass OOM-killed at 16 GB, shot-by-shot 0.97 GB.
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

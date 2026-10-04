@@ -17,7 +17,7 @@ upper third, last line yellow, gone at 3s. Condensed fits 138px inside the 780px
 safe width where Montserrat fits 76px - nearly double, and the high position
 leaves his face clear.
 """
-import json, os, subprocess, sys
+import json, os, shutil, subprocess, sys
 from PIL import ImageFont
 
 HOME   = os.path.expanduser("~/Kamay")
@@ -228,6 +228,7 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
             parts.append(head + f",scale={W}:{H}:flags=lanczos,setsar=1,fps=30[v{i}];")
         labels.append(f"[v{i}]")
     graph = "".join(parts) + "".join(labels) + f"concat=n={len(shots)}:v=1:a=0[vcc];"
+    _head = len(graph)        # everything after this works on the 9:16 picture (see the render below)
     # 12 Sept, Kamay: "when kevin is done butttt there is another scene coming and
     # you can see that". Every check I had was audio - a shot change at the tail is
     # invisible to all of them. If the source cuts to a new scene inside the last
@@ -310,6 +311,44 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
             "-movflags", "+faststart", out, "-loglevel", "error"]
     seek = max(0.0, t0 - 4.0)
+    # EACH SHOT ITS OWN PROCESS, THEN ONE PASS OVER THE 9:16 PICTURE. 3 Oct 2026, run 42:
+    # NO-SUCH-THING-AS-ADVERSITY (70.8 s) and BANNED-FOR-LIFE (66.5 s) were killed by
+    # the runner mid-render on all three attempts - every shot is a trim branch off ONE
+    # decoded 4K stream, and the frames of the shots not yet reached queue up in memory,
+    # which is what has held every clip under ~60 s. Rendered one shot per ffmpeg, each
+    # holds only its own 4K frames; the join, captions and fades then run on 1080x1920.
+    if len(shots) > 1 and os.environ.get("VSC_ONE_PASS") != "1":
+        import re as _re, tempfile as _tf
+        tmp = _tf.mkdtemp(prefix="vsc_shots_")
+        segs_ok = True
+        for i, p in enumerate(parts):
+            starts = [float(x) for x in _re.findall(r"trim=start=([0-9.]+)", p)]
+            ss = max(0.0, min(starts) - 4.0) if starts else seek
+            seg = os.path.join(tmp, f"s{i:03d}.mkv")
+            rr = subprocess.run([FFMPEG, "-y", "-copyts", "-ss", f"{ss:.3f}", "-i", src,
+                                 "-threads", "2", "-filter_complex_threads", "1",
+                                 "-filter_complex", p.rstrip(";"), "-map", f"[v{i}]",
+                                 "-c:v", "libx264", "-preset", "fast", "-crf", "12",
+                                 "-pix_fmt", "yuv420p", seg, "-loglevel", "error"])
+            if rr.returncode or not os.path.exists(seg):
+                segs_ok = False
+                break
+        if segs_ok:
+            g2 = "".join(f"[{i + 1}:v]" for i in range(len(parts))) + \
+                 f"concat=n={len(parts)}:v=1:a=0[vcc];" + graph[_head:]
+            ins = [FFMPEG, "-y", "-copyts", "-ss", f"{seek:.3f}", "-i", src]
+            for i in range(len(parts)):
+                ins += ["-i", os.path.join(tmp, f"s{i:03d}.mkv")]
+            b2 = list(base)
+            b2[b2.index("-filter_complex") + 1] = g2
+            r2 = subprocess.run(ins + b2)
+            shutil.rmtree(tmp, ignore_errors=True)
+            if r2.returncode == 0:
+                return shots
+            print(f"      shot-by-shot render failed ({r2.returncode}); one pass", flush=True)
+        else:
+            shutil.rmtree(tmp, ignore_errors=True)
+            print("      a shot failed to render on its own; one pass", flush=True)
     cmd = [FFMPEG, "-y", "-copyts", "-ss", f"{seek:.3f}", "-i", src] + base
     r = subprocess.run(cmd)
     if r.returncode:
