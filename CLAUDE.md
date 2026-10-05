@@ -132,6 +132,26 @@ too short was made deep inside that context.
 - Routine work (planning from a transcript, caption fixes) runs on Sonnet in a fresh
   scheduled session, like kt-machine's planners - never in an Opus conversation.
 
+## Next to build (Kamay is deciding the shape - do not build until he says how)
+
+**VSC on autopilot, like the KT and AR accounts** (Kamay, 5 Oct: "keep that in the next to
+build"). Today a batch is hand-made in an Opus chat; KT's is planned by a Sonnet routine in
+a fresh session twice a week and needs nobody. The VSC version would be:
+1. Kamay drops a one-line stub plan (`key`, Rumble URL, duration) - GIN picks the episode,
+   so that is the one step that stays human.
+2. `prep` transcribes it and publishes the transcript (already works for a stub plan).
+3. A scheduled Sonnet planner, in a fresh session, reads the transcript and this file's
+   rules, writes `clips[]`, runs `cloud/check_plan.py`, and pushes.
+4. `vsc.yml` builds; with `FRAMEIO_TOKEN` set the batch could go to Frame.io too.
+Open questions for Kamay: who triggers it, whether delivery to Frame.io is automatic, and
+how much review he wants before GIN sees it.
+
+Smaller, also waiting:
+- Three stacked fix pairs remain in `millionaires_problems` (NO-SUCH 1/4 and 2/5,
+  MORE-PROBLEMS 1/7). Those clips are delivered; clean them before any `only` rebuild.
+- Check whether the `prep` release publishes the transcript UNENCRYPTED in this public
+  repository; every other copy of Kevin's material is encrypted.
+
 ## Shared engine
 
 Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
