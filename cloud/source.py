@@ -66,10 +66,19 @@ def fetch(plan):
     if usable():
         return dest
 
-    # 1. the cached copy
+    # 1. the cached copy (one file, or <name>.part00, .part01... for one over 2 GiB)
     r = sh("gh", "release", "download", "sources", "-R", REPO, "-p", name, "-D", "/tmp",
            "--clobber")
     got = os.path.join("/tmp", name)
+    if r.returncode != 0 and name.endswith(".enc"):
+        sh("gh", "release", "download", "sources", "-R", REPO, "-p", name + ".part*", "-D", "/tmp",
+           "--clobber")
+        parts = sorted(os.path.join("/tmp", f) for f in os.listdir("/tmp") if f.startswith(name + ".part"))
+        if parts:
+            j = subprocess.run("cat " + " ".join(f'"{x}"' for x in parts) + f' > "{got}"', shell=True)
+            for x in parts:
+                os.remove(x)
+            r = j
     if r.returncode == 0 and os.path.exists(got):
         if name.endswith(".enc"):
             sh("openssl", "enc", "-d", "-aes-256-cbc", "-pbkdf2", "-pass", "env:VSC_KEY",
@@ -97,13 +106,30 @@ def fetch(plan):
                 print(f"  fetched from Rumble ({height(dest)}p): "
                       f"{plan.get('rumble_title', '')}", flush=True)
                 if os.environ.get("SOURCE_MAY_CACHE") == "1":
+                    # OVER 2 GiB GOES UP IN PARTS (5 Oct 2026): GitHub refuses a release
+                    # asset of 2 GiB or more, and every shard downloads the source from
+                    # here. Same scheme as kt-machine's rumble_stock.py; the download
+                    # above joins the parts byte for byte.
                     enc = os.path.join("/tmp", name)
-                    sh("openssl", "enc", "-aes-256-cbc", "-pbkdf2", "-salt",
-                       "-pass", "env:VSC_KEY", "-in", dest, "-out", enc)
                     sh("gh", "release", "create", "sources", "-R", REPO, "-t", "sources",
                        "-n", "Source videos, encrypted. This repository is public.")
-                    u = sh("gh", "release", "upload", "sources", enc, "--clobber", "-R", REPO)
-                    os.remove(enc)
+                    part = 1900 * 1024 * 1024
+                    if os.path.getsize(dest) < part - 1024 * 1024:
+                        sh("openssl", "enc", "-aes-256-cbc", "-pbkdf2", "-salt",
+                           "-pass", "env:VSC_KEY", "-in", dest, "-out", enc)
+                        files = [enc]
+                    else:
+                        subprocess.run(f'openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:VSC_KEY '
+                                       f'-in "{dest}" | split -b {part} -d -a 2 - "{enc}.part"',
+                                       shell=True, check=True)
+                        files = sorted(os.path.join("/tmp", f) for f in os.listdir("/tmp")
+                                       if f.startswith(name + ".part"))
+                    u = None
+                    for f in files:
+                        u = sh("gh", "release", "upload", "sources", f, "--clobber", "-R", REPO)
+                        os.remove(f)
+                        if u.returncode:
+                            break
                     print("  cached, encrypted, to the sources release" if not u.returncode
                           else f"  could not cache it: {u.stderr[-120:]}", flush=True)
                 return dest

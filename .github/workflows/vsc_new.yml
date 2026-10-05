@@ -1,0 +1,52 @@
+# NEW VSC BATCH - 5 Oct 2026. The one thing a person does: say what GIN assigned.
+# GitHub app -> vsc-factory -> Actions -> vsc-new -> Run workflow: type the title and
+# the length Frame.io shows, and leave. This writes the stub plan, finds the episode on
+# Rumble by its length, and starts the vsc workflow: prep transcribes it, autoplan
+# chooses the clips, build renders and checks them, and they land in the clips release.
+name: vsc-new
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "The assignment's title, as GIN gave it"
+        required: true
+      duration:
+        description: "Its length as Frame.io shows it (18:10) or in seconds"
+        required: true
+      rumble:
+        description: "Rumble URL - only if you already know it (otherwise found by length)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+  actions: write
+jobs:
+  new:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - id: n
+        env:
+          TITLE: ${{ inputs.title }}
+          DURATION: ${{ inputs.duration }}
+          RUMBLE: ${{ inputs.rumble }}
+        run: python cloud/new_batch.py "$TITLE" "$DURATION" "$RUMBLE"
+      - name: Save the stub and start the factory
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ inputs.title }}
+        run: |
+          git config user.name "vsc-new"
+          git config user.email "vsc-new@users.noreply.github.com"
+          git add plans/
+          git commit -q -m "new VSC batch: $TITLE"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
+          # A push made with this workflow's token starts no other workflow; a dispatch does.
+          gh workflow run vsc.yml --ref main
+          {
+            echo "### $TITLE is in the factory"
+            echo "Plan: plans/${{ steps.n.outputs.key }}.json - source found on Rumble: ${{ steps.n.outputs.source }}."
+            echo "The clips land in the clips release when the vsc run finishes (about 2 hours)."
+          } >> "$GITHUB_STEP_SUMMARY"

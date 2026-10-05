@@ -14,6 +14,9 @@ limit (see "Token budget").
 
 ## Making a batch (the whole loop)
 
+(The normal way is the **Autopilot** below - one form, nothing else. These are the steps it
+runs, and how to do any of them by hand.)
+
 1. **Source.** The assignment video comes from GIN / Frame.io. Find the same episode
    on Rumble by DURATION, not title: `python3 cloud/rumble_match.py <key> <seconds>`.
    Put the Rumble URL in the plan; `prep` fetches it and caches it encrypted in the
@@ -132,25 +135,31 @@ too short was made deep inside that context.
 - Routine work (planning from a transcript, caption fixes) runs on Sonnet in a fresh
   scheduled session, like kt-machine's planners - never in an Opus conversation.
 
-## Next to build (Kamay is deciding the shape - do not build until he says how)
+## Autopilot (built 5 Oct 2026) - give it the assignment, come back to clips
 
-**VSC on autopilot, like the KT and AR accounts** (Kamay, 5 Oct: "keep that in the next to
-build"). Today a batch is hand-made in an Opus chat; KT's is planned by a Sonnet routine in
-a fresh session twice a week and needs nobody. The VSC version would be:
-1. Kamay drops a one-line stub plan (`key`, Rumble URL, duration) - GIN picks the episode,
-   so that is the one step that stays human.
-2. `prep` transcribes it and publishes the transcript (already works for a stub plan).
-3. A scheduled Sonnet planner, in a fresh session, reads the transcript and this file's
-   rules, writes `clips[]`, runs `cloud/check_plan.py`, and pushes.
-4. `vsc.yml` builds; with `FRAMEIO_TOKEN` set the batch could go to Frame.io too.
-Open questions for Kamay: who triggers it, whether delivery to Frame.io is automatic, and
-how much review he wants before GIN sees it.
+1. **Kamay:** GitHub app -> vsc-factory -> Actions -> **vsc-new** -> Run workflow: the title
+   GIN gave it and the length Frame.io shows (18:10). `cloud/new_batch.py` writes a stub
+   plan, finds the episode on Rumble by length (kt-machine's catalogue, refreshed every
+   day), refuses an episode already planned, and starts `vsc.yml`.
+2. **prep** fetches and transcribes it and publishes `TRANSCRIPT_<prefix key>.txt`.
+3. **autoplan** (`cloud/autoplan.py`): ONE Claude call (Opus 5.5, high effort, no tools)
+   with `PLANNING.md` + "The rules" + the delivered batch as the brief, answering JSON in a
+   fixed schema. Code keeps it only if every `open`/`close` is in the transcript word for
+   word and `check_plan.py` passes (one repair round). Only `plans/` is committed; a fresh
+   run builds it. A failed autoplan never blocks the batches already planned.
+4. **build -> collect -> verify** as always; the clips land in the `clips` release.
 
-Smaller, also waiting:
+One-time setup: repository secret `ANTHROPIC_API_KEY` (console.anthropic.com, pay per use,
+roughly $0.20-0.60 a batch). Optional variable `VSC_PLANNER_MODEL`. No key = the stub
+waits and the run says so. Still human: watching the clips, caption `fixes` after the
+first render, and uploading to Frame.io (automatic once `FRAMEIO_TOKEN` exists).
+
+Loose ends:
 - Three stacked fix pairs remain in `millionaires_problems` (NO-SUCH 1/4 and 2/5,
   MORE-PROBLEMS 1/7). Those clips are delivered; clean them before any `only` rebuild.
-- Check whether the `prep` release publishes the transcript UNENCRYPTED in this public
-  repository; every other copy of Kevin's material is encrypted.
+- The `prep` release publishes transcripts UNENCRYPTED in this public repository (the
+  autopilot reads them there); every other copy of Kevin's material is encrypted.
+- A source over 2 GiB is cached as `<key>.mp4.enc.part00, .part01...` (source.py joins them).
 
 ## Shared engine
 

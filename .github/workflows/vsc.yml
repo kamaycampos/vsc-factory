@@ -59,8 +59,47 @@ jobs:
         env:
           SOURCE_MAY_CACHE: "1"     # prep runs alone; the parallel shards must never write
 
-  shard:
+  # THE AUTOPILOT (5 Oct 2026). A stub plan (no clips yet - from the vsc-new form) gets
+  # its clips from ONE Claude call with no tools (cloud/autoplan.py), kept only if code
+  # finds every opening and closing line in the transcript and check_plan passes. Only
+  # plans/ is committed; then a fresh run is started to build it, and this run stands down.
+  # With no stub waiting this job takes seconds and changes nothing.
+  autoplan:
     needs: prep
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: write
+    outputs:
+      planned: ${{ steps.a.outputs.planned }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - id: a
+        run: |
+          pip install -q anthropic
+          python cloud/autoplan.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VSC_PLANNER_MODEL: ${{ vars.VSC_PLANNER_MODEL }}
+      - name: Save the clips and build them
+        if: steps.a.outputs.planned == '1'
+        run: |
+          git config user.name "vsc-autoplan"
+          git config user.email "vsc-autoplan@users.noreply.github.com"
+          git add plans/
+          git commit -q -m "autoplan: clips chosen for ${{ steps.a.outputs.keys }}"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
+          gh workflow run vsc.yml --ref main
+
+  shard:
+    needs: [prep, autoplan]
+    # A failed autoplan never blocks the batches already planned; a successful one hands
+    # over to the fresh run it started (which cancels this one - newer run wins).
+    if: ${{ !cancelled() && needs.prep.result == 'success' && needs.autoplan.outputs.planned != '1' }}
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
@@ -74,7 +113,7 @@ jobs:
 
   build:
     needs: shard
-    if: needs.shard.outputs.count != '0'
+    if: ${{ !cancelled() && needs.shard.result == 'success' && needs.shard.outputs.count != '0' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
