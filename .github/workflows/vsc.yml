@@ -48,6 +48,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
+      # A bad plan fails here in seconds, before 20 servers spend an hour on it:
+      # teachings cut short to fit a machine, clips over 120 s, stacked fixes.
+      - name: Plan check
+        run: python cloud/check_plan.py
       - uses: actions/cache@v4
         with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - run: bash setup.sh

@@ -6,10 +6,11 @@ servers; Kamay downloads the finished batch from the `clips` release and uploads
 to Frame.io for GIN's reviewers. This is a JOB for GIN - it never feeds Kamay's or
 Yaren's own accounts, and their content never comes here.
 
-**The Connector** (Kamay's 4th chat, Claude Code session
-`session_018UdrEfWJonXGVYkZvfByj6`) keeps every project in sync. When you finish a
-batch, fix a bug, or learn a rule, tell it with the `send_message` tool so the fix
-reaches the other projects.
+**The Connector** keeps every project in sync. When you finish a batch, fix a bug, or
+learn a rule, write it HERE (this file, or the commit message) - the Connector reads the
+repositories. Do not `send_message` into the old Connector session
+(`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
+limit (see "Token budget").
 
 ## Making a batch (the whole loop)
 
@@ -19,7 +20,8 @@ reaches the other projects.
    `sources` release, so nothing depends on Rumble twice. Source must be >= 1080p.
    Fallbacks: the `sources` release (upload `<key>.mp4.enc`, needs `VSC_KEY`), or
    Frame.io when `FRAMEIO_TOKEN` is set.
-2. **Plan.** `plans/<key>.json` - see `plans/millionaires_problems.json` for the shape:
+2. **Plan.** `plans/<key>.json` - see `plans/millionaires_problems.json` for the shape
+   (and run `python3 cloud/check_plan.py` before you push - the build runs it too):
    `key, prefix, source, note, rumble, duration, height, clips[]`, and per clip
    `name, region [s,e], open "<first words>", close "<last words>",
    hook ["LINE ONE","LINE TWO"], fixes [[t, "wrong", "right"]]`.
@@ -56,8 +58,14 @@ reaches the other projects.
 - Emphasis capitals never cost a word.
 - **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
 - **Format 1080x1920 (9:16), hard maximum 120 s** (Naomi's ceiling; `MAX_LEN = 118`).
-  In practice ~20-60 s; since 4 Oct the renderer handles long clips (see below), but a
-  clip over ~75 s should still be two clips that each carry a full idea.
+  **Length follows the teaching, never the machine.** A clip runs from the start of the
+  thought to where it lands, setup + proof + landing, usually 45-110 s. Under 40 s needs
+  `"short_ok": "<why it is complete>"` in the plan; `cloud/check_plan.py` enforces both
+  ends and runs first in every build. (Kamay, 5 Oct: the first batch came out 21-60 s
+  and "cut the teaching". The cause: on 30 Sept the renderer died on clips over ~62 s and
+  the plan was cut to fit it - 102 s and 128 s teachings split into 3-5 pieces, commit
+  d88d8f1. The renderer was fixed on 4 Oct. A machine limit is a bug to fix, never a
+  reason to shorten a teaching.)
 - **Framing is checked across the WHOLE clip**, not just the first frame - the
   interviews cut between 2-4 camera angles.
 - **One caption size per clip.** Reviewers: Cali and Naomi, on GIN's Frame.io.
@@ -102,10 +110,32 @@ reaches the other projects.
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 
+## Token budget (Kamay, 5 Oct: two sessions burned 65% of a WEEK's limit)
+
+Measured, not guessed: "VSC video production" ran to 672K tokens of context and re-read
+247 million cached tokens; "Affiliate Factory Empire" re-read 357 million. Every tool call
+re-reads the WHOLE conversation, so a 600K-token session pays ~600K per `ls`. That is the
+"one second spent a day's limit". It also made the work worse: the batch that came out
+too short was made deep inside that context.
+
+- **One batch = one fresh session.** Hand off with a short note (what is done, what is
+  next, run id) and start a new chat once a session passes ~150K context or ~4 hours.
+  Never "continue" a giant session to save explaining - explaining costs 2K tokens.
+- **Never wake a big session on a timer.** No `send_later` / routine check-ins into a
+  session over ~100K context; GitHub tells you when a run ends (or Kamay looks at the
+  release). A check-in every 8 minutes into a 600K session is 4M tokens an hour of nothing.
+- **Never `send_message` into the old Connector session to "report"** - it wakes the
+  biggest context on the account. Write it in the commit message / CLAUDE.md instead.
+- **No subagent fan-out, no watching renders.** Push once, end the turn, read the
+  verdict table when it is done. Do not download and frame-check every clip in chat;
+  `edges.py` and the verdict table already do that on GitHub's servers for free.
+- Routine work (planning from a transcript, caption fixes) runs on Sonnet in a fresh
+  scheduled session, like kt-machine's planners - never in an Opus conversation.
+
 ## Shared engine
 
 Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
 `QC_AGENT.md`) come from `kamaycampos/kt-machine/shared/`, pulled live at setup.
 **Never keep a local copy of a shared file here** - a local copy overrides the shared
 one and forks silently (this happened twice on 30 Sept). Improve the shared file in
-kt-machine instead, and tell the Connector.
+kt-machine instead, and say so in the commit message.
