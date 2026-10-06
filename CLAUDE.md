@@ -153,6 +153,17 @@ One-time setup: repository secret `ANTHROPIC_API_KEY` (console.anthropic.com, pa
 roughly $0.20-0.60 a batch). Optional variable `VSC_PLANNER_MODEL`. No key = the stub
 waits and the run says so. Still human: watching the clips, caption `fixes` after the
 first render, and uploading to Frame.io (automatic once `FRAMEIO_TOKEN` exists).
+**`ANTHROPIC_API_KEY` is set (Kamay, 6 Oct).**
+
+**How a batch starts now (Kamay, 6 Oct):** Kamay sends a chat "New VSC: <title>, <length>".
+Claude starts `vsc_new.yml` itself (GitHub Actions `workflow_dispatch`, inputs `title`,
+`duration`, optional `rumble`), checks it started, and ends the turn - no clicking for Kamay.
+Full autopilot (a watcher polling GIN's Frame.io) waits on a `FRAMEIO_TOKEN`, and GIN may
+have to allow that token: it is GIN's workspace. Only build it if assignments come often.
+
+Shared engine, 6 Oct (kt-machine PRs 18, 19): `kt_render` now drops whisper markup -
+`(laughing)`, `[BLANK_AUDIO]`, `*music*` - before building captions, and honours a
+`CAPTION_SHIFT` env (unset here, so VSC renders are otherwise unchanged).
 
 Loose ends:
 - Three stacked fix pairs remain in `millionaires_problems` (NO-SUCH 1/4 and 2/5,
