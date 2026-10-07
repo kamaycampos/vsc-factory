@@ -101,6 +101,16 @@ def problems(p, clips, text):
             out.append(f"{c['name']}: region must be [start, end] with start < end")
         elif c["region"][1] > float(p.get("duration") or 1e9) + 1:
             out.append(f"{c['name']}: region ends after the episode does")
+    # Names are unique across every plan: the clips release and built.json are keyed by
+    # name, so a redo reusing a delivered name would overwrite the file GIN already has.
+    taken = {}
+    for f in glob.glob(os.path.join(ROOT, "plans", "*.json")):
+        o = json.load(open(f))
+        if o.get("key") != p.get("key"):
+            taken.update({c["name"]: o["key"] for c in o.get("clips", [])})
+    for c in clips:
+        if c["name"] in taken:
+            out.append(f"{c['name']}: that name is already used by plans/{taken[c['name']]}.json - choose a new one")
     trial = dict(p, clips=clips)
     os.makedirs("/tmp/autoplan", exist_ok=True)
     path = "/tmp/autoplan/_trial.json"
@@ -126,6 +136,18 @@ def clean(raw):
 def plan_one(client, p, text):
     system = (open(os.path.join(ROOT, "PLANNING.md")).read() + "\n\n" + rules() +
               "\n\n## The delivered, reviewer-approved batch (shape and standard)\n" + example())
+    if p.get("redo_of"):
+        old = json.load(open(os.path.join(ROOT, "plans", p["redo_of"] + ".json")))
+        system += (
+            f"\n\n## THIS IS A REDO of {p['redo_of']} - the SAME episode as the batch above\n"
+            "Kamay, 5 Oct: that batch came out 30-82 s and CUT THE TEACHING. It was planned while "
+            "the renderer died on clips over ~62 s, so long teachings were split into pieces; the "
+            "renderer is fixed. Re-cut the episode: every clip runs from the start of the thought "
+            "to where the teaching lands - setup, proof and landing - usually 45-110 s, never over "
+            "118. Where one lesson was split across several clips above, make it ONE clip. Keep "
+            "different tellings of a lesson only when each is complete on its own. Every clip "
+            "needs a NEW name, different from every name above.\n"
+            f"Notes on this episode: {old.get('note', '')}")
     user = (f"Episode: \"{p.get('title') or p['key']}\", {p.get('duration', '?')} seconds long.\n"
             f"Transcript (each line starts at [mm:ss.ss] source time):\n\n{text}")
     messages = [{"role": "user", "content": user}]
