@@ -165,6 +165,11 @@ Shared engine, 6 Oct (kt-machine PRs 18, 19): `kt_render` now drops whisper mark
 `(laughing)`, `[BLANK_AUDIO]`, `*music*` - before building captions, and honours a
 `CAPTION_SHIFT` env (unset here, so VSC renders are otherwise unchanged).
 
+**Redo of a delivered episode (Kamay, 7 Oct):** a stub plan with `"redo_of": "<old key>"` and the old
+`source` (reuses the cached video). autoplan is told it is the same episode, cut too short, and must keep
+each whole teaching; every clip name must be new across ALL plans (the release is keyed by name, so a
+reused name would overwrite what GIN has). First one: `plans/millionaires_full.json`.
+
 Loose ends:
 - Three stacked fix pairs remain in `millionaires_problems` (NO-SUCH 1/4 and 2/5,
   MORE-PROBLEMS 1/7). Those clips are delivered; clean them before any `only` rebuild.
