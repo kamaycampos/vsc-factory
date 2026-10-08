@@ -94,6 +94,15 @@ jobs:
           git commit -q -m "autoplan: clips chosen for ${{ steps.a.outputs.keys }}"
           for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
           gh workflow run vsc.yml --ref main
+      # RED, NOT GREEN, WHILE A BATCH WAITS (run 48, 7 Oct: autoplan could not find the
+      # transcript, planned nothing, and every job went green with zero clips). Runs after
+      # the save, so a batch that WAS planned is never lost to one that was not; the other
+      # batches still build (shard does not need this job to succeed).
+      - name: A batch is still waiting for its clips
+        if: ${{ !cancelled() && steps.a.outputs.waiting != '' }}
+        run: |
+          echo "::error::No clips were chosen for: ${{ steps.a.outputs.waiting }} - the reason is in the step above."
+          exit 1
 
   shard:
     needs: [prep, autoplan]

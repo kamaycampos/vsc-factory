@@ -110,10 +110,18 @@ runs, and how to do any of them by hand.)
   Trimming every shot off one decoded 4K stream queued gigabytes of frames and killed the
   runner on every clip over ~62 s (run 42: NO-SUCH 70.8 s, BANNED 66.5 s, 3 attempts each).
   Measured locally on a 75 s 4K source: one pass OOM-killed at 16 GB, shot-by-shot 0.97 GB.
-- **A release asset's spaces come back as dots.** prep uploads `TRANSCRIPT_Why Millionaires
-  millionaires_full.txt`; GitHub stores `TRANSCRIPT_Why.Millionaires.millionaires_full.txt`.
-  autoplan asked for the spaced name, found nothing, said "AUTOPLANNED: none" and the run
-  went green with zero clips (run 48, 7 Oct). Download by the dotted name.
+- **A release asset's name is rewritten by GitHub** (spaces -> dots): prep uploads
+  `TRANSCRIPT_Why Millionaires millionaires_full.txt`, the release holds
+  `TRANSCRIPT_Why.Millionaires.millionaires_full.txt`. autoplan asked for the spaced name,
+  planned nothing and run 48 (7 Oct) went GREEN with zero clips. autoplan now matches names
+  on letters and digits; a batch still waiting for clips turns the run RED (autoplan's last
+  step, and verify), and "0/0 published" is never "BATCH COMPLETE".
+- **A clip's length is its SPEECH, not its region.** The renderer cuts from the first place
+  the `open` words are spoken to the last place the `close` words are, anywhere from 22 s
+  before the region to 28 s after it. The delivered batch padded 21-38 s of speech into
+  40 s regions, so check_plan's region test passed the very clips Kamay called too short.
+  autoplan replays that search on the transcript before it keeps a plan: 40-118 s of speech
+  (or `short_ok`), and open/close words spoken only once in the window.
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 
@@ -149,7 +157,10 @@ too short was made deep inside that context.
 3. **autoplan** (`cloud/autoplan.py`): ONE Claude call (Opus 5.5, high effort, no tools)
    with `PLANNING.md` + "The rules" + the delivered batch as the brief, answering JSON in a
    fixed schema. Code keeps it only if every `open`/`close` is in the transcript word for
-   word and `check_plan.py` passes (one repair round). Only `plans/` is committed; a fresh
+   word, the renderer's search replayed on the transcript gives 40-118 s of speech with no
+   repeated open/close words, and `check_plan.py` passes (two repair rounds, brief and
+   transcript cached). The chosen clips are listed on the run's summary page. If no batch
+   passes, the stub stays a stub and the run is RED, never green. Only `plans/` is committed; a fresh
    run builds it. A failed autoplan never blocks the batches already planned.
 4. **build -> collect -> verify** as always; the clips land in the `clips` release.
 

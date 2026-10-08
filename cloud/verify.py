@@ -23,13 +23,23 @@ def published():
 
 
 def main():
-    have, want = published(), []
+    have, want, waiting = published(), [], []
     for f in sorted(glob.glob(os.path.join(HERE, "plans", "*.json"))):
-        want += [c["name"] for c in json.load(open(f))["clips"]]
+        p = json.load(open(f))
+        want += [c["name"] for c in p["clips"]]
+        if not p["clips"]:
+            waiting.append(p["key"])
     missing = [n for n in want if n not in have]
     print(f"{len(want) - len(missing)}/{len(want)} clips published")
     for n in want:
         print(f"  {'ok  ' if n in have else 'MISSING'} {n}")
+    # 7 Oct, run 48: "0/0 clips published ... BATCH COMPLETE" - a plan with no clips
+    # yet is a batch nobody has made, not a finished one.
+    for k in waiting:
+        print(f"  WAITING  plans/{k}.json has no clips yet - autoplan did not choose them")
+    if waiting and not missing:
+        sys.exit(f"\nBATCH NOT MADE - {', '.join(waiting)} still has no clips. "
+                 "See the autoplan job of this run for why.")
     if missing:
         sys.exit(f"\nBATCH INCOMPLETE after three attempts - {len(missing)} clip(s) never "
                  f"reached the release: {', '.join(missing)}\n"
