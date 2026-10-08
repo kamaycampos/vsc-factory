@@ -10,5 +10,188 @@
  "autoplan": true,
  "redo_of": "millionaires_problems",
  "note": "Redo of millionaires_problems (Kamay, 7 Oct): the same episode, cut by the autopilot so every clip keeps the whole teaching. Same cached source. The ad wall 17:35-end is never cut.",
- "clips": []
+ "clips": [
+  {
+   "name": "WORST-DAY-BEST-DAY",
+   "region": [
+    0.0,
+    46.0
+   ],
+   "open": "most people think that they can't achieve success",
+   "close": "understand there's no such thing as adversity",
+   "hook": [
+    "YOUR WORST DAY IS",
+    "WHERE SUCCESS STARTS"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "TWO-WRONG-BELIEFS",
+   "region": [
+    44.0,
+    156.0
+   ],
+   "open": "If you look at people that aren't very successful",
+   "close": "which will take them to the next level",
+   "hook": [
+    "MILLIONAIRES HAVE MORE",
+    "PROBLEMS THAN YOU"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "FIRED-FROM-HIS-OWN-COMPANY",
+   "region": [
+    154.0,
+    217.0
+   ],
+   "open": "Steven Jobs was fired",
+   "close": "come out stronger than ever before, which they all did",
+   "hook": [
+    "APPLE FIRED STEVE JOBS.",
+    "THAT SAVED APPLE."
+   ],
+   "fixes": []
+  },
+  {
+   "name": "ROCK-BOTTOM-FOREST-FIRE",
+   "region": [
+    237.0,
+    306.0
+   ],
+   "open": "JK Rowling. author of Harry Potter",
+   "close": "Adversity is the seed of a greater benefit",
+   "hook": [
+    "BROKE, DIVORCED, IN HER CAR:",
+    "J.K. ROWLING"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "DONE-FOR-YOU-NOT-TO-YOU",
+   "region": [
+    303.0,
+    364.0
+   ],
+   "open": "Successful people don't look at obstacles or challenges",
+   "close": "an opportunity for them to find a treasure of gold",
+   "hook": [
+    "THE UNIVERSE DOES THINGS",
+    "FOR YOU, NOT TO YOU"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "A-CHANGE-IN-CONDITIONS",
+   "region": [
+    366.0,
+    464.0
+   ],
+   "open": "People always come up to me",
+   "close": "dollars on TV around the world",
+   "hook": [
+    "HE LOST HIS BUSINESS,",
+    "THEN MADE $450 MILLION"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "THE-FTC-HEADLINE",
+   "region": [
+    460.0,
+    532.0
+   ],
+   "open": "I got sued by the Federal Trade Commission",
+   "close": "protected by the first amendment That means books",
+   "hook": [
+    "THE GOVERNMENT BANNED HIM",
+    "FROM TV FOR LIFE"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "50-MILLION-COPIES",
+   "region": [
+    497.0,
+    603.0
+   ],
+   "open": "What if I am banned from infomercials for life",
+   "close": "and signed that disastrous. settlement",
+   "hook": [
+    "BANNED FROM TV, HE",
+    "SOLD 50 MILLION BOOKS"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "ATTACK-MODE-NOT-DEFENSE",
+   "region": [
+    599.0,
+    717.0
+   ],
+   "open": "There's a big distinction between how rich people",
+   "close": "Or are you in defensive mode?",
+   "hook": [
+    "THE NO. 1 DIFFERENCE",
+    "BETWEEN RICH AND BROKE"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "PLAYING-NOT-TO-LOSE",
+   "region": [
+    714.0,
+    792.0
+   ],
+   "open": "We see this with athletes",
+   "close": "turn the mountain into a gold mine",
+   "hook": [
+    "THE TEAM THAT'S DOWN",
+    "A GOAL WINS"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "LAUGH-AT-IT-NOW",
+   "region": [
+    817.0,
+    923.0
+   ],
+   "open": "You have a habit of reacting instead of responding",
+   "close": "Confront it and attack it. Don't run away from it.",
+   "hook": [
+    "SOMEDAY YOU'LL LAUGH AT IT.",
+    "LAUGH NOW."
+   ],
+   "fixes": []
+  },
+  {
+   "name": "SUFFERING-IS-OPTIONAL",
+   "region": [
+    921.0,
+    999.0
+   ],
+   "open": "There's an old saying",
+   "close": "but you don't have to suffer",
+   "hook": [
+    "PAIN IS CERTAIN.",
+    "SUFFERING IS OPTIONAL."
+   ],
+   "fixes": []
+  },
+  {
+   "name": "LOOKING-FOR-THE-GOLD",
+   "region": [
+    998.0,
+    1055.0
+   ],
+   "open": "Think about it this way. People move tons",
+   "close": "that's the day that your success begins",
+   "hook": [
+    "TONS OF DIRT FOR",
+    "A FEW OUNCES OF GOLD"
+   ],
+   "fixes": []
+  }
+ ]
 }
