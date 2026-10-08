@@ -19,15 +19,22 @@ answer comes back as JSON, is checked by code, and is committed only if it passe
 4. For each clip give:
    - `name`: UPPER-DASHED, 2-5 words, the idea (`RUN-AT-THE-PROBLEM`).
    - `region`: `[start, end]` in source seconds, a few seconds of air either side of
-     the words. The renderer finds the exact cut inside it.
-   - `open`: the clip's first 5-8 words, copied EXACTLY from the transcript.
-   - `close`: its last 5-8 words, copied EXACTLY.
+     the words. It is only WHERE the renderer looks: it searches 22 s before to 28 s
+     after it and cuts from the FIRST place the `open` words are spoken to the LAST place
+     the `close` words are.
+   - `open`: the clip's first 5-8 words, copied EXACTLY from the transcript - words
+     spoken only once in that search window.
+   - `close`: its last 5-8 words, copied EXACTLY - also spoken only once there (Kevin
+     repeats his refrains: "the seed of a greater benefit" comes back again and again).
    - `hook`: two short lines in CAPITALS, max 10 words together, one idea.
    - `short_ok`: `""` - or, only for a clip under 40 s, why it is complete anyway.
    Caption corrections (`fixes`) come after the first render, not now.
 5. Every rule below is checked by code afterwards: open/close must be found word for word
-   in the transcript, regions must be 40-118 s unless `short_ok` says why. A batch that
-   fails comes back to you once with the problems listed.
+   in the transcript, once each where the renderer looks, and the SPEECH from the open
+   words to the close words must run 40-118 s unless `short_ok` says why. The region does
+   not count - the words do (the delivered batch padded 27 s of speech into 40 s regions,
+   and those are the clips Kamay called too short). A batch that
+   fails comes back to you, up to twice, with the problems listed.
 
 ## Where a clip starts and ends (the reviewers reject everything else)
 - **Start on the first word of a complete thought** - a claim, a question, a story's first
