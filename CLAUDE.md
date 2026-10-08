@@ -110,6 +110,10 @@ runs, and how to do any of them by hand.)
   Trimming every shot off one decoded 4K stream queued gigabytes of frames and killed the
   runner on every clip over ~62 s (run 42: NO-SUCH 70.8 s, BANNED 66.5 s, 3 attempts each).
   Measured locally on a 75 s 4K source: one pass OOM-killed at 16 GB, shot-by-shot 0.97 GB.
+- **A release asset's spaces come back as dots.** prep uploads `TRANSCRIPT_Why Millionaires
+  millionaires_full.txt`; GitHub stores `TRANSCRIPT_Why.Millionaires.millionaires_full.txt`.
+  autoplan asked for the spaced name, found nothing, said "AUTOPLANNED: none" and the run
+  went green with zero clips (run 48, 7 Oct). Download by the dotted name.
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

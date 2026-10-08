@@ -79,7 +79,9 @@ def example():
 
 def transcript(p):
     """TRANSCRIPT_<prefix key>.txt, as prep publishes it to the prep release."""
-    name = f"TRANSCRIPT_{(p['prefix'] + ' ' + p['key'])[:40]}.txt"
+    # GitHub stores an asset's spaces as dots ("TRANSCRIPT_Why.Millionaires..."), so the
+    # name prep uploads is never the name that comes back (run 48: "no transcript yet").
+    name = f"TRANSCRIPT_{(p['prefix'] + ' ' + p['key'])[:40]}.txt".replace(" ", ".")
     os.makedirs("/tmp/autoplan", exist_ok=True)
     subprocess.run(["gh", "release", "download", "prep", "-R", REPO, "-p", name,
                     "-D", "/tmp/autoplan", "--clobber"], capture_output=True)
