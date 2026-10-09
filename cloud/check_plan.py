@@ -102,12 +102,14 @@ def check(path, delivered):
                              "fears or recognises - is there a number, a name or a cost to lead with?")
         fx = c.get("fixes") or []
         for i, f in enumerate(fx):
-            if len(f) != 3:
-                errs.append(f"{n}: fix {i} must be [t, \"wrong\", \"right\"]")
+            if len(f) not in (3, 4):
+                errs.append(f"{n}: fix {i} must be [t, \"wrong\", \"right\"] (+ optional start times)")
+            elif len(f) == 4 and (not isinstance(f[3], list) or len(f[3]) != len(str(f[2]).split())):
+                errs.append(f"{n}: fix {i} needs one start time per word of \"right\"")
             # case counts: captions show it ("a Forest fire" -> "A forest fire" is a real fix)
             elif str(f[1]).split() == str(f[2]).split():
                 errs.append(f"{n}: fix {i} changes nothing")
-        for i, j in stacked([f for f in fx if len(f) == 3]):
+        for i, j in stacked([f for f in fx if len(f) in (3, 4)]):
             errs.append(f"{n}: fix {j} rewrites the text fix {i} produced - they stack and "
                         "duplicate words. Write ONE fix against the server's caps.json")
     return errs, warns
