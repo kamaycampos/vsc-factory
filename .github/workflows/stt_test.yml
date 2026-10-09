@@ -1,0 +1,131 @@
+# WHICH SPEECH-TO-TEXT FOR THE MASTER TRANSCRIPT (cloud/stt_test.py), 9 Oct 2026.
+# Manual only. Reads the cached source, writes NOTHING to the repo or any release:
+# audio and transcripts travel between jobs encrypted with VSC_KEY, and the report is
+# numbers and name tallies only. Paid engines run only if their secret exists.
+name: stt-test
+on:
+  workflow_dispatch:
+    inputs:
+      key:
+        description: "Episode (plans/<key>.json, source cached in the sources release)"
+        default: "millionaires_problems"
+      shared_ref:
+        description: "kt-machine branch that holds shared/kt_master.py"
+        default: "master-transcript"
+      correct:
+        description: "Also score every engine after the one Claude correction call (~$0.1-0.3 each)"
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: stt-test
+  cancel-in-progress: true
+env:
+  GH_TOKEN: ${{ github.token }}
+  VSC_KEY: ${{ secrets.VSC_KEY }}
+  KT_SHARED: /tmp/kt_shared
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Source -> 16 kHz mono wav, encrypted for the next jobs
+        run: |
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y ffmpeg >/dev/null
+          K="${{ inputs.key }}"
+          gh release download sources -R "$GITHUB_REPOSITORY" -p "$K.mp4.enc*" -D /tmp/src
+          cat $(ls /tmp/src/* | sort) | openssl enc -d -aes-256-cbc -pbkdf2 -pass env:VSC_KEY -out /tmp/src.mp4
+          ffmpeg -loglevel error -i /tmp/src.mp4 -vn -ar 16000 -ac 1 -c:a pcm_s16le /tmp/a.wav
+          rm /tmp/src.mp4
+          mkdir -p /tmp/up && openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:VSC_KEY -in /tmp/a.wav -out /tmp/up/a.wav.enc
+          ls -la /tmp/a.wav /tmp/up
+      - uses: actions/upload-artifact@v4
+        with: { name: audio, path: /tmp/up/a.wav.enc, retention-days: 2 }
+
+  stt:
+    needs: audio
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [small, turbo, turbo-names, deepgram, elevenlabs, assemblyai]
+    env:
+      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/download-artifact@v4
+        with: { name: audio, path: /tmp/in }
+      - name: Shared engine from kt-machine (${{ inputs.shared_ref }})
+        run: |
+          mkdir -p $KT_SHARED
+          curl -sfL "https://raw.githubusercontent.com/kamaycampos/kt-machine/${{ inputs.shared_ref }}/shared/kt_master.py" -o $KT_SHARED/kt_master.py
+          openssl enc -d -aes-256-cbc -pbkdf2 -pass env:VSC_KEY -in /tmp/in/a.wav.enc -out /tmp/a.wav
+      # the same pinned whisper.cpp and small.en as every build (vsc.yml's cache)
+      - uses: actions/cache@v4
+        if: ${{ startsWith(matrix.engine, 'small') || startsWith(matrix.engine, 'turbo') }}
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - uses: actions/cache@v4
+        if: ${{ startsWith(matrix.engine, 'turbo') }}
+        with: { path: ~/wturbo, key: ggml-large-v3-turbo-v1 }
+      - name: whisper.cpp (pinned, portable) and models
+        if: ${{ startsWith(matrix.engine, 'small') || startsWith(matrix.engine, 'turbo') }}
+        run: |
+          W="$HOME/wcache"; mkdir -p "$W" "$HOME/wturbo"
+          if [ ! -x "$W/whisper-cli" ]; then
+            sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y cmake >/dev/null
+            git clone -q https://github.com/ggml-org/whisper.cpp /tmp/whisper.cpp
+            git -C /tmp/whisper.cpp checkout -q 2ca53bb45e38748d07b310eeb36245a7157ac882
+            cmake -S /tmp/whisper.cpp -B /tmp/whisper.cpp/build -DCMAKE_BUILD_TYPE=Release \
+                  -DGGML_NATIVE=OFF -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF >/dev/null
+            cmake --build /tmp/whisper.cpp/build -j"$(nproc)" --config Release --target whisper-cli >/dev/null
+            cp /tmp/whisper.cpp/build/bin/whisper-cli "$W/"
+          fi
+          [ -s "$W/ggml-small.en.bin" ] || curl -sL --retry 3 -o "$W/ggml-small.en.bin" \
+            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin
+          if [[ "${{ matrix.engine }}" == turbo* ]] && [ ! -s "$HOME/wturbo/ggml-large-v3-turbo.bin" ]; then
+            curl -sL --retry 3 -o "$HOME/wturbo/ggml-large-v3-turbo.bin" \
+              https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
+          fi
+          ls -la "$W" "$HOME/wturbo"
+          echo "WHISPER_CLI=$W/whisper-cli" >> "$GITHUB_ENV"
+      - name: Transcribe the whole episode (${{ matrix.engine }})
+        run: |
+          mkdir -p /tmp/out
+          python cloud/stt_test.py run ${{ matrix.engine }} /tmp/a.wav /tmp/out/${{ matrix.engine }}.json
+          if [ -f /tmp/out/${{ matrix.engine }}.json ]; then
+            openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:VSC_KEY -in /tmp/out/${{ matrix.engine }}.json \
+              -out /tmp/out/${{ matrix.engine }}.json.enc && rm /tmp/out/${{ matrix.engine }}.json
+          fi
+      - uses: actions/upload-artifact@v4
+        with: { name: "hyp-${{ matrix.engine }}", path: /tmp/out/, retention-days: 7, if-no-files-found: ignore }
+
+  score:
+    needs: stt
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "hyp-*", path: /tmp/hyp, merge-multiple: true }
+      - name: Score against the delivered captions
+        run: |
+          pip install -q anthropic
+          mkdir -p $KT_SHARED
+          curl -sfL "https://raw.githubusercontent.com/kamaycampos/kt-machine/${{ inputs.shared_ref }}/shared/kt_master.py" -o $KT_SHARED/kt_master.py
+          for f in /tmp/hyp/*.enc; do openssl enc -d -aes-256-cbc -pbkdf2 -pass env:VSC_KEY -in "$f" -out "${f%.enc}" && rm "$f"; done
+          python cloud/stt_test.py score "${{ inputs.key }}" /tmp/hyp ${{ inputs.correct && '--correct' || '' }}
+          cat /tmp/report/report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with: { name: report, path: /tmp/report/, retention-days: 30 }

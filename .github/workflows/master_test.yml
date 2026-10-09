@@ -1,0 +1,88 @@
+# THE MASTER TRANSCRIPT, END TO END ON ONE CLIP (opt-in path, 9 Oct 2026). Manual only.
+# Renders the clip twice on one server - today's path, then MASTER_TRANSCRIPT=1 - and
+# prints the caption diff. Writes nothing to the repo or any release: the rendered
+# clips are an artifact (like the clips release), the master transcript is encrypted.
+name: master-test
+on:
+  workflow_dispatch:
+    inputs:
+      key: { description: "Episode", default: "millionaires_problems" }
+      clip: { description: "Clip name in that plan", default: "JOBS-WAS-FIRED" }
+      engine: { description: "small | turbo | turbo-names | deepgram | elevenlabs | assemblyai", default: "turbo" }
+      shared_ref: { description: "kt-machine branch with shared/kt_master.py", default: "master-transcript" }
+permissions:
+  contents: read
+concurrency:
+  group: master-test
+  cancel-in-progress: true
+jobs:
+  clip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VSC_KEY: ${{ secrets.VSC_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
+      SHARED_REF: ${{ inputs.shared_ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - uses: actions/cache@v4
+        if: ${{ startsWith(inputs.engine, 'turbo') }}
+        with: { path: ~/wturbo, key: ggml-large-v3-turbo-v1 }
+      - run: bash setup.sh
+      - name: Turbo model
+        if: ${{ startsWith(inputs.engine, 'turbo') }}
+        run: |
+          mkdir -p ~/wturbo
+          [ -s ~/wturbo/ggml-large-v3-turbo.bin ] || curl -sL --retry 3 -o ~/wturbo/ggml-large-v3-turbo.bin \
+            https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
+      - name: BEFORE - today's captions (per-clip small.en + the plan's fixes)
+        run: |
+          pip install -q anthropic
+          python cloud/build.py "${{ inputs.key }}" "${{ inputs.clip }}"
+          mkdir -p /tmp/before && mv /tmp/shard_out/* /tmp/before/
+          rm -f ~/Desktop/VSC/Clips/${{ inputs.clip }}_*
+      - name: Master transcript (${{ inputs.engine }}, one Claude correction call)
+        run: python cloud/master.py "${{ inputs.key }}" "${{ inputs.engine }}"
+      - name: AFTER - captions cut from the master (MASTER_TRANSCRIPT=1)
+        env: { MASTER_TRANSCRIPT: "1" }
+        run: |
+          python cloud/build.py "${{ inputs.key }}" "${{ inputs.clip }}"
+          mkdir -p /tmp/after && mv /tmp/shard_out/* /tmp/after/
+      - name: Caption diff, burst by burst
+        if: ${{ !cancelled() }}
+        run: |
+          python3 - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
+          import difflib, glob, json
+          def caps(d):
+              f = glob.glob(f"/tmp/{d}/*__caps.json")
+              return [b[2] for b in json.load(open(f[0]))] if f else []
+          def verdict(d):
+              f = glob.glob(f"/tmp/{d}/report-*.json")
+              return json.load(open(f[0])) if f else []
+          b, a = caps("before"), caps("after")
+          print("```")
+          for d in ("before", "after"):
+              for r in verdict(d):
+                  print(f"{d.upper():6} {r.get('verdict','?')} {r.get('file','')} moments {r.get('moments','')} {r.get('why') or ''}")
+          print(f"bursts: before {len(b)}, after {len(a)}")
+          for line in difflib.unified_diff(b, a, "before", "after", n=0, lineterm=""):
+              print(line)
+          print("```")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: master-test
+          retention-days: 14
+          path: |
+            /tmp/before/
+            /tmp/after/
+            /tmp/master_out/
