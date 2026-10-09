@@ -33,6 +33,7 @@ OUT = os.path.join(WORK, "v2caps")
 PUNCT = ("Hello, everyone. Today, we are going to talk about money, health, and "
          "success. It is important, isn't it?")
 FILLER = re.compile(r"^(um+|uh+|erm|ah|mm+|hmm+)[,.!?]?$", re.I)
+FROM_MASTER = False      # the last accurate_words() came from the master transcript
 
 
 def norm(t):
@@ -54,6 +55,19 @@ def _plain(src, t0, t1):
 
 def accurate_words(src, a, b, key):
     """[(start, end, word)] clip-relative: timed-pass TIMES carrying plain-pass WORDS."""
+    # OPT-IN, DEFAULT OFF (9 Oct 2026): MASTER_TRANSCRIPT=1 cuts the clip's words from
+    # the episode's one corrected transcript (kt-machine shared/kt_master.py). Neither
+    # whisper pass runs, so nothing here can rewrite the corrected words. No master
+    # file for this source = exactly the path below.
+    global FROM_MASTER
+    FROM_MASTER = False
+    if os.environ.get("MASTER_TRANSCRIPT") == "1":
+        import kt_master
+        got = kt_master.cut(src, a, b)
+        if got is not None:
+            FROM_MASTER = True
+            print(f"      captions cut from the master transcript ({len(got)} words)", flush=True)
+            return [w for w in got if w[2].strip() and not FILLER.match(w[2].strip())]
     timed = [w for w in kt_words.words_for(src, a, b, key) if w[2].strip()]
     if not timed:
         return []
@@ -254,6 +268,13 @@ def build(name, a, b, src, close_phrase, fixes=()):
     words = accurate_words(src, a, b, f"VSC2/{name}")
     # quote marks come from EITHER pass and hide sentence ends from the line breaker
     words = [(x, y, w.strip('"\u201c\u201d')) for x, y, w in words if w.strip('"\u201c\u201d')]
+    # A MASTER IS ALREADY CORRECTED, once per episode. The plan's per-clip fixes were
+    # written against small.en's per-clip text; applied to corrected words they can only
+    # match by accident or stack ("really really" -> three). MASTER_KEEP_FIXES=1 keeps them.
+    if FROM_MASTER and fixes and os.environ.get("MASTER_KEEP_FIXES") != "1":
+        print(f"      {len(fixes)} per-clip fix(es) skipped: the master transcript is corrected "
+              f"(episode corrections go in the plan's master_fixes)", flush=True)
+        fixes = ()
     # corrections FIRST: THE-CHINESE-FARMER's closing "there's just news" could not be
     # found while whisper still had it as "There is just news."
     words = fix_text(words, fixes)

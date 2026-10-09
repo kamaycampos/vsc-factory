@@ -40,11 +40,14 @@ sudo cp /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
 # anchored to the sound, the on-screen check) is pushed to the same place and reaches
 # them. Project-specific files are copied AFTER, so this project always wins on its
 # own style, hooks and plans - the details that must not leak between brands.
-RAW="https://raw.githubusercontent.com/kamaycampos/kt-machine/main/shared"
+# SHARED_REF (default main) lets a TEST workflow pull an unmerged kt-machine branch;
+# every production workflow leaves it unset.
+export SHARED_REF="${SHARED_REF:-main}"
+RAW="https://raw.githubusercontent.com/kamaycampos/kt-machine/$SHARED_REF/shared"
 curl -sfL "$RAW/MANIFEST.json" -o /tmp/shared_manifest.json
 python3 - <<'EOF'
 import json, os, urllib.request
-raw = "https://raw.githubusercontent.com/kamaycampos/kt-machine/main/shared"
+raw = "https://raw.githubusercontent.com/kamaycampos/kt-machine/" + os.environ["SHARED_REF"] + "/shared"
 man = json.load(open("/tmp/shared_manifest.json"))["files"]
 K = os.path.expanduser("~/Kamay")
 for f in man:
