@@ -199,3 +199,30 @@ Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
 **Never keep a local copy of a shared file here** - a local copy overrides the shared
 one and forks silently (this happened twice on 30 Sept). Improve the shared file in
 kt-machine instead, and say so in the commit message.
+
+## Caption engine: master transcript (IN PROGRESS, opt-in, 9 Oct 2026)
+
+One transcript per episode, corrected once, with every clip's captions CUT from it.
+Code: `kt-machine/shared/kt_master.py` (branch `master-transcript`, kt-machine PR pending);
+here `pipeline/vsc_v2caps.py` (flag path), `cloud/master.py`, `cloud/stt_test.py`.
+**Default OFF**: nothing changes unless `MASTER_TRANSCRIPT=1` is set and a master file
+exists. With it on, a clip's per-clip `fixes` are skipped (`MASTER_KEEP_FIXES=1` keeps
+them). Episode corrections go in the plan as `master_fixes: [[source_s, "wrong", "right"]]`.
+Claude's edits are vetoed by code: at most 6 words each, no deletion of real words, no
+invented text (it must sound like the old words or be a known name), no overlapping edits
+(so no stacking), and a cap on the count. Timing outside an edit never moves.
+
+Runs started 9 Oct 19:44 UTC (manual workflows on main, ref `master-transcript`):
+- vsc-factory `stt-test` run 37982236579: the speech-to-text benchmark. Its report
+  artifact / job summary has WER, names, timing spread, runtime and $ per engine, with
+  and without the Claude correction.
+- vsc-factory `master-test` run 37982240107: JOBS-WAS-FIRED rendered before and after, turbo.
+- kt-machine `master-test` run 37982243678: ep_v6v9urd shard 0, turbo.
+
+NEXT (fresh session): read those three results. Fix whatever failed and re-dispatch.
+Write the benchmark table and a recommendation here and in the kt-machine PR. Open the two
+feature PRs (vsc-factory `master-transcript`, kt-machine `master-transcript`) and merge
+them only once the e2e runs are green (everything in them is default-off). Then give
+Kamay the switch-on plan: which flag, which secret, what it costs per episode.
+No paid STT key exists yet, so the paid adapters (Deepgram, ElevenLabs, AssemblyAI) are
+written but have never run.
