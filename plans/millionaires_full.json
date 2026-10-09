@@ -23,7 +23,18 @@
     "YOUR WORST DAY IS",
     "WHERE SUCCESS STARTS"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     23.97,
+     "end it, creates it.",
+     "end it. It creates it."
+    ],
+    [
+     29.25,
+     "have. Is that",
+     "have is that"
+    ]
+   ]
   },
   {
    "name": "TWO-WRONG-BELIEFS",
@@ -37,7 +48,59 @@
     "MILLIONAIRES HAVE MORE",
     "PROBLEMS THAN YOU"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     24.47,
+     "that successful Successful people",
+     "that successful people"
+    ],
+    [
+     36.77,
+     "problems. they have to face,",
+     "problems they have to face,"
+    ],
+    [
+     39.85,
+     "obstacles I have to overcome,",
+     "obstacles they have to overcome,"
+    ],
+    [
+     61.46,
+     "$10 million dollars",
+     "$10 million"
+    ],
+    [
+     65.64,
+     "every single... one Everyone had",
+     "every single one had"
+    ],
+    [
+     71.88,
+     "foul bankruptcy,",
+     "filed bankruptcy,"
+    ],
+    [
+     76.15,
+     "changed. Businesses challenge.",
+     "changed, businesses challenged."
+    ],
+    [
+     89.16,
+     "do... is there a cause over the circumstances?",
+     "do is they're at cause over the circumstances."
+    ],
+    [
+     94.35,
+     "They are a cause over",
+     "They are at cause over"
+    ],
+    [
+     104.04,
+     "failure emit out of which they can create And find",
+     "failure, in it, out of which they can create and find"
+    ]
+   ],
+   "end_at": 154.05
   },
   {
    "name": "FIRED-FROM-HIS-OWN-COMPANY",
@@ -51,7 +114,34 @@
     "APPLE FIRED STEVE JOBS.",
     "THAT SAVED APPLE."
    ],
-   "fixes": []
+   "fixes": [
+    [
+     0.0,
+     "Steven Jobs was fired",
+     "Steve Jobs was fired"
+    ],
+    [
+     10.0,
+     "starting next because he that I know technology It's better",
+     "starting NeXT, because he thought, I know technology better"
+    ],
+    [
+     18.36,
+     "started Next, and in Next,",
+     "started NeXT, and in NeXT,"
+    ],
+    [
+     28.0,
+     "today. If it wasn't, if Steven Jobs",
+     "today if it wasn't, if Steve Jobs"
+    ],
+    [
+     57.5,
+     "before. Which they all did.",
+     "before, which they all did."
+    ]
+   ],
+   "start_at": 153.97
   },
   {
    "name": "ROCK-BOTTOM-FOREST-FIRE",
@@ -65,7 +155,29 @@
     "BROKE, DIVORCED, IN HER CAR:",
     "J.K. ROWLING"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     0.03,
+     "Today, J.K. Rowling,",
+     "J.K. Rowling,"
+    ],
+    [
+     38.54,
+     "underbrush. That's been",
+     "underbrush that's been"
+    ],
+    [
+     41.62,
+     "It has It has been. to be cleared out.",
+     "It has to be cleared out."
+    ],
+    [
+     56.49,
+     "bad. a Forest fire",
+     "bad. A forest fire"
+    ]
+   ],
+   "start_at": 238.94
   },
   {
    "name": "DONE-FOR-YOU-NOT-TO-YOU",
@@ -79,7 +191,33 @@
     "THE UNIVERSE DOES THINGS",
     "FOR YOU, NOT TO YOU"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     13.2,
+     "But they do it. as a look at it",
+     "What they do is they look at it"
+    ],
+    [
+     25.5,
+     "situation. that you could",
+     "situation that you could"
+    ],
+    [
+     39.5,
+     "things To us,",
+     "things to us,"
+    ],
+    [
+     41.89,
+     "So in every quote adversity",
+     "So, in every adversity"
+    ],
+    [
+     52.5,
+     "it As an",
+     "it as an"
+    ]
+   ]
   },
   {
    "name": "A-CHANGE-IN-CONDITIONS",
@@ -93,7 +231,34 @@
     "HE LOST HIS BUSINESS,",
     "THEN MADE $450 MILLION"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     12.24,
+     "They go What",
+     "They go, What"
+    ],
+    [
+     42.5,
+     "ways. in that",
+     "ways. In that"
+    ],
+    [
+     55.27,
+     "Bobby Singer. at the at Carnegie the Deli",
+     "Bobby Singer at the Carnegie Deli"
+    ],
+    [
+     68.5,
+     "television. and then",
+     "television, and then"
+    ],
+    [
+     83.0,
+     "look at. It came",
+     "look at it that way. Out of it came"
+    ]
+   ],
+   "start_at": 368.67
   },
   {
    "name": "THE-FTC-HEADLINE",
@@ -107,21 +272,40 @@
     "THE GOVERNMENT BANNED HIM",
     "FROM TV FOR LIFE"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     10.5,
+     "need to... Stop this",
+     "need to stop this"
+    ],
+    [
+     39.57,
+     "They go, yes,",
+     "They go, Yes,"
+    ],
+    [
+     55.79,
+     "I says, Well,",
+     "I said, Well,"
+    ]
+   ],
+   "end_at": 529.72,
+   "end_fade": true
   },
   {
    "name": "50-MILLION-COPIES",
    "region": [
-    497.0,
+    514.0,
     603.0
    ],
-   "open": "What if I am banned from infomercials for life",
+   "open": "And now I'm banned from TV infomercials",
    "close": "and signed that disastrous. settlement",
    "hook": [
     "BANNED FROM TV, HE",
     "SOLD 50 MILLION BOOKS"
    ],
-   "fixes": []
+   "fixes": [],
+   "start_at": 515.78
   },
   {
    "name": "ATTACK-MODE-NOT-DEFENSE",
@@ -135,7 +319,63 @@
     "THE NO. 1 DIFFERENCE",
     "BETWEEN RICH AND BROKE"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     0.0,
+     "There is a big",
+     "There's a big"
+    ],
+    [
+     17.0,
+     "same thing. but One reacts",
+     "same thing, but one reacts"
+    ],
+    [
+     24.42,
+     "Do you go into failure? defensive mode?",
+     "Do you go into defensive mode?"
+    ],
+    [
+     35.5,
+     "is going to attack mode when he gets",
+     "is going into attack mode. When he gets"
+    ],
+    [
+     38.33,
+     "attacked when a When problem a comes",
+     "attacked, when a problem comes"
+    ],
+    [
+     41.57,
+     "or failure is set back,",
+     "or failure or setback,"
+    ],
+    [
+     50.0,
+     "problem. I'm trying to protect.",
+     "problem, trying to protect."
+    ],
+    [
+     62.5,
+     "put their Do not face",
+     "put their head in the sand, not face"
+    ],
+    [
+     66.12,
+     "it. Not confront",
+     "it, not confront"
+    ],
+    [
+     85.0,
+     "handle it and he also",
+     "handle it. And he also"
+    ],
+    [
+     102.0,
+     "mindset. of How you",
+     "mindset of how you"
+    ]
+   ]
   },
   {
    "name": "PLAYING-NOT-TO-LOSE",
@@ -149,7 +389,34 @@
     "THE TEAM THAT'S DOWN",
     "A GOAL WINS"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     15.28,
+     "down to goal.",
+     "down a goal."
+    ],
+    [
+     21.53,
+     "what undurably happens?",
+     "what invariably happens?"
+    ],
+    [
+     28.3,
+     "Vinsel Barty said a BEX.",
+     "Vince Lombardi said,"
+    ],
+    [
+     55.0,
+     "obstacle. and they go, you",
+     "obstacle and they go, You"
+    ],
+    [
+     60.41,
+     "the possibility thinkers creed.",
+     "the Possibility Thinker's Creed:"
+    ]
+   ],
+   "start_at": 715.1
   },
   {
    "name": "LAUGH-AT-IT-NOW",
@@ -163,7 +430,48 @@
     "SOMEDAY YOU'LL LAUGH AT IT.",
     "LAUGH NOW."
    ],
-   "fixes": []
+   "fixes": [
+    [
+     12.5,
+     "confront it and look You have to get it and hide.",
+     "confront it and look at it, and hide."
+    ],
+    [
+     38.5,
+     "do... is you say,",
+     "do is you say,"
+    ],
+    [
+     42.51,
+     "Did we hear this phrase? Someday, we'll",
+     "Did you hear this phrase? Someday we'll"
+    ],
+    [
+     54.95,
+     "hits. Laugh.",
+     "hits, laugh."
+    ],
+    [
+     58.0,
+     "some day I'm going",
+     "someday I'm going"
+    ],
+    [
+     68.74,
+     "Someday I'll Someday, look I back at this",
+     "Someday I'll look back at this"
+    ],
+    [
+     83.0,
+     "body. It called is endorphins",
+     "body called endorphins,"
+    ],
+    [
+     93.5,
+     "stress up in anxiety",
+     "stress and anxiety"
+    ]
+   ]
   },
   {
    "name": "SUFFERING-IS-OPTIONAL",
@@ -177,7 +485,28 @@
     "PAIN IS CERTAIN.",
     "SUFFERING IS OPTIONAL."
    ],
-   "fixes": []
+   "fixes": [
+    [
+     12.0,
+     "adversity. or problems",
+     "adversity or problems"
+    ],
+    [
+     38.0,
+     "are a cause over",
+     "are at cause over"
+    ],
+    [
+     58.0,
+     "said Everyone",
+     "said, Everyone"
+    ],
+    [
+     68.0,
+     "may... Experience",
+     "may experience"
+    ]
+   ]
   },
   {
    "name": "LOOKING-FOR-THE-GOLD",
@@ -191,7 +520,25 @@
     "TONS OF DIRT FOR",
     "A FEW OUNCES OF GOLD"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     12.0,
+     "big... A huge, massive bulldozer",
+     "big, huge, massive bulldozers"
+    ],
+    [
+     25.86,
+     "What a Great day!",
+     "What a great day!"
+    ],
+    [
+     52.5,
+     "apart, One day that",
+     "apart, that's the day that"
+    ]
+   ],
+   "end_at": 1054.66,
+   "end_fade": true
   }
  ]
 }

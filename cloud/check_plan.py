@@ -104,7 +104,8 @@ def check(path, delivered):
         for i, f in enumerate(fx):
             if len(f) != 3:
                 errs.append(f"{n}: fix {i} must be [t, \"wrong\", \"right\"]")
-            elif norm(f[1]) == norm(f[2]):
+            # case counts: captions show it ("a Forest fire" -> "A forest fire" is a real fix)
+            elif str(f[1]).split() == str(f[2]).split():
                 errs.append(f"{n}: fix {i} changes nothing")
         for i, j in stacked([f for f in fx if len(f) == 3]):
             errs.append(f"{n}: fix {j} rewrites the text fix {i} produced - they stack and "
