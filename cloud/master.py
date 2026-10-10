@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build an episode's MASTER transcript on the server (kt-machine shared/kt_master.py).
 
-    python cloud/master.py <key> <engine> [--no-correct]
+    python cloud/master.py <key> <engine> [<second engine>] [--no-correct]
 
 Engines: small | turbo | turbo-names | large - free whisper.cpp only (see
 cloud/stt_test.py). The whole episode is transcribed once, corrected by one Claude
@@ -24,12 +24,13 @@ from cloud.stt_test import ENGINES             # noqa: E402
 import kt_master                               # noqa: E402
 
 
-def main(key, engine, correct=True):
+def main(key, engine, correct=True, second=None):
     plan = [p for p in plans() if p["key"] == key][0]
     src = fetch(plan)
     ctx = plan.get("rumble_title") or plan.get("prefix", "")
     ctx = f"'{ctx}'. {plan.get('note', '')}"
-    m = kt_master.build(src, ENGINES[engine], correct, ctx, plan.get("master_fixes", []))
+    m = kt_master.build(src, ENGINES[engine], correct, ctx, plan.get("master_fixes", []),
+                        second=ENGINES.get(second) if second else None)
     for e in m["edits"]:
         print(f"    EDIT {e['at']:7.1f}s  {e['wrong']!r} -> {e['right']!r}  ({e['why']})")
     for e in m["rejected"]:
@@ -44,4 +45,5 @@ def main(key, engine, correct=True):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], "--no-correct" not in sys.argv)
+    a = [x for x in sys.argv[1:] if not x.startswith("--")]
+    main(a[0], a[1], "--no-correct" not in sys.argv, a[2] if len(a) > 2 else None)

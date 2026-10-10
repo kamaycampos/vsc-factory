@@ -245,11 +245,13 @@ refused). Turbo is 4x slower for almost nothing here; the names prompt changed n
   collapse before Claude. NOT yet re-run.
 
 **NEXT (fresh session):**
-1. Re-dispatch `master-test` in both repos with `engine=small` (ref `master-transcript`) and
-   `stt-test` (adds large-v3). Read the diffs: the bar is today's hand-fixed captions.
-2. Give Claude a second opinion where it is blind: run small.en AND turbo over the episode and
-   mark every span where they disagree in the lines Claude reads ("NeXT because he says/that I
-   know"). Free, and it targets exactly the garbles Claude missed.
+1. Re-dispatched 10 Oct (see the commit after this one for run ids): `master-test` in both repos
+   (engine small, second turbo) and `stt-test` (adds large-v3 and the hints row). Read the diffs:
+   the bar is today's hand-fixed captions.
+2. DONE 10 Oct, not yet measured: `build(..., second=<engine>)` / `cloud/master.py <key> small
+   turbo` runs a second free engine and shows Claude every span where the two disagree ("~ \"that\"
+   / other model: \"says\""); a word the second model heard passes the veto. stt-test scores it
+   as `small+turbo-hints+claude`. Costs ~25 min more runner time (turbo), still $0.
 3. kt-machine needs the `ANTHROPIC_API_KEY` repo secret for KT/AR to get the correction (Kamay).
 4. Merge both feature PRs only when e2e is at least as good as today on VSC; default stays OFF.
 5. Switch-on plan for Kamay: set `MASTER_TRANSCRIPT=1` in the workflow env (vsc.yml build, and

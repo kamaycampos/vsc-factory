@@ -9,6 +9,7 @@ on:
       key: { description: "Episode", default: "millionaires_problems" }
       clip: { description: "Clip name in that plan", default: "JOBS-WAS-FIRED" }
       engine: { description: "small | turbo | turbo-names (free whisper.cpp only)", default: "small" }
+      second: { description: "Second engine whose disagreements Claude is shown ('' = none)", default: "turbo" }
       shared_ref: { description: "kt-machine branch with shared/kt_master.py", default: "master-transcript" }
 permissions:
   contents: read
@@ -31,11 +32,11 @@ jobs:
       - uses: actions/cache@v4
         with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - uses: actions/cache@v4
-        if: ${{ startsWith(inputs.engine, 'turbo') }}
+        if: ${{ startsWith(inputs.engine, 'turbo') || startsWith(inputs.second, 'turbo') }}
         with: { path: ~/wturbo, key: ggml-large-v3-turbo-v1 }
       - run: bash setup.sh
       - name: Turbo model
-        if: ${{ startsWith(inputs.engine, 'turbo') }}
+        if: ${{ startsWith(inputs.engine, 'turbo') || startsWith(inputs.second, 'turbo') }}
         run: |
           mkdir -p ~/wturbo
           [ -s ~/wturbo/ggml-large-v3-turbo.bin ] || curl -sL --retry 3 -o ~/wturbo/ggml-large-v3-turbo.bin \
@@ -47,7 +48,7 @@ jobs:
           mkdir -p /tmp/before && mv /tmp/shard_out/* /tmp/before/
           rm -f ~/Desktop/VSC/Clips/${{ inputs.clip }}_*
       - name: Master transcript (${{ inputs.engine }}, one Claude correction call)
-        run: python cloud/master.py "${{ inputs.key }}" "${{ inputs.engine }}"
+        run: python cloud/master.py "${{ inputs.key }}" "${{ inputs.engine }}" ${{ inputs.second }}
       - name: AFTER - captions cut from the master (MASTER_TRANSCRIPT=1)
         env: { MASTER_TRANSCRIPT: "1" }
         run: |

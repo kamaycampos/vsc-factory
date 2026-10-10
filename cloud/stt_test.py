@@ -165,9 +165,14 @@ def score(key, hypdir, do_correct=False):
             hyps.append(json.load(open(os.path.join(hypdir, f))))
     if do_correct:
         import kt_master
-        for h in list(hyps):
-            w, taken, rejected, usage = kt_master.correct([tuple(x) for x in h["words"]],
-                                                         context=plan.get("note", ""))
+        by = {h["engine"]: h for h in hyps}
+        jobs = [(h, None) for h in hyps]
+        if "small" in by and "turbo" in by:        # small.en, with turbo's disagreements as hints
+            jobs.append((dict(by["small"], engine="small+turbo-hints"), by["turbo"]))
+        for h, other in jobs:
+            w, taken, rejected, usage = kt_master.correct(
+                [tuple(x) for x in h["words"]], context=plan.get("note", ""),
+                other=[tuple(x) for x in other["words"]] if other else None)
             if usage:
                 hyps.append({"engine": h["engine"] + "+claude", "seconds": h["seconds"],
                              "words": w, "edits": len(taken), "refused": len(rejected),
