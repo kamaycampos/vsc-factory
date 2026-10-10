@@ -245,7 +245,8 @@ refused). Turbo is 4x slower for almost nothing here; the names prompt changed n
   collapse before Claude. NOT yet re-run.
 
 **NEXT (fresh session):**
-1. Re-dispatched 10 Oct (see the commit after this one for run ids): `master-test` in both repos
+1. Re-dispatched 10 Oct 00:03 UTC: vsc `stt-test` 38007353111, vsc `master-test` 38007355083,
+   kt-machine `master-test` 38007357277 - `master-test` in both repos
    (engine small, second turbo) and `stt-test` (adds large-v3 and the hints row). Read the diffs:
    the bar is today's hand-fixed captions.
 2. DONE 10 Oct, not yet measured: `build(..., second=<engine>)` / `cloud/master.py <key> small
