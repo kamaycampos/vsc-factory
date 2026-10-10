@@ -1,7 +1,8 @@
 # WHICH SPEECH-TO-TEXT FOR THE MASTER TRANSCRIPT (cloud/stt_test.py), 9 Oct 2026.
 # Manual only. Reads the cached source, writes NOTHING to the repo or any release:
 # audio and transcripts travel between jobs encrypted with VSC_KEY, and the report is
-# numbers and name tallies only. Paid engines run only if their secret exists.
+# numbers and name tallies only. FREE ONLY (Kamay, 9 Oct): whisper.cpp on the runner;
+# the one paid piece is the Claude correction pass on the existing key.
 name: stt-test
 on:
   workflow_dispatch:
@@ -46,15 +47,11 @@ jobs:
   stt:
     needs: audio
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 300
     strategy:
       fail-fast: false
       matrix:
-        engine: [small, turbo, turbo-names, deepgram, elevenlabs, assemblyai]
-    env:
-      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
-      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
+        engine: [small, turbo, turbo-names, large]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -68,15 +65,16 @@ jobs:
           openssl enc -d -aes-256-cbc -pbkdf2 -pass env:VSC_KEY -in /tmp/in/a.wav.enc -out /tmp/a.wav
       # the same pinned whisper.cpp and small.en as every build (vsc.yml's cache)
       - uses: actions/cache@v4
-        if: ${{ startsWith(matrix.engine, 'small') || startsWith(matrix.engine, 'turbo') }}
         with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - uses: actions/cache@v4
         if: ${{ startsWith(matrix.engine, 'turbo') }}
         with: { path: ~/wturbo, key: ggml-large-v3-turbo-v1 }
+      - uses: actions/cache@v4
+        if: ${{ matrix.engine == 'large' }}
+        with: { path: ~/wlarge, key: ggml-large-v3-v1 }
       - name: whisper.cpp (pinned, portable) and models
-        if: ${{ startsWith(matrix.engine, 'small') || startsWith(matrix.engine, 'turbo') }}
         run: |
-          W="$HOME/wcache"; mkdir -p "$W" "$HOME/wturbo"
+          W="$HOME/wcache"; mkdir -p "$W" "$HOME/wturbo" "$HOME/wlarge"
           if [ ! -x "$W/whisper-cli" ]; then
             sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y cmake >/dev/null
             git clone -q https://github.com/ggml-org/whisper.cpp /tmp/whisper.cpp
@@ -92,7 +90,11 @@ jobs:
             curl -sL --retry 3 -o "$HOME/wturbo/ggml-large-v3-turbo.bin" \
               https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
           fi
-          ls -la "$W" "$HOME/wturbo"
+          if [ "${{ matrix.engine }}" = large ] && [ ! -s "$HOME/wlarge/ggml-large-v3.bin" ]; then
+            curl -sL --retry 3 -o "$HOME/wlarge/ggml-large-v3.bin" \
+              https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin
+          fi
+          ls -la "$W" "$HOME/wturbo" "$HOME/wlarge"
           echo "WHISPER_CLI=$W/whisper-cli" >> "$GITHUB_ENV"
       - name: Transcribe the whole episode (${{ matrix.engine }})
         run: |

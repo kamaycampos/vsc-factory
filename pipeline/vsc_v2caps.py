@@ -63,11 +63,12 @@ def accurate_words(src, a, b, key):
     FROM_MASTER = False
     if os.environ.get("MASTER_TRANSCRIPT") == "1":
         import kt_master
-        got = kt_master.cut(src, a, b)
-        if got is not None:
+        if kt_master.load(src):
+            # kt_words.words_for gives the master's WORDS on this window's own TIMES
+            got = [w for w in kt_words.words_for(src, a, b, key) if w[2].strip()]
             FROM_MASTER = True
-            print(f"      captions cut from the master transcript ({len(got)} words)", flush=True)
-            return [w for w in got if w[2].strip() and not FILLER.match(w[2].strip())]
+            print(f"      captions from the master transcript ({len(got)} words)", flush=True)
+            return [w for w in got if not FILLER.match(w[2].strip())]
     timed = [w for w in kt_words.words_for(src, a, b, key) if w[2].strip()]
     if not timed:
         return []

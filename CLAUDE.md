@@ -200,29 +200,59 @@ Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
 one and forks silently (this happened twice on 30 Sept). Improve the shared file in
 kt-machine instead, and say so in the commit message.
 
-## Caption engine: master transcript (IN PROGRESS, opt-in, 9 Oct 2026)
+## Caption engine: master transcript (opt-in, default OFF - hand-off 10 Oct 2026)
 
-One transcript per episode, corrected once, with every clip's captions CUT from it.
-Code: `kt-machine/shared/kt_master.py` (branch `master-transcript`, kt-machine PR pending);
-here `pipeline/vsc_v2caps.py` (flag path), `cloud/master.py`, `cloud/stt_test.py`.
-**Default OFF**: nothing changes unless `MASTER_TRANSCRIPT=1` is set and a master file
-exists. With it on, a clip's per-clip `fixes` are skipped (`MASTER_KEEP_FIXES=1` keeps
-them). Episode corrections go in the plan as `master_fixes: [[source_s, "wrong", "right"]]`.
-Claude's edits are vetoed by code: at most 6 words each, no deletion of real words, no
-invented text (it must sound like the old words or be a known name), no overlapping edits
-(so no stacking), and a cap on the count. Timing outside an edit never moves.
+One transcript per episode, corrected once, with every clip's captions taken from it.
+**FREE ONLY (Kamay, 9 Oct): no paid speech-to-text, ever.** whisper.cpp on the runner; the
+one paid piece is the Claude correction pass on the existing `ANTHROPIC_API_KEY`.
+Branches (not merged): `master-transcript` here and in kt-machine. On main: only the manual
+workflows `stt-test`, `master-test` (both repos); dispatch them with `ref=master-transcript`.
+Code: kt-machine `shared/kt_master.py` (+ a hook in `kt_words.words_for`); here
+`pipeline/vsc_v2caps.py`, `cloud/master.py`, `cloud/stt_test.py`.
+Nothing changes unless `MASTER_TRANSCRIPT=1` is set AND a master file exists. With it on:
+WORDS come from the master, TIMES and clip edges from the window's own per-clip timing pass
+(aligned word by word), the plan's per-clip `fixes` are skipped (`MASTER_KEEP_FIXES=1` keeps
+them), and episode corrections go in the plan once as `master_fixes: [[source_s, "wrong", "right"]]`.
+Claude's edits are vetoed by code (max 6 words, no deleting real words, nothing invented,
+no overlap = no stacking, a cap on the count); timing outside an edit never moves.
 
-Runs started 9 Oct 19:44 UTC (manual workflows on main, ref `master-transcript`):
-- vsc-factory `stt-test` run 37982236579: the speech-to-text benchmark. Its report
-  artifact / job summary has WER, names, timing spread, runtime and $ per engine, with
-  and without the Claude correction.
-- vsc-factory `master-test` run 37982240107: JOBS-WAS-FIRED rendered before and after, turbo.
-- kt-machine `master-test` run 37982243678: ep_v6v9urd shard 0, turbo.
+**Benchmark, run 37982236579 (9 Oct)** - millionaires_problems whole episode, scored against
+the 23 delivered clips' burned captions (2,623 words; small.en + the reviewers' fixes, so the
+reference FLATTERS small.en):
 
-NEXT (fresh session): read those three results. Fix whatever failed and re-dispatch.
-Write the benchmark table and a recommendation here and in the kt-machine PR. Open the two
-feature PRs (vsc-factory `master-transcript`, kt-machine `master-transcript`) and merge
-them only once the e2e runs are green (everything in them is default-off). Then give
-Kamay the switch-on plan: which flag, which secret, what it costs per episode.
-No paid STT key exists yet, so the paid adapters (Deepgram, ElevenLabs, AssemblyAI) are
-written but have never run.
+| engine | WER % | names right | timing spread median/p90 ms | runtime | $ |
+|---|---|---|---|---|---|
+| small.en (today's model) | 2.55 | 18/25 | 220 / 678 | 6.5 min | 0 |
+| large-v3-turbo | 2.33 | 19/25 | 260 / 780 | 25 min | 0 |
+| turbo + names prompt | 2.33 | 19/25 | 241 / 675 | 26 min | 0 |
+| **small.en + Claude** | **2.10** | **24/25** | 220 / 676 | 6.5 min | 0.067 |
+| turbo + Claude | 2.13 | 24/25 | 260 / 779 | 25 min | 0.063 |
+
+Reading: the Claude pass is the win (names 18 -> 24 of 25, ~$0.07 an episode, 0 edits
+refused). Turbo is 4x slower for almost nothing here; the names prompt changed nothing.
+**Default engine: small.en + Claude.** large-v3 is now in the matrix, not yet run.
+
+**End to end (turbo master, 9 Oct):**
+- VSC run 37982240107, JOBS-WAS-FIRED: worse than today's hand-fixed captions. "NeXT because he
+  that I know" (turbo garble Claude missed), "I'm I'm the genius" (kt_qc FAIL), "And in NeXT".
+  Both before and after fail edges "first word heard is not 'steve'" (pre-existing, not this).
+- KT run 37982243678, ep_v6v9urd shard 0 (kt-machine has NO `ANTHROPIC_API_KEY` secret, so
+  uncorrected): better punctuation and line breaks, "Art Eastland" for "Artis and", but
+  "So flip" dropped off a clip's head and WALL-STREET-500-RIVALS failed sync (worst 10% 0.98 s).
+  NINE-HOURS passed every gate.
+- Fixed since (commit "master words on the window's own times"): master words now ride on the
+  per-window timing pass (keeps the edge words, keeps graded times); unpunctuated exact repeats
+  collapse before Claude. NOT yet re-run.
+
+**NEXT (fresh session):**
+1. Re-dispatch `master-test` in both repos with `engine=small` (ref `master-transcript`) and
+   `stt-test` (adds large-v3). Read the diffs: the bar is today's hand-fixed captions.
+2. Give Claude a second opinion where it is blind: run small.en AND turbo over the episode and
+   mark every span where they disagree in the lines Claude reads ("NeXT because he says/that I
+   know"). Free, and it targets exactly the garbles Claude missed.
+3. kt-machine needs the `ANTHROPIC_API_KEY` repo secret for KT/AR to get the correction (Kamay).
+4. Merge both feature PRs only when e2e is at least as good as today on VSC; default stays OFF.
+5. Switch-on plan for Kamay: set `MASTER_TRANSCRIPT=1` in the workflow env (vsc.yml build, and
+   kt-machine factory.yml build), and build the master once per episode in prep
+   (`cloud/master.py <key> small`, cached encrypted in the prep release). Cost: ~$0.07 of Claude
+   per 18-min episode, ~7 min of free runner time.

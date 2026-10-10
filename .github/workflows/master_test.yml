@@ -8,7 +8,7 @@ on:
     inputs:
       key: { description: "Episode", default: "millionaires_problems" }
       clip: { description: "Clip name in that plan", default: "JOBS-WAS-FIRED" }
-      engine: { description: "small | turbo | turbo-names | deepgram | elevenlabs | assemblyai", default: "turbo" }
+      engine: { description: "small | turbo | turbo-names (free whisper.cpp only)", default: "small" }
       shared_ref: { description: "kt-machine branch with shared/kt_master.py", default: "master-transcript" }
 permissions:
   contents: read
@@ -23,9 +23,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       VSC_KEY: ${{ secrets.VSC_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
-      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
       SHARED_REF: ${{ inputs.shared_ref }}
     steps:
       - uses: actions/checkout@v4

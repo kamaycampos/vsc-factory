@@ -3,7 +3,7 @@
 
     python cloud/master.py <key> <engine> [--no-correct]
 
-Engines: small | turbo | turbo-names | deepgram | elevenlabs | assemblyai (see
+Engines: small | turbo | turbo-names | large - free whisper.cpp only (see
 cloud/stt_test.py). The whole episode is transcribed once, corrected by one Claude
 call (when ANTHROPIC_API_KEY is set), then the plan's `master_fixes` - human
 corrections in SOURCE seconds, written once per episode - are applied. The file goes

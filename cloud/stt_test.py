@@ -40,14 +40,8 @@ ENGINES = {
     "small": "whisper:" + os.path.expanduser("~/wcache/ggml-small.en.bin"),
     "turbo": "whisper:" + os.path.expanduser("~/wturbo/ggml-large-v3-turbo.bin"),
     "turbo-names": "whisper+names:" + os.path.expanduser("~/wturbo/ggml-large-v3-turbo.bin"),
-    "deepgram": "deepgram", "elevenlabs": "elevenlabs", "assemblyai": "assemblyai",
+    "large": "whisper:" + os.path.expanduser("~/wlarge/ggml-large-v3.bin"),
 }
-KEYS = {"deepgram": "DEEPGRAM_API_KEY", "elevenlabs": "ELEVENLABS_API_KEY",
-        "assemblyai": "ASSEMBLYAI_API_KEY"}
-# List price per audio hour, USD, checked against each vendor's pricing page by hand -
-# [Likely], not measured: verify before relying on it.
-PRICE_HR = {"small": 0.0, "turbo": 0.0, "turbo-names": 0.0, "deepgram": 0.26,
-            "elevenlabs": 0.40, "assemblyai": 0.15}
 FILLER = {"um", "uh", "erm", "ah", "mm", "hmm"}
 
 
@@ -65,12 +59,9 @@ def raw_toks(text):
 
 
 def run(engine, wav, out):
-    if engine in KEYS and not os.environ.get(KEYS[engine]):
-        print(f"SKIPPED {engine}: no {KEYS[engine]} secret")
-        return
     import kt_master
     t0 = time.time()
-    words = kt_master.transcribe(wav, ENGINES[engine])
+    words = kt_master.collapse_stutters(kt_master.transcribe(wav, ENGINES[engine]))
     took = round(time.time() - t0, 1)
     json.dump({"engine": engine, "seconds": took, "words": words}, open(out, "w"))
     print(f"{engine}: {len(words)} words in {took}s")
@@ -167,7 +158,6 @@ def score(key, hypdir, do_correct=False):
     print(f"reference: {len(ref)} delivered clips, "
           f"{sum(len(toks(' '.join(b[2] for b in r['bursts']))) for r in ref.values())} words")
     plan = json.load(open(os.path.join(ROOT, "plans", key + ".json")))
-    dur = plan.get("duration", 1090)
     rows = []
     hyps = []
     for f in sorted(os.listdir(hypdir)):
@@ -193,8 +183,7 @@ def score(key, hypdir, do_correct=False):
             e, n, hit, tot, d = score_clip(r, h["words"])
             E += e; N += n; H += hit; T += tot; D += d
         D.sort()
-        base = h["engine"].split("+")[0]
-        cost = PRICE_HR.get(base, 0) * dur / 3600 + h.get("claude_usd", 0)
+        cost = h.get("claude_usd", 0)          # whisper.cpp on a free runner costs nothing
         rows.append({"engine": h["engine"], "wer": round(100 * E / max(1, N), 2), "errors": E, "words": N,
                      "names": f"{H}/{T}", "timing_ms_median": round(1000 * D[len(D) // 2]) if D else None,
                      "timing_ms_p90": round(1000 * D[int(len(D) * 0.9)]) if D else None,
