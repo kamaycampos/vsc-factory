@@ -7,6 +7,217 @@
  "duration": 1611.0,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "PRAYING-FROM-DESPERATION",
+   "region": [
+    86.0,
+    178.0
+   ],
+   "open": "The number one mistake a person makes",
+   "close": "thing that happens to you and for you",
+   "hook": [
+    "MAYBE YOU'RE SUPPOSED",
+    "TO GET EVICTED"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "NOT-FINE-NOT-THE-END",
+   "region": [
+    175.0,
+    265.0
+   ],
+   "open": "There's a phrase there's a phrase that we",
+   "close": "it just means it's not the end",
+   "hook": [
+    "IF IT'S NOT FINE,",
+    "IT'S NOT THE END"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "NO-DEADLINES-WITH-GOD",
+   "region": [
+    264.0,
+    366.0
+   ],
+   "open": "Another common mistake is people put deadlines",
+   "close": "a whole host of opportunities these and blessing",
+   "hook": [
+    "GOD, PLEASE GIVE ME SUSIE.",
+    "MARY IS BETTER."
+   ],
+   "fixes": []
+  },
+  {
+   "name": "THE-SECRET-BASEMENT",
+   "region": [
+    370.0,
+    465.0
+   ],
+   "open": "Let me tell you how I actually learned",
+   "close": "in your training is to learn how to pray",
+   "hook": [
+    "1975: 10 STRANGERS IN",
+    "A SECRET BASEMENT"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "ONE-FORMULA-SIX-BOOKS",
+   "region": [
+    474.0,
+    564.0
+   ],
+   "open": "Where does God in prayer come into",
+   "close": "surpasses all human comprehension and understanding",
+   "hook": [
+    "THE QURAN, THE BIBLE, THE ZOHAR:",
+    "ONE PRAYER FORMULA"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "PAUL-AND-SILAS",
+   "region": [
+    721.0,
+    797.0
+   ],
+   "open": "Paul and Silas in the New Testament",
+   "close": "the joy first, and then the result happened",
+   "hook": [
+    "THEY THANKED GOD",
+    "AND THE PRISON WALLS FELL"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "OUR-FATHER-NOT-MY-FATHER",
+   "region": [
+    797.0,
+    891.0
+   ],
+   "open": "Jesus is telling the apostles",
+   "close": "So that's who you're talking to.",
+   "hook": [
+    "STOP PRAYING",
+    "ME, ME, ME"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "HEAVEN-IS-NOT-A-PLACE",
+   "region": [
+    904.0,
+    952.0
+   ],
+   "open": "You're talking to the source of all supply",
+   "close": "which means we're all connected",
+   "hook": [
+    "HEAVEN IS NOT",
+    "A PLACE"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "FORGIVE-OR-IT-FAILS",
+   "region": [
+    960.0,
+    1048.0
+   ],
+   "open": "Then I was taught Mark 11.24",
+   "close": "you're releasing that animosity so you're forgiving",
+   "hook": [
+    "HOLD ONE GRUDGE AND",
+    "YOUR PRAYER WON'T WORK"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "THE-BEDTIME-PRAYER",
+   "region": [
+    1048.0,
+    1097.0
+   ],
+   "open": "Then we said, \"And thank you, God",
+   "close": "left absolutely beautifully and wonderfully",
+   "hook": [
+    "A CHILD'S BEDTIME PRAYER",
+    "IS THE REAL FORMULA"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "WORRY-ABOUT-NOTHING",
+   "region": [
+    1153.0,
+    1205.0
+   ],
+   "open": "From an experiential standpoint, when you followed that",
+   "close": "You should not be worried about anything",
+   "hook": [
+    "IF GOD FEEDS THE BIRDS,",
+    "WHY ARE YOU WORRIED?"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "BREATHE-BEFORE-YOU-PRAY",
+   "region": [
+    1216.0,
+    1303.0
+   ],
+   "open": "Breathing is something throughout history in every religious",
+   "close": "alpha state, or into a theta state",
+   "hook": [
+    "PRAYER STARTS WITH",
+    "BREATHING THROUGH YOUR NOSE"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "TWO-INCHES-BELOW",
+   "region": [
+    1300.0,
+    1392.0
+   ],
+   "open": "Then, you put your attention two inches",
+   "close": "into the ether and connects right to source",
+   "hook": [
+    "YOU LIVE 2 INCHES",
+    "BELOW YOUR BELLY BUTTON"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "PIERCE-THE-VEIL",
+   "region": [
+    1404.0,
+    1452.0
+   ],
+   "open": "The veil is the delineating point between duality",
+   "close": "because it's a place of knowingness",
+   "hook": [
+    "THE VEIL BETWEEN YOU",
+    "AND GOD CAN BE PIERCED"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "ABANDONED-BY-GOD",
+   "region": [
+    1453.0,
+    1532.0
+   ],
+   "open": "Most people do feel abandoned by God",
+   "close": "surpasses all human comprehension and understanding",
+   "hook": [
+    "FEEL ABANDONED BY GOD?",
+    "YOU'RE PRAYING WRONG"
+   ],
+   "fixes": []
+  }
+ ],
  "rumble": "https://rumble.com/v7afnp8-why-your-prayers-fail-the-ancient-prayer-formula-that-actually-works.html"
 }
