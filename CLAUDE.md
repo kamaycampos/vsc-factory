@@ -122,6 +122,22 @@ runs, and how to do any of them by hand.)
   40 s regions, so check_plan's region test passed the very clips Kamay called too short.
   autoplan replays that search on the transcript before it keeps a plan: 40-118 s of speech
   (or `short_ok`), and open/close words spoken only once in the window.
+- **A source uploaded from the Mac must be checked on the release, part by part** (12 Oct):
+  why_your_prayers_fail went up as `.part00` + `.part01`; the 2 GB part00 upload died
+  with the session that started it, nothing noticed, and prep called the cache
+  "unreadable" for half a day. It was also locked with `VSC_KEY_B` (the plan's
+  `"source_key"` names the secret) and that one-line decrypt change sat uncommitted.
+  Verify with `gh release view sources --json assets` that every part is there at its size.
+- **Every clip that renders is recorded in `built.json`, whatever its verdict** (12 Oct).
+  Only PASS was recorded, so LOOK/FAIL clips were re-rendered in rounds 2 and 3 of every
+  run, to the same verdict (TWO-WRONG-BELIEFS: six times in one day). A plan change still
+  rebuilds; a clip that rendered nothing is still retried.
+- **Edge listening allows whisper's name bias on the FIRST word only** (12 Oct): "Steven"
+  heard for caption "Steve" failed FIRED-FROM-HIS-OWN-COMPANY, which opens cleanly. A word
+  cut at the start is heard shorter, never longer; the last word stays exact.
+- **The Mac gate judges with the live shared `kt_qc`** (fetched into `~/VSC/.engine`,
+  checked against the MANIFEST), not a hand copy in `~/Kamay` - they drifted once already.
+- Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
 

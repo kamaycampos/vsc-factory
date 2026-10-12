@@ -3,6 +3,7 @@
  "prefix": "Why Your Prayers",
  "title": "Why Your Prayers Fail (The Ancient Prayer Formula That Actually Works)",
  "source": "why_your_prayers_fail.mp4.enc",
+ "source_key": "VSC_KEY_B",
  "duration": 1611.0,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",

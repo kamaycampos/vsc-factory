@@ -81,7 +81,11 @@ def fetch(plan):
             r = j
     if r.returncode == 0 and os.path.exists(got):
         if name.endswith(".enc"):
-            sh("openssl", "enc", "-d", "-aes-256-cbc", "-pbkdf2", "-pass", "env:VSC_KEY",
+            # A plan may name its own key (12 Oct 2026): why_your_prayers_fail was
+            # uploaded from a Mac copy when Rumble refused the runners, locked with
+            # VSC_KEY_B because VSC_KEY was not at hand.
+            key = plan.get("source_key", "VSC_KEY")
+            sh("openssl", "enc", "-d", "-aes-256-cbc", "-pbkdf2", "-pass", f"env:{key}",
                "-in", got, "-out", dest)
             os.remove(got)
         else:

@@ -53,6 +53,19 @@ def heard(wav, tag):
     return w
 
 
+def same_start(got, cap):
+    """Is the first word heard the first caption word, whole?
+
+    12 Oct 2026: FIRED-FROM-HIS-OWN-COMPANY opens on "Steve" over clean silence, whisper
+    heard "Steven" (its known name bias - CLAUDE.md, "Steve Jobs (not Steven)") and the
+    clip was failed. A word cut at the START of a clip is heard SHORTER or different,
+    never with letters added, so a heard word that begins with the caption word and runs
+    at most two letters longer is the whole word. Only the opening gets this: at the end,
+    a longer word ("problem" heard as "problems") is speech running past the close."""
+    return got == cap or (bool(cap) and len(cap) >= 4 and got.startswith(cap)
+                          and len(got) - len(cap) <= 2)
+
+
 def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
     """What whisper hears at the two ends of the file at p, against its own captions.
 
@@ -75,7 +88,7 @@ def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
             "caption_first": cap_first, "caption_last": cap_last,
             "plan_first": norm((c.get("open") or " ").split()[0]),
             "plan_last": norm((c.get("close") or " ").split()[-1]),
-            "first_ok": got_first is not None and got_first == cap_first,
+            "first_ok": got_first is not None and same_start(got_first, cap_first),
             "last_ok": got_last is not None and got_last == cap_last}
 
 

@@ -40,9 +40,10 @@ env:
   GH_TOKEN: ${{ github.token }}
   FRAMEIO_TOKEN: ${{ secrets.FRAMEIO_TOKEN }}
   VSC_KEY: ${{ secrets.VSC_KEY }}      # opens the font and the cached source
+  VSC_KEY_B: ${{ secrets.VSC_KEY_B }}  # opens a source whose plan says "source_key": "VSC_KEY_B"
 jobs:
   prep:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +67,7 @@ jobs:
   # With no stub waiting this job takes seconds and changes nothing.
   autoplan:
     needs: prep
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: write
@@ -109,7 +110,7 @@ jobs:
     # A failed autoplan never blocks the batches already planned; a successful one hands
     # over to the fresh run it started (which cancels this one - newer run wins).
     if: ${{ !cancelled() && needs.prep.result == 'success' && needs.autoplan.outputs.planned != '1' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
       count: ${{ steps.s.outputs.count }}
@@ -123,7 +124,7 @@ jobs:
   build:
     needs: shard
     if: ${{ !cancelled() && needs.shard.result == 'success' && needs.shard.outputs.count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     strategy:
       fail-fast: false            # one bad clip must not take the batch down
@@ -151,7 +152,7 @@ jobs:
   collect:
     needs: build
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -171,7 +172,7 @@ jobs:
   shard2:
     needs: collect
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
       count: ${{ steps.s.outputs.count }}
@@ -185,7 +186,7 @@ jobs:
   build2:
     needs: shard2
     if: ${{ !cancelled() && needs.shard2.outputs.count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     strategy:
       fail-fast: false
@@ -213,7 +214,7 @@ jobs:
   collect2:
     needs: build2
     if: ${{ !cancelled() && needs.shard2.outputs.count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -224,7 +225,7 @@ jobs:
   shard3:
     needs: collect2
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.s.outputs.matrix }}
       count: ${{ steps.s.outputs.count }}
@@ -238,7 +239,7 @@ jobs:
   build3:
     needs: shard3
     if: ${{ !cancelled() && needs.shard3.outputs.count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     strategy:
       fail-fast: false
@@ -266,7 +267,7 @@ jobs:
   collect3:
     needs: build3
     if: ${{ !cancelled() && needs.shard3.outputs.count != '0' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -280,7 +281,7 @@ jobs:
   verify:
     needs: [collect, collect2, collect3]
     if: ${{ !cancelled() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - run: python cloud/verify.py

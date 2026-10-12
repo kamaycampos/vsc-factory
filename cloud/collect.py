@@ -55,8 +55,15 @@ def main():
             built = json.load(open("/tmp/bj/built.json"))
         except Exception:
             built = {}
+    # EVERY CLIP THAT RENDERED IS BUILT FROM ITS PLAN, whatever its verdict. 12 Oct 2026:
+    # only a PASS was recorded, so a LOOK or FAIL clip was rebuilt in rounds 2 and 3 of
+    # every run and again by every later run - TWO-WRONG-BELIEFS and FIRED-FROM-HIS-OWN-
+    # COMPANY were rendered six times on 12 Oct, each time to the same verdict, ~35 runner
+    # minutes a round. Re-rendering the same plan cannot change a verdict; changing the
+    # plan (a fix, a new cut) changes the fingerprint, and that rebuilds it. A clip that
+    # rendered NOTHING has no file and stays unrecorded, so the retry rounds still catch it.
     for r in rep:
-        if r.get("ok") is not False and r.get("plan"):
+        if r.get("plan") and r.get("file"):
             built[r["clip"]] = r["plan"]
     os.makedirs("/tmp/bj", exist_ok=True)
     json.dump(built, open("/tmp/bj/built.json", "w"), indent=1, sort_keys=True)
