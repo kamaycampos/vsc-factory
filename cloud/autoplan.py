@@ -236,6 +236,28 @@ def clean(raw):
     return clips
 
 
+def thin_punctuation(text, window=300.0, floor=4.0):
+    """[(start, end, stops per minute)] for every 5-minute stretch under `floor`.
+
+    RULES #2: a cutter cannot find a sentence boundary the transcript does not contain,
+    and whisper drifts on long files - the second half of KT's 7 Oct transcript came back
+    with almost no full stops. Reported on the run page so a thin stretch is visible
+    before anyone wonders why its clips open mid-thought."""
+    lines = [(int(m[1]) * 60 + float(m[2]), m[3]) for m in LINE.finditer(text)]
+    if not lines:
+        return []
+    out, t, end = [], 0.0, lines[-1][0]
+    while t < end:
+        seg = " ".join(s for a, s in lines if t <= a < t + window)
+        mins = min(window, end - t) / 60
+        if mins >= 1 and seg.strip():
+            rate = len(re.findall(r"[.!?](?:\s|$)", seg)) / mins
+            if rate < floor:
+                out.append((t, min(t + window, end), rate))
+        t += window
+    return out
+
+
 def plan_one(client, p, text):
     system = (open(os.path.join(ROOT, "PLANNING.md")).read() + "\n\n" + rules() +
               "\n\n## The delivered, reviewer-approved batch (shape and standard)\n" + example())
@@ -335,6 +357,13 @@ def main():
             print(f"::error::{p['key']}: no transcript for it in the prep release")
             waiting.append(p["key"])
             continue
+        thin = thin_punctuation(text)
+        for a, b, rate in thin:
+            print(f"::warning::{p['key']}: {mmss(a)}-{mmss(b)} has {rate:.1f} full stops a "
+                  "minute (under 4) - whisper drifted; cuts there need a careful look")
+        if thin:
+            summary([f"**{p['key']}: thin punctuation** in " + ", ".join(
+                f"{mmss(a)}-{mmss(b)} ({r:.1f}/min)" for a, b, r in thin)])
         print(f"{p['key']}: choosing clips with {MODEL}")
         clips = plan_one(client, p, text)
         if not clips:
