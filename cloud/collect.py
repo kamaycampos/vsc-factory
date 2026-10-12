@@ -70,6 +70,26 @@ def main():
     u = sh("gh", "release", "upload", "clips", "/tmp/bj/built.json", "--clobber", "-R", REPO)
     if u.returncode:
         print(f"  could not record which plan these were built from: {u.stderr[-120:]}", flush=True)
+    # THE VERDICT TRAVELS WITH THE CLIP (12 Oct 2026). The Mac gate decides what reaches
+    # the folder Kamay submits from, and it cannot listen to the edges - only the cloud
+    # does. FIRED-FROM-HIS-OWN-COMPANY was a cloud FAIL and the Mac delivered it anyway,
+    # because nothing carried the verdict down. Keyed by clip, with the exact file name,
+    # so an older verdict never judges a newer file.
+    verdicts = {}
+    d = sh("gh", "release", "download", "clips", "-R", REPO, "-p", "verdicts.json",
+           "-D", "/tmp/bj", "--clobber")
+    if d.returncode == 0:
+        try:
+            verdicts = json.load(open("/tmp/bj/verdicts.json"))
+        except Exception:
+            verdicts = {}
+    for r in rep:
+        if r.get("file"):
+            w = r.get("why") or []
+            verdicts[r["clip"]] = {"file": r["file"], "verdict": r.get("verdict"),
+                                   "why": [w] if isinstance(w, str) else list(w)}
+    json.dump(verdicts, open("/tmp/bj/verdicts.json", "w"), indent=1, sort_keys=True)
+    sh("gh", "release", "upload", "clips", "/tmp/bj/verdicts.json", "--clobber", "-R", REPO)
     open("/tmp/notes.md", "w").write("\n".join(body))
     sh("gh", "release", "edit", "clips", "-R", REPO, "-F", "/tmp/notes.md")
     print("\n".join(body))
