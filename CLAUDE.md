@@ -208,6 +208,22 @@ Loose ends:
   autopilot reads them there); every other copy of Kevin's material is encrypted.
 - A source over 2 GiB is cached as `<key>.mp4.enc.part00, .part01...` (source.py joins them).
 
+## Delivery to the Mac (`mac/`, moved here from ~/Kamay on 12 Oct 2026)
+
+`~/Desktop/VSC/Clips` is a shortcut to `~/VSC/Clips`; **a clip in there can be submitted.**
+The LaunchAgent `com.kamay.vscpull` runs `mac/vsc_pull.py` every 15 min while the Mac is
+awake (`com.kamay.keep-awake` = `caffeinate -s`: awake only ON THE CHARGER):
+- `vsc_pull.py` pulls the newest cut of each clip from the `clips` release into
+  `~/VSC/.incoming`, git-pulls this repo (so fixes to `mac/` deploy themselves), fetches
+  `verdicts.json`, runs the gate, and shows a macOS notification when clips land.
+- `vsc_gate.py` passes a clip into `Clips/` or holds it in `Clips/_needs_work/` with a
+  `__WHY.txt`: file opens at 1080x1920 with sound, plan corrections on screen, live shared
+  `kt_qc`, and the cloud's edge-listening FAILs (`verdicts.json`).
+- `vsc_source.py` (started detached by the pull): when a plan's Rumble source is missing
+  from the `sources` release and no vsc run is active, the Mac downloads it (Rumble refuses
+  the runners, not the Mac), locks it with `~/.vsc_key` (= `VSC_KEY`), uploads verified
+  parts, and starts `vsc.yml`. Log: `~/Kamay/logs/vsc_source.log`.
+
 ## Shared engine
 
 Word timings, caption breaks, framing, edges and the quality check (`kt_qc.py`,
