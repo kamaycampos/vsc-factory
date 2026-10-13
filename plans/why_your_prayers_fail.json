@@ -7,6 +7,123 @@
  "duration": 1611.0,
  "autoplan": true,
  "note": "Started by vsc-new. Re-planned 13 Oct: the first plan (15 clips) cut where Kevin had no pause - 13 failed the edge checks, 2 could not be located. autoplan now plans on the pause map (pauses-<key>.json). Rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "PRAY-FOR-THE-BLESSING",
+   "region": [
+    124.0,
+    226.0
+   ],
+   "open": "You know, they have some desperate need.",
+   "close": "find the blessing and the treasure in it.",
+   "hook": [
+    "MAYBE YOU'RE SUPPOSED",
+    "TO GET EVICTED"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "NO-DEADLINES-FOR-GOD",
+   "region": [
+    266.0,
+    297.0
+   ],
+   "open": "Another common mistake is people put deadlines",
+   "close": "you don't know what's off your radar screen",
+   "hook": [
+    "STOP GIVING GOD",
+    "A FRIDAY DEADLINE"
+   ],
+   "short_ok": "The whole mistake in one pass: the deadline, the examples (by Friday, this month, make so-and-so like me) and the reason it fails - you can't see what's off your radar screen. The next line runs on into the interviewer's question, so there is no later clean close.",
+   "fixes": []
+  },
+  {
+   "name": "JOY-BEFORE-THE-WALLS",
+   "region": [
+    754.0,
+    790.0
+   ],
+   "open": "They didn't pray for freedom. They were given",
+   "close": "before the walls came down. Not after.",
+   "hook": [
+    "PAUL AND SILAS DIDN'T",
+    "PRAY FOR FREEDOM"
+   ],
+   "short_ok": "A complete story with its own landing: they didn't beg to get out, they gave thanks, and the joy came before the walls fell. 'Not after.' is the twist.",
+   "fixes": []
+  },
+  {
+   "name": "OUR-NOT-MY-FATHER",
+   "region": [
+    807.0,
+    907.0
+   ],
+   "open": "If you're going to pray for something",
+   "close": "the source of everything in your life.",
+   "hook": [
+    "JESUS NEVER SAID",
+    "PRAY TO 'MY FATHER'"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "HEAVEN-IS-NOT-A-PLACE",
+   "region": [
+    916.0,
+    940.0
+   ],
+   "open": "Well, the word heaven is actually",
+   "close": "our provider who dwells within us as us.",
+   "hook": [
+    "HEAVEN IS NOT",
+    "A PLACE"
+   ],
+   "short_ok": "One self-contained idea: 'heaven' is mistranslated and means 'who dwells within us as us', and Kevin restates the whole corrected line as the landing. The lines after it end mid-sentence, so there is no later clean close.",
+   "fixes": []
+  },
+  {
+   "name": "FORGIVE-OR-IT-FAILS",
+   "region": [
+    963.0,
+    1007.0
+   ],
+   "open": "If you say to this mountain, be removed",
+   "close": "forgiven everybody in your life including your enemies",
+   "hook": [
+    "FORGIVE YOUR ENEMIES",
+    "OR IT WON'T WORK"
+   ],
+   "short_ok": "Runs right at about 40 s: the verse, the three-step formula and the forgiveness condition are all here, and it lands on 'including your enemies' before the next thought begins.",
+   "fixes": []
+  },
+  {
+   "name": "BLESS-MOMMY-AND-DADDY",
+   "region": [
+    1010.0,
+    1096.0
+   ],
+   "open": "in many circles we were taught at night",
+   "close": "left absolutely beautifully and wonderfully.",
+   "hook": [
+    "A CHILD'S BEDTIME PRAYER",
+    "IS THE SECRET FORMULA"
+   ],
+   "fixes": []
+  },
+  {
+   "name": "WORRY-ABOUT-NOTHING",
+   "region": [
+    1093.0,
+    1204.0
+   ],
+   "open": "then there's another phrase where it says",
+   "close": "You should not be worried about anything.",
+   "hook": [
+    "IF GOD FEEDS THE BIRDS",
+    "WHY ARE YOU WORRIED"
+   ],
+   "fixes": []
+  }
+ ],
  "rumble": "https://rumble.com/v7afnp8-why-your-prayers-fail-the-ancient-prayer-formula-that-actually-works.html"
 }
