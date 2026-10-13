@@ -36,6 +36,17 @@ answer comes back as JSON, is checked by code, and is committed only if it passe
    and those are the clips Kamay called too short). A batch that
    fails comes back to you, up to twice, with the problems listed.
 
+## Cut only where Kevin pauses (13 Oct 2026)
+When the transcript says so, **every line break is a real pause in the sound** and nowhere
+else is. A clip can only open on the FIRST words of a line and close on the LAST words of a
+line; anything else opens on the tail of his previous word or cuts into his next one, and
+the reviewers hear it. Kevin also pauses mid-sentence for effect, so some lines are
+fragments ("a", "person makes when they pray is..."): the line a clip opens on must ALSO be
+the start of a complete thought, and the line it closes on must end where the teaching
+lands. If the ideal first sentence is not at a line start, use the nearest line start
+before it that begins a complete thought. Never open on a false start or a repeat ("There's
+a phrase there's a phrase").
+
 ## Where a clip starts and ends (the reviewers reject everything else)
 - **Start on the first word of a complete thought** - a claim, a question, a story's first
   line. Never on "And / But / So / Because / That's why", never on a line that points back

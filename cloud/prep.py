@@ -45,6 +45,19 @@ def build(plan):
     import vsc_week
     src = fetch(plan)
     base = os.path.splitext(os.path.basename(src))[0]
+    # THE PAUSE MAP (13 Oct 2026): where the sound is quiet enough to cut, by the
+    # renderer's rule - autoplan plans on it (cloud/pauses.py). Once per source, seconds.
+    pz = f"/tmp/pauses-{plan['key']}.json"
+    if sh("gh", "release", "download", "prep", "-R", REPO, "-p", os.path.basename(pz),
+          "-D", "/tmp", "--clobber").returncode:
+        from cloud.pauses import pause_map
+        import json
+        json.dump(pause_map(src), open(pz, "w"))
+        sh("gh", "release", "create", "prep", "-R", REPO, "-t", "prep", "-n",
+           "Transcripts, word timings and shot maps, one bundle per source.")
+        up = sh("gh", "release", "upload", "prep", pz, "--clobber", "-R", REPO)
+        print(f"  pause map {'published' if not up.returncode else 'NOT published'}: "
+              f"{len(json.load(open(pz))['pauses'])} pauses", flush=True)
     tar = f"/tmp/prep-{plan['key']}.tar.gz"
     got = sh("gh", "release", "download", "prep", "-R", REPO,
              "-p", os.path.basename(tar), "-D", "/tmp", "--clobber")

@@ -137,6 +137,19 @@ runs, and how to do any of them by hand.)
   cut at the start is heard shorter, never longer; the last word stays exact.
 - **The Mac gate judges with the live shared `kt_qc`** (fetched into `~/VSC/.engine`,
   checked against the MANIFEST), not a hand copy in `~/Kamay` - they drifted once already.
+- **Plan on the pauses** (13 Oct). why_your_prayers_fail's first plan put 13 of 15 opens/
+  closes where Kevin had no pause and 2 closes the renderer could not find: the planner read a
+  transcript that cannot show silence, checked against text the renderer never searches.
+  prep now publishes `pauses-<key>.json` (`cloud/pauses.py`, quiet_runs' rule); autoplan gives
+  the planner the word stream with a line break at every real pause, checks each open/close
+  with the renderer's own `_find` on that stream, and needs >= 0.15 s of pause before the open
+  and >= 0.20 s after the close. After the last repair round it keeps the clips that pass
+  (>= 6) instead of dropping the batch.
+- **The caption pass's punctuation is repaired** (`vsc_v2caps.tidy`, 13 Oct): a full stop
+  followed by a lowercase word becomes a comma before a joining word, goes before a word no
+  sentence starts on, and otherwise keeps the stop and capitalises; a capitalised starter
+  after an unpunctuated word gets a stop; "that's That's" gets a comma. On that batch's
+  captions: 27 kt_qc text faults -> 0 (2 more were kt_qc false alarms, fixed in kt-machine #24).
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.

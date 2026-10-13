@@ -35,7 +35,8 @@ import check_plan  # noqa: E402
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-factory")
 MODEL = os.environ.get("VSC_PLANNER_MODEL") or "claude-opus-5-5"
-ATTEMPTS = 3        # the first answer, then up to two repair rounds with the problems listed
+ATTEMPTS = 4        # the first answer, then up to three repair rounds with the problems listed
+MIN_KEEP = 6        # after the last round, keep the clips that pass if at least this many do
 
 SCHEMA = {
     "type": "object",
@@ -182,6 +183,123 @@ def located(c, tw):
     return out
 
 
+# ----------------------------------------------------------------- THE PAUSES (13 Oct 2026)
+# why_your_prayers_fail: 13 of 15 clips came back "no pause before the open" or "no pause
+# after the close", and two could not be rendered at all ("missing closing"). The planner
+# chose its words from a transcript that cannot show silence, and they were checked against
+# that transcript - while the renderer searches the WORD-TIMING pass and cuts in the SOUND.
+# So the planner now reads a transcript whose every line break IS a real pause (prep's
+# pauses-<key>.json, measured by quiet_runs' rule), and its words are checked the way the
+# renderer finds them: in the word stream, loosely, inside region -22/+28 s, with a pause
+# before the open and after the close. Calibrated on that batch: these rules called 22 of
+# the renderer's 26 edge verdicts, and were stricter on the rest.
+PAUSE = None                 # (words, pauses) for the plan being chosen, when prep made them
+OPEN_GAP, CLOSE_GAP = 0.15, 0.20
+
+
+def gap_before(pauses, t):
+    """The longest pause pause_before() would take for a first word starting at t."""
+    return max((b - a for a, b in pauses if a <= t + 0.15 and t - 0.6 <= b <= t + 2.5), default=0.0)
+
+
+def gap_after(pauses, t):
+    """The longest pause pause_after() would take after a last word ending at t."""
+    return max((b - a for a, b in pauses if b >= t - 0.25 and t - 1.0 <= a <= t + 0.5), default=0.0)
+
+
+def prep_data(p):
+    """(words, pauses) from the prep release, or None - then only the old checks run."""
+    d = "/tmp/autoplan/prep"
+    os.makedirs(d, exist_ok=True)
+    for pat in (f"prep-{p['key']}.tar.gz", f"pauses-{p['key']}.json"):
+        subprocess.run(["gh", "release", "download", "prep", "-R", REPO, "-p", pat, "-D", d,
+                        "--clobber"], capture_output=True)
+    try:
+        import tarfile
+        with tarfile.open(os.path.join(d, f"prep-{p['key']}.tar.gz")) as t:
+            m = next(m for m in t.getmembers() if m.name.endswith(f"{p['key']}.words.json"))
+            words = json.load(t.extractfile(m))
+        pauses = json.load(open(os.path.join(d, f"pauses-{p['key']}.json")))["pauses"]
+    except Exception as e:
+        print(f"::warning::{p['key']}: no pause map ({type(e).__name__}) - planning without it")
+        return None
+    for w in words:
+        w["n"] = re.sub(r"[^a-z0-9']", "", w["t"].lower())
+    return words, pauses
+
+
+def paused_transcript(words, pauses):
+    """The words, one line per stretch of speech: a new line starts only after a pause the
+    renderer can cut in (>= CLOSE_GAP after the last word, >= OPEN_GAP before the next)."""
+    lines, cur = [], []
+    for k, w in enumerate(words):
+        cur.append(w)
+        nxt = words[k + 1] if k + 1 < len(words) else None
+        if nxt is None or (gap_after(pauses, w["b"]) >= CLOSE_GAP
+                           and gap_before(pauses, nxt["a"]) >= OPEN_GAP):
+            a = cur[0]["a"]
+            lines.append(f"[{int(a // 60):02d}:{a % 60:05.2f}] " + " ".join(x["t"] for x in cur))
+            cur = []
+    return "\n".join(lines)
+
+
+def _near(a, b):
+    import difflib
+    return a == b or (min(len(a), len(b)) >= 4 and difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.8)
+
+
+def _find(ws, phrase, last=False):
+    """pipeline/vsc_pick._find: exact first, then one word heard differently."""
+    toks = [t for t in (re.sub(r"[^a-z0-9']", "", x.lower()) for x in phrase.split()) if t]
+    if not toks:
+        return None
+    for loose in (False, True):
+        hits = []
+        for i in range(len(ws) - len(toks) + 1):
+            got = [ws[i + k]["n"] for k in range(len(toks))]
+            same = sum(1 for a, b in zip(got, toks) if (_near(a, b) if loose else a == b))
+            if same == len(toks) or (loose and len(toks) >= 4 and same >= len(toks) - 1):
+                hits.append(i)
+        if hits:
+            return hits[-1] if last else hits[0]
+    return None
+
+
+def at_pauses(c):
+    """What the RENDERER will find for this clip, judged on the word stream and the pause
+    map. Empty = it opens and closes in silence and both ends can be located."""
+    words, pauses = PAUSE
+    n = c["name"]
+    a0, b0 = max(0.0, c["region"][0] - 22), c["region"][1] + 28
+    ws = [w for w in words if a0 <= w["a"] <= b0]
+    i, j = _find(ws, c["open"]), _find(ws, c["close"], last=True)
+    out = []
+    if i is None:
+        out.append(f"{n}: the renderer cannot find the open \"{c['open']}\" in the word stream "
+                   "near your region - copy it exactly from the start of a line")
+    if j is None:
+        out.append(f"{n}: the renderer cannot find the close \"{c['close']}\" in the word stream "
+                   "near your region - copy it exactly from the end of a line")
+    if out:
+        return out
+    je = j + len([t for t in c["close"].split() if re.sub(r"[^a-z0-9']", "", t.lower())]) - 1
+    t0, t1 = ws[i]["a"], ws[min(je, len(ws) - 1)]["b"]
+    if gap_before(pauses, t0) < OPEN_GAP:
+        out.append(f"{n}: the open \"{c['open']}\" ({mmss(t0)}) is not after a pause - Kevin is "
+                   "still talking into it. Start on the FIRST words of a transcript line")
+    if gap_after(pauses, t1) < CLOSE_GAP:
+        out.append(f"{n}: the close \"{c['close']}\" ({mmss(t1)}) runs straight into his next words "
+                   "- end on the LAST words of a transcript line, where the teaching lands")
+    span = t1 - t0
+    if span > check_plan.MAX_LEN - 1:
+        out.append(f"{n}: {span:.0f} s of speech from open to close - over the "
+                   f"{check_plan.MAX_LEN:.0f} s ceiling")
+    elif span < check_plan.MIN_LEN and not c.get("short_ok"):
+        out.append(f"{n}: only {span:.0f} s of speech from open to close - keep the whole teaching, "
+                   "or say in short_ok why it is complete")
+    return out
+
+
 def problems(p, clips, text):
     """Everything code can check. Empty list = keep it."""
     out = []
@@ -204,6 +322,8 @@ def problems(p, clips, text):
             out.append(f"{c['name']}: region ends after the episode does")
         if found:
             out += located(c, tw)
+            if PAUSE:
+                out += at_pauses(c)
     # Names are unique across every plan: the clips release and built.json are keyed by
     # name, so a redo reusing a delivered name would overwrite the file GIN already has.
     taken = {}
@@ -274,7 +394,11 @@ def plan_one(client, p, text):
             "needs a NEW name, different from every name above.\n"
             f"Notes on this episode: {old.get('note', '')}")
     user = (f"Episode: \"{p.get('title') or p['key']}\", {p.get('duration', '?')} seconds long.\n"
-            f"Transcript (each line starts at [mm:ss.ss] source time):\n\n{text}")
+            + ("Transcript: every line is one stretch of speech, and EVERY LINE BREAK IS A REAL "
+               "PAUSE in the sound - the only places a clip can be cut cleanly. Each line starts "
+               "at [mm:ss.ss] source time. `open` = the first words of a line; `close` = the last "
+               "words of a line.\n\n" if PAUSE else
+               "Transcript (each line starts at [mm:ss.ss] source time):\n\n") + text)
     messages = [{"role": "user", "content": user}]
     import anthropic
     for attempt in range(1, ATTEMPTS + 1):
@@ -315,6 +439,18 @@ def plan_one(client, p, text):
         messages += [{"role": "assistant", "content": r.content},
                      {"role": "user", "content": "Code checked your batch and found these problems. "
                       "Return the whole corrected batch:\n- " + "\n- ".join(bad)}]
+    # KEEP WHAT PASSED (13 Oct 2026). One clip the planner could not get onto a pause used
+    # to throw away the whole batch, and the episode waited for a person. The clips that
+    # pass every check are kept when there are enough of them; the rest are named here.
+    if clips:
+        names = {c["name"] for c in clips}
+        failing = {b.split(":")[0] for b in bad if b.split(":")[0] in names}
+        general = [b for b in bad if b.split(":")[0] not in names]
+        keep = [c for c in clips if c["name"] not in failing]
+        if not general and len(keep) >= MIN_KEEP and not problems(p, keep, text):
+            print(f"::warning::{p['key']}: kept {len(keep)} clips that pass; dropped "
+                  f"{', '.join(sorted(failing))} - they could not be put on a clean pause")
+            return keep
     return None
 
 
@@ -357,6 +493,13 @@ def main():
             print(f"::error::{p['key']}: no transcript for it in the prep release")
             waiting.append(p["key"])
             continue
+        global PAUSE
+        PAUSE = prep_data(p)
+        if PAUSE:
+            # the planner reads, and is checked against, the transcript whose line breaks
+            # are the pauses the renderer can cut in
+            text = paused_transcript(*PAUSE)
+            print(f"  pause map: {len(PAUSE[1])} pauses, {text.count(chr(10)) + 1} lines of speech")
         thin = thin_punctuation(text)
         for a, b, rate in thin:
             print(f"::warning::{p['key']}: {mmss(a)}-{mmss(b)} has {rate:.1f} full stops a "

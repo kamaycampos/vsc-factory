@@ -62,8 +62,12 @@ def same_start(got, cap):
     never with letters added, so a heard word that begins with the caption word and runs
     at most two letters longer is the whole word. Only the opening gets this: at the end,
     a longer word ("problem" heard as "problems") is speech running past the close."""
-    return got == cap or (bool(cap) and len(cap) >= 4 and got.startswith(cap)
-                          and len(got) - len(cap) <= 2)
+    # ...and its SPELLING: run 38316915072 heard "Stephen" for the same clip. A clipped
+    # word has lost its first sound, so the same first three letters at full length or
+    # longer is the whole word ("teve" for "steve" still fails).
+    return got == cap or (bool(cap) and len(cap) >= 4 and (
+        (got.startswith(cap) and len(got) - len(cap) <= 2)
+        or (got[:3] == cap[:3] and len(cap) <= len(got) <= len(cap) + 3)))
 
 
 def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
@@ -79,8 +83,11 @@ def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
     sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{max(0.0, dur - EDGE - 0.6):.3f}", "-i", p,
        "-ar", "16000", "-ac", "1", f"{work}/t.wav")
     h, t = heard(f"{work}/h.wav", "h"), heard(f"{work}/t.wav", "t")
-    cap_first = norm(caps[0][2].split()[0]) if caps else None
-    cap_last = norm(caps[-1][2].split()[-1]) if caps else None
+    # the first / last REAL word: a caption token that is only punctuation ("--", an
+    # opening quote) normed to "" and failed PRAYING-FROM-DESPERATION (13 Oct)
+    toks = [t for t in (norm(x) for c in (caps or []) for x in c[2].split()) if t]
+    cap_first = toks[0] if toks else None
+    cap_last = toks[-1] if toks else None
     got_first = norm(h[0][2]) if h else None
     got_last = norm(t[-1][2]) if t else None
     c = plan_clip or {}

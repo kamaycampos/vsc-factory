@@ -250,13 +250,68 @@ def missing_tail(have, close_words, close_phrase):
     return None
 
 
+# Words a sentence can never end on: a capital after one of these is whisper's mistake
+# ("of That" -> "of that"), never a new sentence.
+_DANGLE = {"of", "to", "the", "a", "an", "and", "or", "but", "in", "on", "at", "for", "with",
+           "from", "by", "that", "get", "is", "are", "was", "were", "be", "my", "your", "his",
+           "her", "their", "our", "its", "into", "than", "as", "if", "so"}
+# Words whisper capitalises as if a sentence began (kt_qc's STARTERS, the common ones).
+_STARTS = {"the", "this", "that", "these", "we", "you", "they", "he", "she", "it", "and",
+           "but", "so", "now", "what", "if", "because", "there", "well", "look", "every",
+           "most", "when", "without", "guess"}
+_JOIN = {"and", "or", "but", "nor", "which", "who", "whom", "whose", "where", "because"}
+_ABBR = {"mr.", "mrs.", "ms.", "dr.", "st.", "vs.", "jr.", "sr.", "no.", "etc."}
+
+
+def tidy(words):
+    """Repair the punctuation whisper's caption pass gets mechanically wrong.
+
+    13 Oct 2026, why_your_prayers_fail: 13 of 15 clips carried "stray full stop"
+    ("grudges. or", "nose. relax", "bit. of") or "sentence starts with no stop"
+    ("desperate They", "of That") - on screen, in the burned-in captions. A full stop
+    followed by a LOWERCASE word is whisper's own language model saying the sentence goes
+    on: before a joining word it becomes a comma, before a word no sentence starts on it
+    goes, and otherwise the stop stays and the next word gets its capital ("nose. Relax
+    your body" - dropping that stop made "your nose relax your" a scramble). A capitalised sentence-starter
+    with no stop before it gets one - unless the word before can never end a sentence,
+    in which case the capital is the mistake. A word said twice in a row with nothing
+    between gets a comma ("that's, that's"), which is how he says it.
+    Only punctuation and the case of one letter change; the words never do."""
+    w = [list(x) for x in words]
+    for k in list(range(len(w) - 1)) * 2:       # twice: "way. way" -> "way way" -> "way, way"
+        cur, nxt = w[k][2], w[k + 1][2]
+        nn = norm(nxt)
+        if not nn:
+            continue
+        if (cur.endswith(".") and not cur.endswith("..") and nxt[:1].islower()
+                and cur.lower() not in _ABBR and not re.fullmatch(r"(?:[A-Za-z]\.)+", cur)):
+            if nn in _JOIN:
+                w[k][2] = cur[:-1] + ","                      # "grudges, or"
+            elif nn in _DANGLE or nn == norm(cur):
+                w[k][2] = cur[:-1]                            # "bit of", "way way"
+            else:
+                w[k + 1][2] = nxt[0].upper() + nxt[1:]        # "nose. Relax"
+        elif (not re.search(r"[.!?,:;\-—]$", cur) and nxt[:1].isupper() and nn in _STARTS
+                and not cur[:1].isupper()):
+            if norm(cur) in _DANGLE:
+                w[k + 1][2] = nxt[0].lower() + nxt[1:]
+            else:
+                w[k][2] = cur + "."
+        elif (norm(cur) == nn and not re.search(r"[.!?,:;\-—]$", cur)
+                and nn not in ("that", "had", "very", "no")):
+            w[k][2] = cur + ","
+            if nxt[:1].isupper() and nxt != "I" and not nxt.startswith("I'"):
+                w[k + 1][2] = nxt[0].lower() + nxt[1:]
+    return [tuple(x) for x in w]
+
+
 def build(name, a, b, src, close_phrase, fixes=()):
     words = accurate_words(src, a, b, f"VSC2/{name}")
     # quote marks come from EITHER pass and hide sentence ends from the line breaker
     words = [(x, y, w.strip('"\u201c\u201d')) for x, y, w in words if w.strip('"\u201c\u201d')]
     # corrections FIRST: THE-CHINESE-FARMER's closing "there's just news" could not be
     # found while whisper still had it as "There is just news."
-    words = fix_text(words, fixes)
+    words = tidy(fix_text(words, fixes))
     words, close_end = cut_after_close(words, close_phrase)
     # A close the caption pass never heard is finished at render time, from the plan's
     # words at the locator's times (vsc_v2_render.finish_close) - one place, not two.
@@ -295,7 +350,7 @@ def refinish(name, close_phrase, fixes):
         json.dump(json.load(open(P))["words"], open(raw, "w"))
     words = [tuple(w) for w in json.load(open(raw))]
     words = [(x, y, w.strip('"“”')) for x, y, w in words if w.strip('"“”')]
-    words = fix_text(words, fixes)
+    words = tidy(fix_text(words, fixes))
     words, close_end = cut_after_close(words, close_phrase)
     bursts = kt_render.phrases_from_words(words)
     json.dump({"words": words, "bursts": bursts, "close_end": close_end}, open(P, "w"), indent=0)
