@@ -121,6 +121,13 @@ def main():
                     note(f"replacing {a['name']}: published file is newer")
             except ValueError:
                 pass
+    # A NEW VIDEO ALWAYS COMES WITH ITS OWN CAPTION FILE (15 Oct 2026). A re-render can
+    # keep its name and even its caption file's size; the held-back older copy's caption
+    # file then looked "already here" and the new WORRY-ABOUT-NOTHING_48s waited in the
+    # holding area for a caption file that was never fetched.
+    want += [m[:-4] + "__caps.json" for m in list(want) if m.endswith(".mp4")
+             and m[:-4] + "__caps.json" not in want
+             and m[:-4] + "__caps.json" in {x["name"] for x in assets}]
     if not want:
         return 0
     got = 0
