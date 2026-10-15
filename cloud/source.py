@@ -102,12 +102,27 @@ def fetch(plan):
         import time
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "-U",
                         "yt-dlp[default,curl-cffi]", "curl_cffi"], capture_output=True)
+        # THE DIRECT STREAM FIRST (15 Oct 2026). Cloudflare guards the episode PAGE and
+        # refused every runner for why_your_prayers_fail, so the Mac had to fetch it -
+        # while kt-machine's rumble_stock.py fetches the same episodes in the cloud every
+        # day by alternating the page with the rumble.com/hls-vod/ playlist, which skips
+        # the guarded page. Same here: the stream (from the plan, or kt-machine's
+        # catalogue) on even attempts, the page on odd ones.
+        hls = plan.get("rumble_hls")
+        if not hls:
+            try:
+                sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+                import rumble_match
+                hls = (rumble_match.catalog().get(plan["rumble"]) or {}).get("hls")
+            except Exception:
+                hls = None
         for attempt in range(6):
+            target = hls if (hls and attempt % 2 == 0) else plan["rumble"]
             sh(sys.executable, "-m", "yt_dlp", "--no-warnings", "-q", "--impersonate",
                "chrome", "-N", "8", "-f", "bv*[height<=2160]+ba/b[height<=2160]",
-               "--merge-output-format", "mp4", "-o", dest, plan["rumble"])
+               "--merge-output-format", "mp4", "-o", dest, target)
             if usable():
-                print(f"  fetched from Rumble ({height(dest)}p): "
+                print(f"  fetched from Rumble ({height(dest)}p, {'stream' if target == hls else 'page'}): "
                       f"{plan.get('rumble_title', '')}", flush=True)
                 if os.environ.get("SOURCE_MAY_CACHE") == "1":
                     # OVER 2 GiB GOES UP IN PARTS (5 Oct 2026): GitHub refuses a release

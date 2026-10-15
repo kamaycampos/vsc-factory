@@ -1,0 +1,33 @@
+# Can a GitHub runner fetch this Rumble episode? 15 seconds of it, both ways:
+# the direct stream (rumble.com/hls-vod/...) and the Cloudflare-guarded page.
+# Manual only. Proves cloud/source.py's route before a batch depends on it.
+name: fetch-test
+on:
+  workflow_dispatch:
+    inputs:
+      page: { description: "Rumble episode page URL", required: true }
+      hls: { description: "its rumble.com/hls-vod/ playlist (optional)", required: false, default: "" }
+permissions:
+  contents: read
+jobs:
+  fetch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: |
+          sudo apt-get -qq install -y ffmpeg >/dev/null
+          pip install -q -U "yt-dlp[default,curl-cffi]" curl_cffi
+          for t in "${{ inputs.hls }}" "${{ inputs.page }}"; do
+            [ -n "$t" ] || continue
+            rm -f /tmp/t.mp4
+            python -m yt_dlp --no-warnings -q --impersonate chrome -N 8 \
+              -f "bv*[height<=2160]+ba/b[height<=2160]" --merge-output-format mp4 \
+              --download-sections "*60-75" -o /tmp/t.mp4 "$t" 2>&1 | tail -3
+            if [ -s /tmp/t.mp4 ]; then
+              echo "FETCHED $(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 /tmp/t.mp4)p $(stat -c %s /tmp/t.mp4) bytes <- $t"
+            else
+              echo "REFUSED <- $t"
+            fi
+          done

@@ -54,6 +54,8 @@ def main():
         u, e, why = M.match(M.catalog(), dur, title)
         if u:
             plan.update(rumble=u, duration=e["dur"], height=e["height"], rumble_title=e["title"])
+            if e.get("hls"):
+                plan["rumble_hls"] = e["hls"]      # the stream Cloudflare does not guard (source.py)
         print(f"Rumble: {why}")
     # ONE EPISODE, ONE PLAN. GIN titles differ from Rumble's, so a second title for the
     # same interview would otherwise start a second batch of the same clips.
