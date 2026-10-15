@@ -6,22 +6,45 @@
  "source_key": "VSC_KEY_B",
  "duration": 1611.0,
  "autoplan": true,
- "note": "Started by vsc-new. Re-planned 13 Oct: the first plan (15 clips) cut where Kevin had no pause - 13 failed the edge checks, 2 could not be located. autoplan now plans on the pause map (pauses-<key>.json). Rules in CLAUDE.md and PLANNING.md.",
+ "note": "Started by vsc-new. Planned on the pause map 13 Oct (8 clips); 15 Oct: 5 more and 3 re-cut on measured breath gaps (start_at/end_at), each edge checked locally by whisper listening on the source before push. Never cut: 09:31-11:01 and 25:58-end (book adverts).",
  "clips": [
+  {
+   "name": "THE-NUMBER-ONE-MISTAKE",
+   "region": [
+    89.0,
+    161.2
+   ],
+   "open": "The number one mistake a person makes",
+   "close": "it does things for us.",
+   "hook": [
+    "THE NUMBER ONE MISTAKE",
+    "PEOPLE MAKE WHEN THEY PRAY"
+   ],
+   "start_at": 89.48,
+   "end_at": 160.66,
+   "fixes": []
+  },
   {
    "name": "PRAY-FOR-THE-BLESSING",
    "region": [
-    124.0,
-    226.0
+    160.3,
+    223.5
    ],
-   "open": "You know, they have some desperate need.",
-   "close": "find the blessing and the treasure in it.",
+   "open": "Maybe you're not supposed to get that raise.",
+   "close": "the blessing and the treasure in it.",
    "hook": [
     "MAYBE YOU'RE SUPPOSED",
     "TO GET EVICTED"
    ],
-   "fixes": [],
-   "start_at": 126.2
+   "start_at": 160.8,
+   "end_at": 222.98,
+   "fixes": [
+    [
+     43.0,
+     "of all time all knew",
+     "of all time, all knew"
+    ]
+   ]
   },
   {
    "name": "NO-DEADLINES-FOR-GOD",
@@ -36,6 +59,22 @@
     "A FRIDAY DEADLINE"
    ],
    "short_ok": "The whole mistake in one pass: the deadline, the examples (by Friday, this month, make so-and-so like me) and the reason it fails - you can't see what's off your radar screen. The next line runs on into the interviewer's question, so there is no later clean close.",
+   "fixes": []
+  },
+  {
+   "name": "SECRET-BASEMENT",
+   "region": [
+    407.5,
+    516.5
+   ],
+   "open": "On this particular occasion, I was told",
+   "close": "the original language and the original meanings.",
+   "hook": [
+    "1975: 10 STRANGERS IN",
+    "A SECRET BASEMENT"
+   ],
+   "start_at": 408.03,
+   "end_at": 516.03,
    "fixes": []
   },
   {
@@ -77,16 +116,17 @@
   {
    "name": "HEAVEN-IS-NOT-A-PLACE",
    "region": [
-    916.0,
-    940.0
+    906.0,
+    951.6
    ],
-   "open": "Well, the word heaven is actually",
-   "close": "our provider who dwells within us as us.",
+   "open": "You're talking to the source of all",
+   "close": "which means we're all connected.",
    "hook": [
-    "HEAVEN IS NOT",
-    "A PLACE"
+    "HEAVEN WAS MISTRANSLATED:",
+    "IT'S NOT A PLACE"
    ],
-   "short_ok": "One self-contained idea: 'heaven' is mistranslated and means 'who dwells within us as us', and Kevin restates the whole corrected line as the landing. The lines after it end mid-sentence, so there is no later clean close.",
+   "start_at": 906.55,
+   "end_at": 951.15,
    "fixes": []
   },
   {
@@ -127,15 +167,65 @@
   {
    "name": "WORRY-ABOUT-NOTHING",
    "region": [
-    1093.0,
-    1204.0
+    1154.6,
+    1203.3
    ],
-   "open": "then there's another phrase where it says",
+   "open": "From an experiential standpoint, when you followed that",
    "close": "You should not be worried about anything.",
    "hook": [
     "IF GOD FEEDS THE BIRDS",
-    "WHY ARE YOU WORRIED"
+    "WHY ARE YOU WORRIED?"
    ],
+   "start_at": 1155.11,
+   "end_at": 1202.76,
+   "fixes": []
+  },
+  {
+   "name": "BREATHE-THROUGH-YOUR-NOSE",
+   "region": [
+    1209.6,
+    1301.0
+   ],
+   "open": "In order to connect easier and faster",
+   "close": "into an alpha state, or into a theta state.",
+   "hook": [
+    "THE PRAYER STEP MOST MISS:",
+    "BREATHE THROUGH YOUR NOSE"
+   ],
+   "start_at": 1210.1,
+   "end_at": 1300.55,
+   "fixes": []
+  },
+  {
+   "name": "TWO-INCHES-BELOW",
+   "region": [
+    1300.1,
+    1368.0
+   ],
+   "open": "Then, you put your attention two inches",
+   "close": "which is two inches below our belly button.",
+   "hook": [
+    "YOU LIVE 2 INCHES",
+    "BELOW YOUR BELLY BUTTON"
+   ],
+   "start_at": 1300.61,
+   "end_at": 1367.55,
+   "fixes": []
+  },
+  {
+   "name": "ABANDONED-BY-GOD",
+   "region": [
+    1455.5,
+    1558.7
+   ],
+   "open": "Most people do feel abandoned by God.",
+   "close": "because the universe knows better than you",
+   "hook": [
+    "FEEL ABANDONED BY GOD?",
+    "YOU'RE PRAYING WRONG"
+   ],
+   "start_at": 1455.96,
+   "end_at": 1558.15,
    "fixes": []
   }
  ],

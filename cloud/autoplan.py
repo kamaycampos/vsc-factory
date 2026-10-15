@@ -76,7 +76,8 @@ def rules():
 
 def example():
     """The delivered, reviewer-approved batch: the shape and the standard."""
-    p = json.load(open(os.path.join(ROOT, "plans", "millionaires_problems.json")))
+    # finished projects live in plans/done/ (15 Oct 2026): out of every build, still the example
+    p = json.load(open(os.path.join(ROOT, "plans", "done", "millionaires_problems.json")))
     keep = ("name", "region", "open", "close", "hook", "short_ok")
     return json.dumps([{k: c[k] for k in keep if k in c} for c in p["clips"]], indent=1)
 
@@ -357,7 +358,7 @@ def problems(p, clips, text):
     # Names are unique across every plan: the clips release and built.json are keyed by
     # name, so a redo reusing a delivered name would overwrite the file GIN already has.
     taken = {}
-    for f in glob.glob(os.path.join(ROOT, "plans", "*.json")):
+    for f in glob.glob(os.path.join(ROOT, "plans", "*.json")) + glob.glob(os.path.join(ROOT, "plans", "done", "*.json")):
         o = json.load(open(f))
         if o.get("key") != p.get("key"):
             taken.update({c["name"]: o["key"] for c in o.get("clips", [])})
@@ -412,7 +413,8 @@ def plan_one(client, p, text):
     system = (open(os.path.join(ROOT, "PLANNING.md")).read() + "\n\n" + rules() +
               "\n\n## The delivered, reviewer-approved batch (shape and standard)\n" + example())
     if p.get("redo_of"):
-        old = json.load(open(os.path.join(ROOT, "plans", p["redo_of"] + ".json")))
+        f = os.path.join(ROOT, "plans", p["redo_of"] + ".json")
+        old = json.load(open(f if os.path.exists(f) else os.path.join(ROOT, "plans", "done", p["redo_of"] + ".json")))
         system += (
             f"\n\n## THIS IS A REDO of {p['redo_of']} - the SAME episode as the batch above\n"
             "Kamay, 5 Oct: that batch came out 30-82 s and CUT THE TEACHING. It was planned while "

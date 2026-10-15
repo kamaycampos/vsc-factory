@@ -237,7 +237,27 @@ Loose ends:
   autopilot reads them there); every other copy of Kevin's material is encrypted.
 - A source over 2 GiB is cached as `<key>.mp4.enc.part00, .part01...` (source.py joins them).
 
+## Keep it clean, always (Kamay, 15 Oct 2026 - a standing order)
+
+"Always be organized with all files ... and always delete stuff that is confirmed not needed
+anymore, that is very important to run smooth forever."
+- **The Desktop holds only `~/Desktop/VSC/Clips`**, and Clips holds only the CURRENT project's
+  clips - the ones not yet uploaded to GIN. Nothing else: no handoff notes, no old batches.
+- **When Kamay confirms a project is uploaded:** move its plan to `plans/done/`, delete its
+  clips / prep / source from the three releases, and move its local clips to the Trash. A
+  finished plan in `plans/done/` is invisible to every build and to the Mac pull.
+- **Trash, never hard-delete.** Emptying the Trash is his. Replaced cuts go there by themselves.
+- No second copies of the repo, no scratch folders in ~ (all of these were retired 15 Oct:
+  ~/vsc-machine, ~/vsc-work, ~/VSCwork, ~/Desktop/VSC/vsc-machine, ~/Archive/vsc-*).
+
 ## Delivery to the Mac (`mac/`, moved here from ~/Kamay on 12 Oct 2026)
+
+**The Mac is not part of production** (15 Oct 2026). Sources come from Rumble's direct stream
+in the cloud (`source.py`, proven by the `fetch-test` workflow: 2160p from a runner, where the
+page answers 403), planning and rendering run on GitHub, and the finished clips wait in the
+`clips` release. The Mac only RECEIVES them: whenever it is awake - on battery or charger,
+lid open - the pull runs within 15 minutes (and at wake), so clips appear the next time it is
+opened. No charger needed. `vsc_source.py` is now only a backup for a source the stream fails.
 
 `~/Desktop/VSC/Clips` is a shortcut to `~/VSC/Clips`; **a clip in there can be submitted.**
 The LaunchAgent `com.kamay.vscpull` runs `mac/vsc_pull.py` every 15 min while the Mac is

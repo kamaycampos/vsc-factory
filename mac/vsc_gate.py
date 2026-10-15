@@ -53,8 +53,7 @@ DEST = os.path.expanduser("~/VSC/Clips")
 HOLD = os.path.expanduser("~/VSC/.incoming")
 BAD = os.path.join(DEST, "_needs_work")
 FFMPEG = os.path.expanduser("~/Kamay/bin/ffmpeg")
-PLANS = [os.path.expanduser("~/vsc-factory/plans"),
-         os.path.expanduser("~/Desktop/VSC/vsc-machine/plans")]
+PLANS = [os.path.expanduser("~/vsc-factory/plans")]
 
 
 def plan_for(name):
@@ -174,16 +173,25 @@ def main():
             # ONE CUT PER CLIP IN THE FOLDER (15 Oct 2026). A re-cut arrives under a new
             # length (HEAVEN-IS-NOT-A-PLACE_21s -> _45s) and the old file stayed beside it,
             # so the folder held two versions of one clip and either could be submitted.
-            # Older cuts - delivered or held back - go to ~/Archive/vsc-replaced, never deleted.
+            # Older cuts - delivered or held back - go to the Trash (Kamay, 15 Oct: "always
+            # delete stuff that is confirmed not needed"); emptying it stays his call.
             clip = re.sub(r"_\d+s\.mp4$", "", base)
-            arch = os.path.expanduser("~/Archive/vsc-replaced")
+            arch = os.path.expanduser("~/.Trash/VSC-replaced")
             for d in (DEST, BAD):
                 for f in glob.glob(os.path.join(d, clip + "_*")):
                     fb = os.path.basename(f)
                     if re.fullmatch(re.escape(clip) + r"_\d+s(\.mp4|__caps\.json|__WHY\.txt)", fb) \
                             and not fb.startswith(base[:-4]):
-                        os.makedirs(arch, exist_ok=True)
-                        os.replace(f, os.path.join(arch, fb))
+                        try:
+                            os.makedirs(arch, exist_ok=True)
+                            os.replace(f, os.path.join(arch, fb))
+                        except OSError:
+                            # macOS may keep a background job out of the Trash; then the
+                            # old cut waits in ~/VSC/.replaced (never pulled again: vsc_pull
+                            # treats every file under ~/VSC outside Clips as handled)
+                            rep = os.path.expanduser("~/VSC/.replaced")
+                            os.makedirs(rep, exist_ok=True)
+                            os.replace(f, os.path.join(rep, fb))
         else:
             held.append((base, why))
             open(os.path.join(BAD, base[:-4] + "__WHY.txt"), "w").write(
