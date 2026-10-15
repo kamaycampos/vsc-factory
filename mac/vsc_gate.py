@@ -200,6 +200,14 @@ def main():
             held.append((base, why))
             open(os.path.join(BAD, base[:-4] + "__WHY.txt"), "w").write(
                 base + "\n\n" + "\n".join("- " + w for w in why) + "\n")
+    # an empty _needs_work is clutter in the folder he opens (15 Oct 2026)
+    try:
+        left = [f for f in os.listdir(BAD) if f not in (".caps", ".DS_Store")]
+        if not left:
+            import shutil
+            shutil.rmtree(BAD)
+    except OSError:
+        pass
     for b in moved:
         print(f"  DELIVERED  {b}")
     for b, why in held:
