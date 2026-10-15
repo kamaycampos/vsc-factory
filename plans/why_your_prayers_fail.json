@@ -20,7 +20,8 @@
     "MAYBE YOU'RE SUPPOSED",
     "TO GET EVICTED"
    ],
-   "fixes": []
+   "fixes": [],
+   "start_at": 126.2
   },
   {
    "name": "NO-DEADLINES-FOR-GOD",
@@ -50,7 +51,14 @@
     "PRAY FOR FREEDOM"
    ],
    "short_ok": "A complete story with its own landing: they didn't beg to get out, they gave thanks, and the joy came before the walls fell. 'Not after.' is the twist.",
-   "fixes": []
+   "fixes": [
+    [
+     30.3,
+     "down, Not after.",
+     "down. Not after."
+    ]
+   ],
+   "end_at": 788.05
   },
   {
    "name": "OUR-NOT-MY-FATHER",
@@ -94,7 +102,13 @@
     "OR IT WON'T WORK"
    ],
    "short_ok": "Runs right at about 40 s: the verse, the three-step formula and the forgiveness condition are all here, and it lands on 'including your enemies' before the next thought begins.",
-   "fixes": []
+   "fixes": [
+    [
+     0.5,
+     "But If you say",
+     "If you say"
+    ]
+   ]
   },
   {
    "name": "BLESS-MOMMY-AND-DADDY",

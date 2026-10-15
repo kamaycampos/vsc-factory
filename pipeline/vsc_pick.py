@@ -56,7 +56,20 @@ def _near(a, b):
     return difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.8
 
 
-def _find(words, phrase, prefer_last=False):
+# 13 Oct 2026: OUR-NOT-MY-FATHER opens "If you're going to pray" in the whole-file pass,
+# and the renderer's 12 s chunk heard "If you're gonna pray" - one word for two, so even
+# the loose match (one word heard differently) failed and the clip never rendered.
+# Both sides are spelled out before comparing.
+_CANON = {"gonna": ["going", "to"], "wanna": ["want", "to"], "gotta": ["got", "to"],
+          "cause": ["because"], "'cause": ["because"], "kinda": ["kind", "of"],
+          "outta": ["out", "of"]}
+
+
+def _canon(t):
+    return _CANON.get(t, [t])
+
+
+def _find(words, phrase, prefer_last=False, span=False):
     """Where this sentence starts. EXACT first, then loosely - never only exactly.
 
     30 Sept 2026: five clips failed three builds in a row with "missing opening|
@@ -67,14 +80,22 @@ def _find(words, phrase, prefer_last=False):
     caption corrections, in a second place: a correction that is 80% the same run
     of words, in the right part of the video, is the run that was meant.
     Exact wins when it exists, so nothing that already resolves can move.
+
+    span=True returns (first word, last word) - the last word from the match itself,
+    since "gonna" is one word where the phrase has two.
     """
-    toks = [norm(t) for t in phrase.split() if norm(t)]
+    toks = [c for t in phrase.split() if norm(t) for c in _canon(norm(t))]
     if not toks:
         return None
+    flat, owner = [], []
+    for wi, w in enumerate(words):
+        for c in _canon(w["n"]):
+            flat.append(c)
+            owner.append(wi)
     for loose in (False, True):
         hits = []
-        for i in range(len(words) - len(toks) + 1):
-            got = [words[i + k]["n"] for k in range(len(toks))]
+        for i in range(len(flat) - len(toks) + 1):
+            got = flat[i:i + len(toks)]
             if not loose:
                 if got == toks:
                     hits.append(i)
@@ -84,10 +105,13 @@ def _find(words, phrase, prefer_last=False):
             # short that "one wrong" is most of it
             if same == len(toks) or (len(toks) >= 4 and same >= len(toks) - 1):
                 hits.append(i)
+        # a hit must start on a word's first token, not inside "going to"
+        hits = [i for i in hits if i == 0 or owner[i] != owner[i - 1]]
         if hits:
             if loose:
                 print(f"      opening/closing matched loosely: {phrase!r}", flush=True)
-            return hits[-1] if prefer_last else hits[0]
+            k = hits[-1] if prefer_last else hits[0]
+            return (owner[k], owner[k + len(toks) - 1]) if span else owner[k]
     return None
 
 
@@ -109,14 +133,14 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     a0, b0 = max(0.0, region[0] - 22), region[1] + 28
     w = words_in(src, a0, b0, tag, S)
     i = _find(w, first_words)
-    j = _find(w, last_words, prefer_last=True)
+    j = _find(w, last_words, prefer_last=True, span=True)
     if (i is None or j is None) and dur and dur > b0 + 1:
         w = words_in(src, 0.0, dur, tag + "_all", S)
         i = _find(w, first_words)
-        j = _find(w, last_words, prefer_last=True)
+        j = _find(w, last_words, prefer_last=True, span=True)
     if i is None or j is None:
         return None, ("missing opening" if i is None else "") + ("|missing closing" if j is None else "")
-    j_end = j + len([t for t in last_words.split() if norm(t)]) - 1
+    j, j_end = j
     if j_end <= i:
         return None, "closing lands before opening"
     start = w[i]["a"] - LEAD

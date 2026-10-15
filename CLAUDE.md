@@ -150,6 +150,10 @@ runs, and how to do any of them by hand.)
   sentence starts on, and otherwise keeps the stop and capitalises; a capitalised starter
   after an unpunctuated word gets a stop; "that's That's" gets a comma. On that batch's
   captions: 27 kt_qc text faults -> 0 (2 more were kt_qc false alarms, fixed in kt-machine #24).
+- **The renderer's word search spells out whisper's contractions** (13 Oct): OUR-NOT-MY-
+  FATHER's open "If you're going to pray" was heard "If you're gonna pray" by the 12 s chunk -
+  one word for two - and never rendered. `vsc_pick._find` expands gonna/wanna/gotta/'cause/
+  kinda/outta on both sides and takes the close's last word from the match.
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.

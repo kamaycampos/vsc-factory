@@ -35,8 +35,10 @@ def main():
             f"{len(mp4)} clips in this batch. Built in the cloud; the Mac was not involved.", ""]
     body += ["| clip | verdict | word on screen | what the check found |", "|---|---|---|---|"]
     for r in sorted(rep, key=lambda r: (r.get("ok", False), r["clip"])):
+        w = r.get("why") or []
+        w = [w] if isinstance(w, str) else w      # "nothing was rendered" is one string, not 20 letters
         body.append(f"| {r['clip']} | **{r.get('verdict','?')}** | {r.get('moments','-')} | "
-                    f"{'; '.join(r.get('why', [])) or '-'} |")
+                    f"{'; '.join(w) or '-'} |")
     if bad:
         body += ["", "**Read the captions of the ones marked LOOK before they go to Frame.io.**"]
     body += ["", "Still a human's job: read every caption line, and watch the first 3 "
