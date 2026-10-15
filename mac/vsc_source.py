@@ -83,9 +83,9 @@ def fetch(plan, assets):
              "which this Mac does not hold - left alone")
         return False
     free = shutil.disk_usage(os.path.expanduser("~")).free
-    if free < 8 * 1024 ** 3:
+    if free < 6 * 1024 ** 3:          # a 27-min 4K source peaks at ~5 GB (file + its encrypted parts)
         tell(f"{key}: source missing, but the Mac has only {free // 1024 ** 3} GB free - "
-             "need 8 GB to fetch it")
+             "need 6 GB to fetch it")
         return False
     shutil.rmtree(WORK, ignore_errors=True)
     os.makedirs(WORK)
@@ -137,8 +137,7 @@ def fetch(plan, assets):
             sh(GH, "release", "delete-asset", "sources", n, "-R", REPO, "-y")
         tell(f"{key}: upload incomplete ({', '.join(wrong)}) - removed, will retry")
         return False
-    sh(GH, "workflow", "run", "vsc.yml", "-R", REPO, "--ref", "main")
-    tell(f"{key}: source uploaded ({h}p, {len(sizes)} part(s)) - the cloud is building it")
+    tell(f"{key}: source uploaded ({h}p, {len(sizes)} part(s))")
     return True
 
 
@@ -165,8 +164,11 @@ def main():
     todo = [p for p in todo if not present(p["source"], assets)]
     if not todo or cloud_busy():
         return 0
-    for p in todo:
-        fetch(p, assets)
+    # every missing source first, ONE run after (15 Oct): starting a run after the first
+    # upload let its prep reach for the second source while this was still uploading it
+    if sum(1 for p in todo if fetch(p, assets)):
+        sh(GH, "workflow", "run", "vsc.yml", "-R", REPO, "--ref", "main")
+        tell("sources uploaded - the cloud is building the new batches")
     return 0
 
 

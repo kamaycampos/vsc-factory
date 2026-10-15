@@ -95,8 +95,20 @@ def build(plan):
 
 if __name__ == "__main__":
     key = sys.argv[1] if len(sys.argv) > 1 else None
+    # ONE EPISODE NEVER HOLDS UP THE OTHERS (15 Oct 2026). A source Rumble refuses used to
+    # end prep, so every other batch - planned or waiting - stopped with it. Each plan is
+    # prepared on its own; a failure is named and turns the run red at the end (autoplan
+    # and verify also report the batch still waiting), and the Mac's vsc_source.py fetches
+    # the refused source and starts a fresh run.
+    failed = []
     for p in plans():
         if key and p["key"] != key:
             continue
-        build(p)
-    print("PREPOK")
+        try:
+            build(p)
+        except (Exception, SystemExit) as e:
+            failed.append(p["key"])
+            print(f"::error::prep {p['key']}: {e}", flush=True)
+    if failed and len(failed) == len([p for p in plans() if not key or p["key"] == key]):
+        sys.exit("prep failed for every plan: " + ", ".join(failed))
+    print("PREPOK" + (f" (not prepared: {', '.join(failed)})" if failed else ""))

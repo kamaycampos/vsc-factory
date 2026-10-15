@@ -171,6 +171,19 @@ def main():
             old = os.path.join(BAD, base)
             if os.path.exists(old):
                 os.remove(old)
+            # ONE CUT PER CLIP IN THE FOLDER (15 Oct 2026). A re-cut arrives under a new
+            # length (HEAVEN-IS-NOT-A-PLACE_21s -> _45s) and the old file stayed beside it,
+            # so the folder held two versions of one clip and either could be submitted.
+            # Older cuts - delivered or held back - go to ~/Archive/vsc-replaced, never deleted.
+            clip = re.sub(r"_\d+s\.mp4$", "", base)
+            arch = os.path.expanduser("~/Archive/vsc-replaced")
+            for d in (DEST, BAD):
+                for f in glob.glob(os.path.join(d, clip + "_*")):
+                    fb = os.path.basename(f)
+                    if re.fullmatch(re.escape(clip) + r"_\d+s(\.mp4|__caps\.json|__WHY\.txt)", fb) \
+                            and not fb.startswith(base[:-4]):
+                        os.makedirs(arch, exist_ok=True)
+                        os.replace(f, os.path.join(arch, fb))
         else:
             held.append((base, why))
             open(os.path.join(BAD, base[:-4] + "__WHY.txt"), "w").write(

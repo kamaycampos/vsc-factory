@@ -154,6 +154,18 @@ runs, and how to do any of them by hand.)
   FATHER's open "If you're going to pray" was heard "If you're gonna pray" by the 12 s chunk -
   one word for two - and never rendered. `vsc_pick._find` expands gonna/wanna/gotta/'cause/
   kinda/outta on both sides and takes the close's last word from the match.
+- **Cut on measured breath gaps, not only full pauses** (15 Oct). Kevin left a renderer-grade
+  pause at only 40 of 261 sentence ends in why_your_prayers_fail, so the pause-only planner
+  placed 8 clips in 27 min. `pauses.py` v2 adds `cuts` (>= 0.15 s at 30 dB under the voice,
+  dipping to 38 dB under, or >= 0.12 s near-silence); autoplan plans on them and writes each
+  clip's exact `start_at` / `end_at`; the cloud's edge listening still judges the file. 8 hand
+  cuts were whisper-verified on the source first; the automatic times match them within 0.1 s.
+  The episode went from 8 to 13 clips. PLANNING.md now asks for every complete teaching.
+- **prep never lets one episode block the others** (15 Oct): a refused source is named, the
+  run goes red, the other batches build; `mac/vsc_source.py` uploads every missing source,
+  then starts ONE run.
+- **One cut per clip in the Mac folder** (15 Oct): when a re-cut passes the gate, older
+  cuts of that clip move to `~/Archive/vsc-replaced` (never deleted).
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.

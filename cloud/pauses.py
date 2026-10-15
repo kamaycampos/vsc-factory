@@ -11,7 +11,8 @@ QUIET by vsc_v2_render.quiet_runs' rule - at least 35 dB under the speech around
 and in the bottom of the local range - lasting >= 0.15 s. autoplan marks them in the
 transcript it hands the planner and refuses an open or close that is not on one.
 
-Output: {"v": 1, "dur": seconds, "pauses": [[start, end], ...]}.
+Output: {"v": 2, "dur": seconds, "pauses": [[start, end], ...],
+         "cuts": [[start, end, depth_db], ...]}  (cuts: see cut_points)
 """
 import json, os, subprocess, sys
 
@@ -58,10 +59,42 @@ def pause_map(src):
             k = j
         else:
             k += 1
-    return {"v": 1, "dur": round(n * STEP, 2), "pauses": out}
+    return {"v": 2, "dur": round(n * STEP, 2), "pauses": out, "cuts": cut_points(db)}
+
+
+def cut_points(db):
+    """Breath gaps a clip can be cut in, measured against the voice around them.
+
+    15 Oct 2026, why_your_prayers_fail: Kevin talks almost without stopping, and the
+    rule above found a pause at only 40 of 261 sentence ends - so the planner could
+    place 8 clips in 27 minutes. Measured by hand, most sentence ends still carry a
+    breath: 0.3-0.6 s that drops 40-50 dB under his voice. Cut there with an exact
+    start_at / end_at and whisper hears a whole first and last word with nothing after
+    (all 8 hand cuts that day, listened to on the source before they were built).
+    A cut point: >= 0.15 s at 30 dB under the loud end of the voice within 1.3 s,
+    dipping to 38 dB under - or >= 0.12 s of near-silence (55 dB under)."""
+    n, out, k = len(db), [], 0
+    hop, w = 20, int(1.3 / STEP)
+    hi = np.empty(n)
+    for c in range(0, n, hop):
+        hi[c:c + hop] = np.percentile(db[max(0, c - w):min(n, c + w)], 90)
+    q = db <= hi - 30
+    while k < n:
+        if q[k]:
+            j = k
+            while j < n and q[j]:
+                j += 1
+            depth = float((db[k:j] - hi[k:j]).min())
+            L = (j - k) * STEP
+            if (L >= 0.15 and depth <= -38) or (L >= 0.12 and depth <= -55):
+                out.append([round(k * STEP, 2), round(j * STEP, 2), round(depth)])
+            k = j
+        else:
+            k += 1
+    return out
 
 
 if __name__ == "__main__":
     m = pause_map(sys.argv[1])
     json.dump(m, open(sys.argv[2], "w"))
-    print(f"{len(m['pauses'])} pauses over {m['dur']:.0f} s")
+    print(f"{len(m['pauses'])} pauses, {len(m['cuts'])} cut points over {m['dur']:.0f} s")

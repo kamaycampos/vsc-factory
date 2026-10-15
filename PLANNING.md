@@ -13,7 +13,9 @@ answer comes back as JSON, is checked by code, and is committed only if it passe
 1. Study the delivered batch you are shown: the shape and the standard to match.
 2. Read the whole transcript you were given. Each line is `[mm:ss.ss] text` - the time
    is when that line STARTS, in source seconds (mm*60 + ss).
-3. Choose **8-15 clips**: every complete teaching in the episode that stands alone.
+3. Choose **every complete teaching in the episode that stands alone** - for a 25-30 minute
+   episode that is usually 12-18 clips (Kamay, 15 Oct: "the most amount of high quality clips,
+   never less"). Quality first: a teaching you cannot open and close cleanly is left out.
    Two tellings of one lesson are fine (affiliates want variety). Skip the intro chatter,
    the outro and anything after the ad wall / testimonial at the end - never cut those.
 4. For each clip give:

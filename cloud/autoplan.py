@@ -194,6 +194,7 @@ def located(c, tw):
 # before the open and after the close. Calibrated on that batch: these rules called 22 of
 # the renderer's 26 edge verdicts, and were stricter on the rest.
 PAUSE = None                 # (words, pauses) for the plan being chosen, when prep made them
+CUTS = False                 # True when those are measured cut points: clips get start_at/end_at
 OPEN_GAP, CLOSE_GAP = 0.15, 0.20
 
 
@@ -207,8 +208,17 @@ def gap_after(pauses, t):
     return max((b - a for a, b in pauses if b >= t - 0.25 and t - 1.0 <= a <= t + 0.5), default=0.0)
 
 
+def cut_near(pauses, t, back=0.8, ahead=0.25):
+    """The longest gap overlapping [t - back, t + ahead]: the one a word starting at t
+    sits right after (as measured by hand on 15 Oct)."""
+    c = [r for r in pauses if r[1] >= t - back and r[0] <= t + ahead]
+    return max(c, key=lambda r: r[1] - r[0]) if c else None
+
+
 def prep_data(p):
     """(words, pauses) from the prep release, or None - then only the old checks run."""
+    global CUTS, OPEN_GAP, CLOSE_GAP
+    CUTS, OPEN_GAP, CLOSE_GAP = False, 0.15, 0.20      # per plan: an older v1 map keeps the old rule
     d = "/tmp/autoplan/prep"
     os.makedirs(d, exist_ok=True)
     for pat in (f"prep-{p['key']}.tar.gz", f"pauses-{p['key']}.json"):
@@ -219,7 +229,13 @@ def prep_data(p):
         with tarfile.open(os.path.join(d, f"prep-{p['key']}.tar.gz")) as t:
             m = next(m for m in t.getmembers() if m.name.endswith(f"{p['key']}.words.json"))
             words = json.load(t.extractfile(m))
-        pauses = json.load(open(os.path.join(d, f"pauses-{p['key']}.json")))["pauses"]
+        pm = json.load(open(os.path.join(d, f"pauses-{p['key']}.json")))
+        # v2 maps carry measured cut points (cloud/pauses.cut_points, 15 Oct 2026): many
+        # more places a clip can start and end, each cut with an exact start_at / end_at
+        CUTS = bool(pm.get("cuts"))
+        pauses = [r[:2] for r in pm["cuts"]] if CUTS else pm["pauses"]
+        if CUTS:
+            OPEN_GAP, CLOSE_GAP = 0.12, 0.15
     except Exception as e:
         print(f"::warning::{p['key']}: no pause map ({type(e).__name__}) - planning without it")
         return None
@@ -284,10 +300,24 @@ def at_pauses(c):
         return out
     je = j + len([t for t in c["close"].split() if re.sub(r"[^a-z0-9']", "", t.lower())]) - 1
     t0, t1 = ws[i]["a"], ws[min(je, len(ws) - 1)]["b"]
-    if gap_before(pauses, t0) < OPEN_GAP:
+    rs = re_ = None
+    if CUTS and not out:
+        # THE EXACT CUT, from the gap itself - whisper's word times run up to half a
+        # second early, so the renderer is told where the silence is (start_at / end_at)
+        # and its edge listening checks the result. Same placement as the 8 hand cuts of
+        # 15 Oct: start up to 0.25 s before the voice, end 0.15 s into the gap.
+        nxt = ws[je + 1]["a"] if je + 1 < len(ws) else t1 + 0.5
+        rs, re_ = cut_near(pauses, t0), cut_near(pauses, nxt)
+        if rs:
+            c["start_at"] = round(max(rs[0], rs[1] - 0.25), 2)
+        if re_:
+            c["end_at"] = round(re_[0] + min(0.15, (re_[1] - re_[0]) / 2), 2)
+    open_ok = (rs is not None and rs[1] - rs[0] >= OPEN_GAP) if CUTS else gap_before(pauses, t0) >= OPEN_GAP
+    close_ok = (re_ is not None and re_[1] - re_[0] >= CLOSE_GAP) if CUTS else gap_after(pauses, t1) >= CLOSE_GAP
+    if not open_ok:
         out.append(f"{n}: the open \"{c['open']}\" ({mmss(t0)}) is not after a pause - Kevin is "
                    "still talking into it. Start on the FIRST words of a transcript line")
-    if gap_after(pauses, t1) < CLOSE_GAP:
+    if not close_ok:
         out.append(f"{n}: the close \"{c['close']}\" ({mmss(t1)}) runs straight into his next words "
                    "- end on the LAST words of a transcript line, where the teaching lands")
     span = t1 - t0
