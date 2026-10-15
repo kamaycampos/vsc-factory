@@ -91,7 +91,9 @@ def main():
     want = []
     for a in assets:
         p = os.path.join(DEST, a["name"])
-        here = [os.path.join(d, a["name"]) for d in (DEST, DELIVERED, os.path.join(DELIVERED, "_needs_work"))]
+        here = [os.path.join(d, a["name"]) for d in (DEST, DELIVERED, os.path.join(DELIVERED, "_needs_work"),
+                                                      os.path.join(DELIVERED, ".caps"),
+                                                      os.path.join(DELIVERED, "_needs_work", ".caps"))]
         here = [q for q in here if os.path.exists(q)]
         # ALREADY JUDGED IF ANY COPY IS THIS FILE (13 Oct 2026). A rebuild the gate held
         # back sits in _needs_work while the older good cut stays in Clips; comparing only

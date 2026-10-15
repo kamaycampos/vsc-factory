@@ -161,9 +161,13 @@ def main():
         base = os.path.basename(mp4)
         dest = DEST if ok else BAD
         os.makedirs(dest, exist_ok=True)
-        for g in (mp4, mp4[:-4] + "__caps.json"):
-            if os.path.exists(g):
-                os.replace(g, os.path.join(dest, os.path.basename(g)))
+        # ONLY VIDEOS WHERE HE LOOKS (15 Oct 2026): the caption file the gate reads goes to
+        # a hidden .caps folder beside the clip, so the folder shows the clips and nothing else
+        capd = os.path.join(dest, ".caps")
+        os.makedirs(capd, exist_ok=True)
+        os.replace(mp4, os.path.join(dest, os.path.basename(mp4)))
+        if os.path.exists(mp4[:-4] + "__caps.json"):
+            os.replace(mp4[:-4] + "__caps.json", os.path.join(capd, os.path.basename(mp4)[:-4] + "__caps.json"))
         if ok:
             moved.append(base)
             # a clip that is good now must not be shadowed by an old rejected copy
@@ -177,7 +181,7 @@ def main():
             # delete stuff that is confirmed not needed"); emptying it stays his call.
             clip = re.sub(r"_\d+s\.mp4$", "", base)
             arch = os.path.expanduser("~/.Trash/VSC-replaced")
-            for d in (DEST, BAD):
+            for d in (DEST, BAD, os.path.join(DEST, ".caps"), os.path.join(BAD, ".caps")):
                 for f in glob.glob(os.path.join(d, clip + "_*")):
                     fb = os.path.basename(f)
                     if re.fullmatch(re.escape(clip) + r"_\d+s(\.mp4|__caps\.json|__WHY\.txt)", fb) \
