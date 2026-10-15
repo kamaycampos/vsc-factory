@@ -22,7 +22,23 @@
    ],
    "start_at": 89.48,
    "end_at": 160.66,
-   "fixes": []
+   "fixes": [
+    [
+     11.0,
+     "They have this desperate. We need. This feeling",
+     "They have this desperate need, this feeling"
+    ],
+    [
+     52.0,
+     "God, Allow me",
+     "God, allow me"
+    ],
+    [
+     64.0,
+     "So they're Looking for",
+     "So they're praying for"
+    ]
+   ]
   },
   {
    "name": "PRAY-FOR-THE-BLESSING",
@@ -40,9 +56,29 @@
    "end_at": 222.98,
    "fixes": [
     [
+     13.0,
+     "But Actually,",
+     "But actually,"
+    ],
+    [
+     27.0,
+     "Guys, we don't use",
+     "We don't use"
+    ],
+    [
+     39.0,
+     "a blessing. Meaning in every adversity,",
+     "a blessing in every adversity,"
+    ],
+    [
      43.0,
      "of all time all knew",
      "of all time, all knew"
+    ],
+    [
+     55.0,
+     "for a... Condition change.",
+     "for a condition change."
     ]
    ]
   },
@@ -59,7 +95,13 @@
     "A FRIDAY DEADLINE"
    ],
    "short_ok": "The whole mistake in one pass: the deadline, the examples (by Friday, this month, make so-and-so like me) and the reason it fails - you can't see what's off your radar screen. The next line runs on into the interviewer's question, so there is no later clean close.",
-   "fixes": []
+   "fixes": [
+    [
+     15.0,
+     "and women and relationships, God,",
+     "and women in relationships. God,"
+    ]
+   ]
   },
   {
    "name": "SECRET-BASEMENT",
@@ -75,7 +117,48 @@
    ],
    "start_at": 408.03,
    "end_at": 516.03,
-   "fixes": []
+   "fixes": [
+    [
+     4.0,
+     "in Marble Hood Neck,",
+     "in Marblehead Neck,"
+    ],
+    [
+     22.0,
+     "into the secret layer.",
+     "into the secret lair."
+    ],
+    [
+     28.0,
+     "like it was in the bat cave",
+     "like I was in the Batcave"
+    ],
+    [
+     57.0,
+     "what, When I heard",
+     "what, when I heard"
+    ],
+    [
+     72.0,
+     "who are religious. We are coming from a place of you know,",
+     "who are religious are coming from a place of, you know,"
+    ],
+    [
+     87.0,
+     "So this was this a was little bit odd to me,",
+     "So this was a little bit odd to me,"
+    ],
+    [
+     98.0,
+     "both new and Old Testament,",
+     "both New and Old Testament,"
+    ],
+    [
+     101.0,
+     "a concourse. Concordance,",
+     "a concordance,"
+    ]
+   ]
   },
   {
    "name": "JOY-BEFORE-THE-WALLS",
@@ -91,6 +174,11 @@
    ],
    "short_ok": "A complete story with its own landing: they didn't beg to get out, they gave thanks, and the joy came before the walls fell. 'Not after.' is the twist.",
    "fixes": [
+    [
+     22.0,
+     "with the universe. So inside them,",
+     "with the universe, so inside them,"
+    ],
     [
      30.3,
      "down, Not after.",
@@ -111,7 +199,23 @@
     "JESUS NEVER SAID",
     "PRAY TO 'MY FATHER'"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     16.0,
+     "Me, me, That's not how Jesus said the pray.",
+     "Me, me, me. That's not how Jesus said to pray."
+    ],
+    [
+     33.0,
+     "you bitch know, and whine about.",
+     "you know, bitch and whine about."
+    ],
+    [
+     58.0,
+     "The Father Another was the head",
+     "The Father was the head"
+    ]
+   ]
   },
   {
    "name": "HEAVEN-IS-NOT-A-PLACE",
@@ -127,7 +231,18 @@
    ],
    "start_at": 906.55,
    "end_at": 951.15,
-   "fixes": []
+   "fixes": [
+    [
+     11.0,
+     "Well, the well, word the heaven is actually, is mistranslated",
+     "Well, the word heaven is actually mistranslated"
+    ],
+    [
+     40.0,
+     "That lives in everyone as us,",
+     "that lives in everyone as us,"
+    ]
+   ]
   },
   {
    "name": "FORGIVE-OR-IT-FAILS",
@@ -147,6 +262,16 @@
      0.5,
      "But If you say",
      "If you say"
+    ],
+    [
+     11.0,
+     "you'll have what Whatever you say,",
+     "you'll have whatsoever you say,"
+    ],
+    [
+     24.0,
+     "say out loud. What you want,",
+     "say out loud what you want,"
     ]
    ]
   },
@@ -162,7 +287,13 @@
     "A CHILD'S BEDTIME PRAYER",
     "IS THE SECRET FORMULA"
    ],
-   "fixes": []
+   "fixes": [
+    [
+     12.0,
+     "Bless me. It's money and daddy,",
+     "Bless Mommy and Daddy,"
+    ]
+   ]
   },
   {
    "name": "WORRY-ABOUT-NOTHING",
@@ -178,7 +309,18 @@
    ],
    "start_at": 1155.11,
    "end_at": 1202.76,
-   "fixes": []
+   "fixes": [
+    [
+     32.0,
+     "how much more will. He care for you,",
+     "how much more will He care for you,"
+    ],
+    [
+     39.0,
+     "And It says,",
+     "And it says,"
+    ]
+   ]
   },
   {
    "name": "BREATHE-THROUGH-YOUR-NOSE",
@@ -194,7 +336,18 @@
    ],
    "start_at": 1210.1,
    "end_at": 1300.55,
-   "fixes": []
+   "fixes": [
+    [
+     12.0,
+     "most Notably,",
+     "most notably,"
+    ],
+    [
+     50.0,
+     "with the universe Which leads",
+     "with the universe, which leads"
+    ]
+   ]
   },
   {
    "name": "TWO-INCHES-BELOW",
@@ -210,7 +363,23 @@
    ],
    "start_at": 1300.61,
    "end_at": 1367.55,
-   "fixes": []
+   "fixes": [
+    [
+     25.0,
+     "your Attention two",
+     "your attention two"
+    ],
+    [
+     34.0,
+     "In other words, B, two inches",
+     "In other words, be two inches"
+    ],
+    [
+     39.0,
+     "out from Come two inches",
+     "out from two inches"
+    ]
+   ]
   },
   {
    "name": "ABANDONED-BY-GOD",
@@ -226,7 +395,33 @@
    ],
    "start_at": 1455.96,
    "end_at": 1558.15,
-   "fixes": []
+   "fixes": [
+    [
+     11.5,
+     "You're feeling separate",
+     "They're feeling separate"
+    ],
+    [
+     21.0,
+     "that sense of being. It alive is an abandoned of being alone,",
+     "that sense of being abandoned, of being alone,"
+    ],
+    [
+     47.5,
+     "you don't Feel",
+     "you don't feel"
+    ],
+    [
+     71.0,
+     "and this enjoy that surpasses",
+     "and lasting joy that surpasses"
+    ],
+    [
+     84.5,
+     "And If you do",
+     "And if you do"
+    ]
+   ]
   }
  ],
  "rumble": "https://rumble.com/v7afnp8-why-your-prayers-fail-the-ancient-prayer-formula-that-actually-works.html"

@@ -277,7 +277,9 @@ def tidy(words):
     in which case the capital is the mistake. A word said twice in a row with nothing
     between gets a comma ("that's, that's"), which is how he says it.
     Only punctuation and the case of one letter change; the words never do."""
-    w = [list(x) for x in words]
+    # whisper's speaker-turn mark: a lone "-" before a word ("- The number one mistake",
+    # 15 Oct 2026, three clips opened on it). An em dash or "--" mid-sentence stays.
+    w = [list(x) for x in words if x[2].strip() != "-"]
     for k in list(range(len(w) - 1)) * 2:       # twice: "way. way" -> "way way" -> "way, way"
         cur, nxt = w[k][2], w[k + 1][2]
         nn = norm(nxt)
