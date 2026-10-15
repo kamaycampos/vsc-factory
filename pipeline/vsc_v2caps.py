@@ -294,7 +294,9 @@ def tidy(words):
             else:
                 w[k + 1][2] = nxt[0].upper() + nxt[1:]        # "nose. Relax"
         elif (not re.search(r"[.!?,:;\-—]$", cur) and nxt[:1].isupper() and nn in _STARTS
-                and not cur[:1].isupper()):
+                and not cur[:1].isupper() and nxt.strip(",.?!") not in ("He", "His", "Him")):
+            # (He / His / Him: a reverent capital for God mid-sentence - "how much more
+            # will He care for you" - not a new sentence. 15 Oct 2026, WORRY-ABOUT-NOTHING)
             if norm(cur) in _DANGLE:
                 w[k + 1][2] = nxt[0].lower() + nxt[1:]
             else:
@@ -313,7 +315,7 @@ def build(name, a, b, src, close_phrase, fixes=()):
     words = [(x, y, w.strip('"\u201c\u201d')) for x, y, w in words if w.strip('"\u201c\u201d')]
     # corrections FIRST: THE-CHINESE-FARMER's closing "there's just news" could not be
     # found while whisper still had it as "There is just news."
-    words = tidy(fix_text(words, fixes))
+    words = fix_text(tidy(words), fixes)   # a written correction has the last word (15 Oct)
     words, close_end = cut_after_close(words, close_phrase)
     # A close the caption pass never heard is finished at render time, from the plan's
     # words at the locator's times (vsc_v2_render.finish_close) - one place, not two.
@@ -352,7 +354,7 @@ def refinish(name, close_phrase, fixes):
         json.dump(json.load(open(P))["words"], open(raw, "w"))
     words = [tuple(w) for w in json.load(open(raw))]
     words = [(x, y, w.strip('"“”')) for x, y, w in words if w.strip('"“”')]
-    words = tidy(fix_text(words, fixes))
+    words = fix_text(tidy(words), fixes)   # a written correction has the last word (15 Oct)
     words, close_end = cut_after_close(words, close_phrase)
     bursts = kt_render.phrases_from_words(words)
     json.dump({"words": words, "bursts": bursts, "close_end": close_end}, open(P, "w"), indent=0)
