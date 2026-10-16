@@ -171,9 +171,12 @@ def main():
         if ok:
             moved.append(base)
             # a clip that is good now must not be shadowed by an old rejected copy
-            old = os.path.join(BAD, base)
-            if os.path.exists(old):
-                os.remove(old)
+            # ...nor by its note and caption file (15 Oct 2026: six __WHY.txt files stayed
+            # behind for clips that had since passed under the same name)
+            for old in (os.path.join(BAD, base), os.path.join(BAD, base[:-4] + "__WHY.txt"),
+                        os.path.join(BAD, ".caps", base[:-4] + "__caps.json")):
+                if os.path.exists(old):
+                    os.remove(old)
             # ONE CUT PER CLIP IN THE FOLDER (15 Oct 2026). A re-cut arrives under a new
             # length (HEAVEN-IS-NOT-A-PLACE_21s -> _45s) and the old file stayed beside it,
             # so the folder held two versions of one clip and either could be submitted.
