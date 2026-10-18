@@ -12,6 +12,18 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
+## Where things stand (handoff, 18 Oct 2026 - replace this section at every handoff)
+
+- **why_your_prayers_fail: DELIVERED to the Mac folder, 13 clips** (15 Oct), every caption
+  line read, all gates pass. Waiting for Kamay to confirm he UPLOADED them to GIN; then
+  retire it per "Keep it clean" (plan -> plans/done/, clear releases, clips to Trash).
+- Kamay was asked to empty the Trash (Mac had ~5.6 GB free).
+- Start a new batch: Kamay gives "title + length" (or the video) -> run `vsc_new.yml`
+  (`gh workflow run vsc_new.yml -R kamaycampos/vsc-factory -f title="..." -f duration="mm:ss"`),
+  confirm it started, end the turn. Sources come from Rumble's stream in the cloud; the Mac
+  can be off. Then read the verdict table, read EVERY caption line against the audio, write
+  `fixes` against the server's `__caps.json`, push once.
+
 ## Making a batch (the whole loop)
 
 (The normal way is the **Autopilot** below - one form, nothing else. These are the steps it
