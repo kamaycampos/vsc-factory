@@ -72,7 +72,7 @@ def _allowed(iv, t0, t1, dur):
     return lo, hi
 
 
-MAX_LEN = 118.0     # Naomi's ceiling is 120s
+MAX_LEN = 88.0      # Naomi's ceiling is 90 s (18 Oct 2026; was 120 s)
 DRIFT   = 9.0       # a boundary further than this from the intended one is not this clip
 
 

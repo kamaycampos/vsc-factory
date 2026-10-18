@@ -69,14 +69,24 @@ runs, and how to do any of them by hand.)
   breaks names: Steve Jobs (not Steven), NeXT, New York Times bestseller list,
   Carnegie Deli, American Memory Institute, the Possibility Thinker's Creed. Where
   Kevin misspeaks and the meaning is obvious, write what he meant.
-- No `[BLANK_AUDIO]`, no words whisper invented ("Sorry."), no speech from someone else.
+- No `[BLANK_AUDIO]`, no words whisper invented ("Sorry."), no speech from someone else
+  (in an interview the guest's question or reaction is fine; the clip is Kevin's).
 - Emphasis capitals never cost a word.
 - **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
-- **Format 1080x1920 (9:16), hard maximum 120 s** (Naomi's ceiling; `MAX_LEN = 118`).
-  **Length follows the teaching, never the machine.** A clip runs from the start of the
-  thought to where it lands, setup + proof + landing, usually 45-110 s. Under 40 s needs
-  `"short_ok": "<why it is complete>"` in the plan; `cloud/check_plan.py` enforces both
-  ends and runs first in every build. (Kamay, 5 Oct: the first batch came out 21-60 s
+- **Format 1080x1920 (9:16), 20-90 s** (Naomi, 18 Oct 2026 - was 120 s; `MAX_LEN = 88`,
+  `FLOOR = 20`). **Length follows the teaching, never the machine.** A clip runs from the
+  start of the thought to where it lands, setup + proof + landing, usually 40-85 s. Under
+  40 s needs `"short_ok": "<why it is complete>"` in the plan; `cloud/check_plan.py` enforces
+  both ends and runs first in every build. A teaching over 88 s is split where a second
+  complete idea begins - both halves whole - never cut short.
+- **Interviews focus on KEVIN** (Naomi, 18 Oct): "it can be talking with John but we don't
+  want clips focusing only on John". prep's `speakers-<key>.json` (`cloud/speakers.py`,
+  voiceprints against `assets/kevin_voice.npy`) tags the guest's lines; autoplan refuses a
+  clip where Kevin has under 60 % of the speech or the guest has the close.
+- **In a wide two-shot, frame whoever is talking** (Naomi, 18 Oct: "reframe to show the
+  person that he's speaking during those moments"). `vsc_render.speaker_shots` hands the
+  shared `vsc_frame.speaker_turns` the clip; it switches on sentence starts, only where both
+  faces are on screen. The render log says "speaker turns: ..." where it acted. (Kamay, 5 Oct: the first batch came out 21-60 s
   and "cut the teaching". The cause: on 30 Sept the renderer died on clips over ~62 s and
   the plan was cut to fit it - 102 s and 128 s teachings split into 3-5 pieces, commit
   d88d8f1. The renderer was fixed on 4 Oct. A machine limit is a bug to fix, never a

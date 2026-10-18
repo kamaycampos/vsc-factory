@@ -6,7 +6,7 @@
 
 WHY THIS EXISTS. 5 Oct 2026, Kamay, after the millionaires_problems batch: "the
 factory was making them so the clips are not more than 60 seconds, which made many
-clips so horribly short, cutting the teaching". GIN's ceiling is 120 s. The ~60 s
+clips so horribly short, cutting the teaching". GIN's ceiling was 120 s (90 s from 18 Oct). The ~60 s
 came from nowhere in GIN's brief: on 30 Sept the renderer died on every clip over
 ~62 s (one decoded 4K stream for all shots), and instead of fixing the renderer the
 plan was cut to fit it - MORE-PROBLEMS 102 s became two clips, BANNED-FOR-LIFE 128 s
@@ -29,8 +29,13 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
+# 18 Oct 2026, Naomi (GIN), restating the assignment: "20 to 90sec length". The ceiling
+# came down from 120 s; a teaching that runs longer is split where a second complete idea
+# begins, never cut short. The floor is GIN's; under MIN_LEN still needs "short_ok"
+# (Kamay, 5 Oct: the 21-60 s batch "cut the teaching").
+FLOOR = 20.0        # GIN's floor - nothing shorter, whatever short_ok says
 MIN_LEN = 40.0      # a whole teaching rarely fits in less; "short_ok" says why it does
-MAX_LEN = 118.0     # Naomi's ceiling is 120 s (same constant as vsc_clip.MAX_LEN)
+MAX_LEN = 88.0      # Naomi's ceiling is 90 s (same constant as vsc_clip.MAX_LEN)
 HOOK_WORDS = 10     # two short lines; GIN approved "THE DAY IT FALLS APART / IS THE DAY YOU START"
 
 # A hook must give the viewer a reason to stay: something they get, fear, or
@@ -83,6 +88,8 @@ def check(path, delivered):
         if span > MAX_LEN:
             errs.append(f"{n}: region {span:.0f}s is over the {MAX_LEN:.0f}s ceiling - "
                         "split it into two clips that EACH carry a whole idea")
+        elif span < FLOOR:
+            errs.append(f"{n}: region {span:.0f}s is under GIN's {FLOOR:.0f}s floor")
         elif span < MIN_LEN and not c.get("short_ok"):
             errs.append(f"{n}: region {span:.0f}s is under {MIN_LEN:.0f}s - is the whole "
                         "teaching (setup, proof, landing) inside it? If it truly is, add "

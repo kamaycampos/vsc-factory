@@ -108,7 +108,7 @@ def transcript(p):
     return open(f).read() if os.path.exists(f) else None
 
 
-LINE = re.compile(r"^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$", re.M)
+LINE = re.compile(r"^\[(\d+):(\d+(?:\.\d+)?)(?: [A-Z+]+)?\]\s*(.*)$", re.M)   # [mm:ss.ss GUEST]
 
 
 def timed_words(text):
@@ -195,6 +195,13 @@ def located(c, tw):
 # before the open and after the close. Calibrated on that batch: these rules called 22 of
 # the renderer's 26 edge verdicts, and were stricter on the rest.
 PAUSE = None                 # (words, pauses) for the plan being chosen, when prep made them
+# WHO IS TALKING (18 Oct 2026, Naomi, for the interview episodes): "we want clips that
+# focus on Kevin talking (it can be talking with John but we don't want clips focusing
+# only on John)". prep's speakers-<key>.json gives every word a voice ("K", "G", "?");
+# the guest's lines are tagged in the transcript and a clip must give Kevin KEVIN_MIN of
+# its speech and close on his words. SPEAKERS is False for a solo episode or no map.
+SPEAKERS = False
+KEVIN_MIN = 0.60
 CUTS = False                 # True when those are measured cut points: clips get start_at/end_at
 OPEN_GAP, CLOSE_GAP = 0.15, 0.20
 
@@ -222,7 +229,7 @@ def prep_data(p):
     CUTS, OPEN_GAP, CLOSE_GAP = False, 0.15, 0.20      # per plan: an older v1 map keeps the old rule
     d = "/tmp/autoplan/prep"
     os.makedirs(d, exist_ok=True)
-    for pat in (f"prep-{p['key']}.tar.gz", f"pauses-{p['key']}.json"):
+    for pat in (f"prep-{p['key']}.tar.gz", f"pauses-{p['key']}.json", f"speakers-{p['key']}.json"):
         subprocess.run(["gh", "release", "download", "prep", "-R", REPO, "-p", pat, "-D", d,
                         "--clobber"], capture_output=True)
     try:
@@ -242,6 +249,19 @@ def prep_data(p):
         return None
     for w in words:
         w["n"] = re.sub(r"[^a-z0-9']", "", w["t"].lower())
+    global SPEAKERS
+    SPEAKERS = False
+    try:
+        from cloud.speakers import who
+        sm = json.load(open(os.path.join(d, f"speakers-{p['key']}.json")))
+        for w in words:
+            w["s"] = who(sm["spans"], (w["a"] + w["b"]) / 2)
+        SPEAKERS = sm["guest_share"] > 0
+        print(f"  speaker map: the guest holds {sm['guest_share']:.0%} of the speech"
+              + ("" if SPEAKERS else " - a solo episode"))
+    except Exception as e:
+        print(f"::warning::{p['key']}: no speaker map ({type(e).__name__}) - cannot check "
+              "that clips focus on Kevin")
     return words, pauses
 
 
@@ -255,7 +275,8 @@ def paused_transcript(words, pauses):
         if nxt is None or (gap_after(pauses, w["b"]) >= CLOSE_GAP
                            and gap_before(pauses, nxt["a"]) >= OPEN_GAP):
             a = cur[0]["a"]
-            lines.append(f"[{int(a // 60):02d}:{a % 60:05.2f}] " + " ".join(x["t"] for x in cur))
+            tag = voice_tag(cur) if SPEAKERS else ""
+            lines.append(f"[{int(a // 60):02d}:{a % 60:05.2f}{tag}] " + " ".join(x["t"] for x in cur))
             cur = []
     return "\n".join(lines)
 
@@ -280,6 +301,31 @@ def _find(ws, phrase, last=False):
         if hits:
             return hits[-1] if last else hits[0]
     return None
+
+
+def voice_tag(ws):
+    """" GUEST" when the guest says most of a line, " KEVIN+GUEST" when both say a fair
+    part of it, "" for Kevin's own lines (the rest of the transcript)."""
+    k = sum(w["b"] - w["a"] for w in ws if w.get("s") == "K")
+    g = sum(w["b"] - w["a"] for w in ws if w.get("s") == "G")
+    if g > k:
+        return " GUEST" if k < 0.3 * (k + g) else " GUEST+KEVIN"
+    return " KEVIN+GUEST" if g >= 0.3 * (k + g) else ""
+
+
+def kevin_focus(c, ws):
+    """GIN wants Kevin's clips: he carries KEVIN_MIN of the speech and lands the close."""
+    k = sum(w["b"] - w["a"] for w in ws if w.get("s") == "K")
+    g = sum(w["b"] - w["a"] for w in ws if w.get("s") == "G")
+    out = []
+    if k + g > 0 and k / (k + g) < KEVIN_MIN:
+        out.append(f"{c['name']}: Kevin speaks only {k / (k + g):.0%} of it - the guest carries "
+                   "this clip. GIN wants clips that focus on KEVIN (the guest may ask and react). "
+                   "Choose a stretch where Kevin teaches, or drop it")
+    tail = [w for w in ws[-6:] if w.get("s") in ("K", "G")]
+    if tail and sum(1 for w in tail if w["s"] == "G") > len(tail) / 2:
+        out.append(f"{c['name']}: it closes on the GUEST's words - end where KEVIN lands the teaching")
+    return out
 
 
 def at_pauses(c):
@@ -321,10 +367,15 @@ def at_pauses(c):
     if not close_ok:
         out.append(f"{n}: the close \"{c['close']}\" ({mmss(t1)}) runs straight into his next words "
                    "- end on the LAST words of a transcript line, where the teaching lands")
+    if SPEAKERS:
+        out += kevin_focus(c, ws[i:je + 1])
     span = t1 - t0
     if span > check_plan.MAX_LEN - 1:
         out.append(f"{n}: {span:.0f} s of speech from open to close - over the "
                    f"{check_plan.MAX_LEN:.0f} s ceiling")
+    elif span < check_plan.FLOOR:
+        out.append(f"{n}: only {span:.0f} s of speech from open to close - under GIN's "
+                   f"{check_plan.FLOOR:.0f} s floor")
     elif span < check_plan.MIN_LEN and not c.get("short_ok"):
         out.append(f"{n}: only {span:.0f} s of speech from open to close - keep the whole teaching, "
                    "or say in short_ok why it is complete")
@@ -420,8 +471,8 @@ def plan_one(client, p, text):
             "Kamay, 5 Oct: that batch came out 30-82 s and CUT THE TEACHING. It was planned while "
             "the renderer died on clips over ~62 s, so long teachings were split into pieces; the "
             "renderer is fixed. Re-cut the episode: every clip runs from the start of the thought "
-            "to where the teaching lands - setup, proof and landing - usually 45-110 s, never over "
-            "118. Where one lesson was split across several clips above, make it ONE clip. Keep "
+            f"to where the teaching lands - setup, proof and landing - never over {check_plan.MAX_LEN:.0f} s. "
+            "Where one lesson was split across several clips above, make it ONE clip. Keep "
             "different tellings of a lesson only when each is complete on its own. Every clip "
             "needs a NEW name, different from every name above.\n"
             f"Notes on this episode: {old.get('note', '')}")
@@ -429,7 +480,11 @@ def plan_one(client, p, text):
             + ("Transcript: every line is one stretch of speech, and EVERY LINE BREAK IS A REAL "
                "PAUSE in the sound - the only places a clip can be cut cleanly. Each line starts "
                "at [mm:ss.ss] source time. `open` = the first words of a line; `close` = the last "
-               "words of a line.\n\n" if PAUSE else
+               "words of a line.\n"
+               + ("Lines tagged GUEST (or GUEST+KEVIN / KEVIN+GUEST) are spoken by the guest "
+                  "(mostly / partly); untagged lines are Kevin's. Clips must FOCUS ON KEVIN: "
+                  f"he speaks at least {KEVIN_MIN:.0%} of every clip and its close is his.\n"
+                  if SPEAKERS else "") + "\n" if PAUSE else
                "Transcript (each line starts at [mm:ss.ss] source time):\n\n") + text)
     messages = [{"role": "user", "content": user}]
     import anthropic

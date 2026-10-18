@@ -16,6 +16,10 @@ ln -sf /usr/bin/ffmpeg  "$K/bin/ffmpeg"
 ln -sf /usr/bin/ffprobe "$K/bin/ffprobe"
 ln -sf "$(command -v gh)" "$K/bin/gh"
 cp assets/yunet.onnx "$K/bin/"
+# WHO IS TALKING (18 Oct 2026): the voiceprint encoder behind speaker maps and
+# speaker_turns' reframing. Lives in kt-machine (public); without it both stay off.
+curl -sfL "https://raw.githubusercontent.com/kamaycampos/kt-machine/main/factory/assets/voice_encoder.npz" \
+  -o "$K/bin/voice_encoder.npz" || echo "::warning::voice encoder not fetched - no speaker maps"
 
 # THE FONTS GO WHERE THE SCRIPT LOOKS. vsc_render.py names the Mac's own path for
 # DIN Condensed Bold, and the look it produces is what Cali and Naomi signed off,

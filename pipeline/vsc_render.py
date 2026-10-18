@@ -133,6 +133,95 @@ def shots_in(segments, t0, t1):
     return merged
 
 
+def speaker_shots(src, framejson, shots, t0, t1, words):
+    """TWO PEOPLE IN ONE WIDE SHOT: FRAME WHOEVER IS TALKING.
+
+    18 Oct 2026, Naomi (GIN), for the interview episodes: "When sometime the camera shows
+    both of them with a large angle (it won't fit both of them in a frame as you have to
+    crop vertically) please reframe to show the person that he's speaking during those
+    moments." The episode's frame.json gives each camera shot ONE person - whoever the
+    mouth tracker framed for the most seconds - so in a two-shot the crop held one man
+    while the other talked. kt_render already fixes this with the shared
+    vsc_frame.speaker_turns (voiceprints, switches on sentence starts, nothing under
+    1.5 s, reactions ignored); this hands it the same input.
+
+    Neighbouring shots whose tracked faces belong to at most two people are one block
+    (the tracker's own soft breaks often split a two-shot where it changed its mind).
+    speaker_turns only acts on a block where BOTH faces really are on screen (80 % of
+    its seconds) - alternating close-ups are left alone - and everything it does not
+    turn keeps the original shots. Any failure: the shots come back unchanged.
+    """
+    try:
+        import numpy as np
+        import vsc_frame as VF
+        track = json.load(open(framejson)).get("track") or []
+        if not (VF.SPEAKER and os.path.exists(VF.VOICE) and track and words and len(shots)):
+            return shots
+        rel = [dict(s, start=s["start"] - t0, end=s["end"] - t0) for s in shots]
+
+        def pts(s):
+            return [(i - t0, track[i]) for i in range(int(s["start"] + t0) + 1, int(s["end"] + t0))
+                    if i < len(track) and track[i]]
+
+        def people(ps):
+            out = []                                  # [[cx, fw, [(t, v)]]]
+            for t, v in ps:
+                p = next((p for p in out if abs(p[0] - v[0]) <= 2 * VF.SAME
+                          and max(p[1], v[1]) / max(min(p[1], v[1]), 1e-6) < 1.5), None)
+                (p[2].append((t, v)) if p else out.append([v[0], v[1], [(t, v)]]))
+            return [p for p in out if len(p[2]) >= 2]
+
+        blocks = [[rel[0]]]
+        for s in rel[1:]:
+            if len(people([q for b in blocks[-1] + [s] for q in pts(b)])) <= 2:
+                blocks[-1].append(s)
+            else:
+                blocks.append([s])
+        seeded, cuts = [], []
+        for bl in blocks:
+            a, b = bl[0]["start"], bl[-1]["end"]
+            if a > 0:
+                cuts.append(a)
+            ppl = people([q for s in bl for q in pts(s)])
+            if len(ppl) != 2:
+                seeded += bl
+                continue
+            med = [tuple(float(np.median([v[k] for _, v in p[2]])) for k in range(3)) for p in ppl]
+            runs = []                                 # per-second, whom the tracker framed
+            for t, v in sorted(q for p in ppl for q in p[2]):
+                k = min((0, 1), key=lambda k: abs(med[k][0] - v[0]))
+                if not runs or runs[-1][2] != k:
+                    runs.append([t, t + 1, k])
+                else:
+                    runs[-1][1] = t + 1
+            runs[0][0], runs[-1][1] = a, b
+            for x, y in zip(runs, runs[1:]):
+                x[1] = y[0]
+            seeded += [dict(bl[0], start=x, end=y, cx=med[k][0], fw=med[k][1], cy=med[k][2])
+                       for x, y, k in runs if y > x]
+        if seeded == rel:
+            return shots
+        res = VF.speaker_turns(src, t0, t1, seeded, cuts,
+                               VF.sentence_starts([(w["a"], w["b"], w["text"]) for w in words]))
+        turned = [s for s in res if s.get("turn")]
+        if not turned:
+            return shots
+        out = []
+        for s in rel:
+            pieces = [(s["start"], s["end"])]
+            for u in turned:
+                pieces = [q for x, y in pieces for q in ((x, min(y, u["start"])), (max(x, u["end"]), y))
+                          if q[1] - q[0] > 0.01]
+            out += [dict(s, start=x, end=y) for x, y in pieces]
+        out = sorted(out + turned, key=lambda s: s["start"])
+        print("      speaker turns: " + ", ".join(f"{s['start']:.1f}s cx {s['cx']:.2f}"
+                                                  for s in out), flush=True)
+        return [dict(s, start=round(s["start"] + t0, 3), end=round(s["end"] + t0, 3)) for s in out]
+    except Exception as e:                            # framing polish never loses a clip
+        print(f"      speaker turns skipped: {type(e).__name__}: {e}", flush=True)
+        return shots
+
+
 def apply_overrides(shots, t0, ovs):
     """Carve per-clip corrections into the shot list. Times in `ovs` are CLIP-relative.
 
@@ -174,7 +263,8 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
           fade_out_by=None, fade_in=0.0):
     sw, sh = source_size(src)
     segs = json.load(open(framejson))["segments"]
-    shots = apply_overrides(shots_in(segs, t0, t1), t0, overrides)
+    shots = apply_overrides(speaker_shots(src, framejson, shots_in(segs, t0, t1), t0, t1, words),
+                            t0, overrides)
     parts, labels = [], []
     for i, s in enumerate(shots):
         trim = f"[0:v]trim=start={s['start']:.3f}:end={s['end']:.3f},setpts=PTS-STARTPTS,"

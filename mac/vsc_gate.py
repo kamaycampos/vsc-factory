@@ -102,6 +102,13 @@ def check(mp4):
         why.append("not 1080x1920 - phones will letterbox it")
     if "Audio:" not in o:
         why.append("no sound track")
+    # GIN's 20-90 s (Naomi, 18 Oct 2026). Clips delivered before it are history.
+    m = re.search(r"Duration: (\d+):(\d+):([\d.]+)", o)
+    secs = int(m[1]) * 3600 + int(m[2]) * 60 + float(m[3]) if m else 0
+    done = {n for k, v in json.load(open(os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "cloud", "delivered.json"))).items() if k != "_why" for n in v}
+    if not 20 <= secs <= 90 and re.sub(r"_\d+s\.mp4$", "", os.path.basename(mp4)) not in done:
+        why.append(f"{secs:.0f} s - outside GIN's 20-90 s")
     caps = mp4[:-4] + "__caps.json"
     if not os.path.exists(caps):
         why.append("no caption file beside it, so the words cannot be read")

@@ -64,7 +64,7 @@ def build(plan):
     if got.returncode == 0:
         unpack(tar, src)
         print(f"  prep reused from the release for {plan['key']}", flush=True)
-        return
+        return speakers(plan, src, base)
     vsc_week.ensure_transcript(src, base)                 # transcript + words + shots
     # THE SHOT MAP IS NOT IN .work. It is written next to the source file, and prep
     # only ever packed .work - so the one genuinely expensive artifact, face-tracking
@@ -91,6 +91,30 @@ def build(plan):
         print(f"  transcript published: {t}", flush=True)
     print(f"  prep built and published ({len(keep)} files){'' if not up.returncode else ' - UPLOAD FAILED'}",
           flush=True)
+    speakers(plan, src, base)
+
+
+def speakers(plan, src, base):
+    """WHO IS TALKING (18 Oct 2026, Naomi: clips must focus on Kevin, not on the guest).
+    speakers-<key>.json, once per source: Kevin or the guest, stretch by stretch
+    (cloud/speakers.py). autoplan tags the guest's lines and checks Kevin's share. A
+    failure here is named and planning goes on without it - it never costs the batch."""
+    import json
+    sp = f"/tmp/speakers-{plan['key']}.json"
+    if not sh("gh", "release", "download", "prep", "-R", REPO, "-p", os.path.basename(sp),
+              "-D", "/tmp", "--clobber").returncode:
+        return
+    try:
+        from cloud.speakers import speaker_map
+        m = speaker_map(src, json.load(open(os.path.join(WORK, base + ".words.json"))))
+    except Exception as e:
+        print(f"::warning::{plan['key']}: no speaker map ({type(e).__name__}: {e}) - "
+              "autoplan cannot see who is talking", flush=True)
+        return
+    json.dump(m, open(sp, "w"))
+    up = sh("gh", "release", "upload", "prep", sp, "--clobber", "-R", REPO)
+    print(f"  speaker map {'published' if not up.returncode else 'NOT published'}: guest "
+          f"{m['guest_share']:.0%} of the speech, {len(m['spans'])} turns", flush=True)
 
 
 if __name__ == "__main__":
