@@ -76,6 +76,26 @@ def height(f):
     return int(m[2]) if m else 0
 
 
+INBOX = os.path.expanduser("~/VSC/Inbox")
+
+
+def duration(f):
+    m = re.search(r"Duration: (\d+):(\d+):([\d.]+)",
+                  sh(os.path.expanduser("~/Kamay/bin/ffmpeg"), "-nostdin", "-i", f).stderr)
+    return int(m[1]) * 3600 + int(m[2]) * 60 + float(m[3]) if m else 0.0
+
+
+def from_inbox(plan):
+    """THE EPISODE NOT ON RUMBLE (18 Oct 2026: "Hollywood Insider Reveals Secret Path to
+    Success", 57:48, is in no catalogue). Kamay downloads GIN's copy from Frame.io into
+    ~/VSC/Inbox; the video there within 3 s of the plan's length is this plan's source."""
+    for f in sorted(glob.glob(os.path.join(INBOX, "*"))):
+        if f.lower().endswith((".mp4", ".mov", ".m4v", ".mkv")) and \
+                abs(duration(f) - float(plan.get("duration") or -99)) <= 3.0:
+            return f
+    return None
+
+
 def fetch(plan, assets):
     name, key = plan["source"], plan["key"]
     if plan.get("source_key", "VSC_KEY") != "VSC_KEY":
@@ -90,9 +110,16 @@ def fetch(plan, assets):
     shutil.rmtree(WORK, ignore_errors=True)
     os.makedirs(WORK)
     src = os.path.join(WORK, f"{key}.mp4")
-    tell(f"Fetching the source for {key} on the Mac (the cloud was refused)")
     env = dict(os.environ, PATH=os.path.expanduser("~/Kamay/bin") + ":" + os.environ.get("PATH", ""))
-    for attempt in range(3):
+    local = None if plan.get("rumble") else from_inbox(plan)
+    if local:
+        tell(f"Uploading {os.path.basename(local)} from the Inbox as the source for {key}")
+        if sh(os.path.expanduser("~/Kamay/bin/ffmpeg"), "-v", "error", "-y", "-i", local,
+              "-c", "copy", "-movflags", "+faststart", src).returncode:
+            shutil.copy(local, src)
+    else:
+        tell(f"Fetching the source for {key} on the Mac (the cloud was refused)")
+    for attempt in range(0 if local else 3):
         sh(YTDLP, "--no-warnings", "-q", "--impersonate", "chrome", "-N", "8",
            "-f", "bv*[height<=2160]+ba/b[height<=2160]", "--merge-output-format", "mp4",
            "-o", src, plan["rumble"], env=env)
@@ -138,6 +165,8 @@ def fetch(plan, assets):
         tell(f"{key}: upload incomplete ({', '.join(wrong)}) - removed, will retry")
         return False
     tell(f"{key}: source uploaded ({h}p, {len(sizes)} part(s))")
+    if local:                                    # done with it: to the Trash, never deleted
+        sh("osascript", "-e", f'tell application "Finder" to delete POSIX file "{local}"')
     return True
 
 
@@ -154,7 +183,7 @@ def main():
     todo = []
     for f in sorted(glob.glob(os.path.join(PLANS, "*.json"))):
         p = json.load(open(f))
-        if p.get("rumble") and p.get("source"):
+        if p.get("source") and (p.get("rumble") or from_inbox(p)):
             todo.append(p)
     if not todo:
         return 0

@@ -14,15 +14,22 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 18 Oct 2026 - replace this section at every handoff)
 
-- **why_your_prayers_fail: DELIVERED to the Mac folder, 13 clips** (15 Oct), every caption
-  line read, all gates pass. Waiting for Kamay to confirm he UPLOADED them to GIN; then
-  retire it per "Keep it clean" (plan -> plans/done/, clear releases, clips to Trash).
-- Kamay was asked to empty the Trash (Mac had ~5.6 GB free).
-- Start a new batch: Kamay gives "title + length" (or the video) -> run `vsc_new.yml`
-  (`gh workflow run vsc_new.yml -R kamaycampos/vsc-factory -f title="..." -f duration="mm:ss"`),
-  confirm it started, end the turn. Sources come from Rumble's stream in the cloud; the Mac
-  can be off. Then read the verdict table, read EVERY caption line against the audio, write
-  `fixes` against the server's `__caps.json`, push once.
+- **hollywood_insider_reveals_secret** ("Hollywood Insider Reveals Secret Path to Success",
+  57:48, Kevin with John): stub plan committed by vsc-new run 39169500659. **NOT ON RUMBLE**
+  (no catalogue entry near 3468 s at 1080p+, no title match), so there is no source yet; the
+  vsc run it started was cancelled. **Kamay downloads GIN's copy from Frame.io into
+  `~/VSC/Inbox`** - the Mac's 15-min pull matches it to the plan by length (+-3 s), locks
+  it, uploads it to `sources`, moves the file to the Trash and starts `vsc.yml`.
+- **First batch under Naomi's interview rules** (18 Oct, commit 223d378): 20-90 s, Kevin
+  >= 60 % of every clip's speech and the close is his, wide two-shots reframed to whoever
+  talks. New and unproven on a real interview: the speaker map (check prep's log "speaker
+  map: guest NN %" - for an interview expect 20-50 %) and the render's "speaker turns:"
+  lines. Watch the two-shots in this batch before it goes to Kamay.
+- **why_your_prayers_fail: UPLOADED to GIN** (Kamay, 18 Oct); names in `delivered.json`.
+  Kamay has "little things to make better" on it - take his notes FIRST in the next session,
+  turn them into rules here, THEN retire it per "Keep it clean" (plan -> plans/done/, clear
+  releases, clips to Trash). Not retired yet so the notes can be checked against the clips.
+- GIN wants a perfect batch before giving more than one assignment at a time.
 
 ## Making a batch (the whole loop)
 
