@@ -54,6 +54,16 @@ def match(cat, duration=None, title=None):
                     return best[0][0], best[0][1], "duration and title agreed"
             return None, None, f"{len(near)} episodes are within {TOL}s of {duration:.1f}s - " \
                                f"say which: {[e['title'][:40] for _u, e in near]}"
+        # FOUND IS NOT "NOT FOUND" (18 Oct 2026). Hollywood Insider sat on Kevin's channel at
+        # exactly 3468 s, but at 720p, and this said "nothing within 2.5 s" - Kamay was told
+        # the episode was not on Rumble. Below the gate it is named, with its height.
+        low = [(u, e) for u, e in cat.items() if not e.get("short")
+               and e.get("height", 0) < MIN_H and abs(e.get("dur", 0) - duration) <= TOL]
+        if low:
+            return None, None, "ON RUMBLE BUT BELOW 1080p: " + "; ".join(
+                f"{e['height']}p {e['dur']}s \"{e['title']}\" {u}" for u, e in low) + \
+                " - the 1080p gate refuses it. A sharper copy (GIN's Frame.io file into " \
+                "~/VSC/Inbox), or Kamay decides to accept this height"
         return None, None, f"nothing within {TOL}s of {duration:.1f}s. The published cut may be " \
                            f"trimmed, or the catalogue may be stale - refresh it in kt-machine."
     if title:

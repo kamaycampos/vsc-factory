@@ -15,11 +15,15 @@ limit (see "Token budget").
 ## Where things stand (handoff, 18 Oct 2026 - replace this section at every handoff)
 
 - **hollywood_insider_reveals_secret** ("Hollywood Insider Reveals Secret Path to Success",
-  57:48, Kevin with John): stub plan committed by vsc-new run 39169500659. **NOT ON RUMBLE**
-  (no catalogue entry near 3468 s at 1080p+, no title match), so there is no source yet; the
-  vsc run it started was cancelled. **Kamay downloads GIN's copy from Frame.io into
-  `~/VSC/Inbox`** - the Mac's 15-min pull matches it to the plan by length (+-3 s), locks
-  it, uploads it to `sources`, moves the file to the Trash and starts `vsc.yml`.
+  57:48, Kevin with John, Ep. 30 of The Kevin Trudeau Show): stub plan committed by vsc-new.
+  It IS on Rumble - `https://rumble.com/v572lr0-the-kevin-trudeau-show-live.html`, Kevin's
+  channel, 3468 s - but **only at 720p** (a re-upload, v573amr, is 720p too). The catalogue
+  missed it because it never read the channel's Livestreams tab (78 episodes, fixed in
+  kt-machine af096e8), and rumble_match then said "nothing found" instead of "below 1080p"
+  (fixed). WAITING ON KAMAY: GIN's Frame.io copy's resolution. 1080p+ -> download it into
+  `~/VSC/Inbox` (the Mac's pull uploads it and starts the build). 720p there too -> Kamay
+  decides whether to render from 720p (put the Rumble URL in the plan and lift the gate for
+  this plan only) - 9:16 from 1280x720 is a 2.7x upscale, softer than every batch so far.
 - **First batch under Naomi's interview rules** (18 Oct, commit 223d378): 20-90 s, Kevin
   >= 60 % of every clip's speech and the close is his, wide two-shots reframed to whoever
   talks. New and unproven on a real interview: the speaker map (check prep's log "speaker
