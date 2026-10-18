@@ -112,6 +112,7 @@ def fetch(plan, assets):
     src = os.path.join(WORK, f"{key}.mp4")
     env = dict(os.environ, PATH=os.path.expanduser("~/Kamay/bin") + ":" + os.environ.get("PATH", ""))
     local = None if plan.get("rumble") else from_inbox(plan)
+    floor = int(plan.get("min_height") or 1000)     # the plan's own gate (cloud/source.py)
     if local:
         tell(f"Uploading {os.path.basename(local)} from the Inbox as the source for {key}")
         if sh(os.path.expanduser("~/Kamay/bin/ffmpeg"), "-v", "error", "-y", "-i", local,
@@ -123,11 +124,11 @@ def fetch(plan, assets):
         sh(YTDLP, "--no-warnings", "-q", "--impersonate", "chrome", "-N", "8",
            "-f", "bv*[height<=2160]+ba/b[height<=2160]", "--merge-output-format", "mp4",
            "-o", src, plan["rumble"], env=env)
-        if os.path.exists(src) and height(src) >= 1000:
+        if os.path.exists(src) and height(src) >= floor:
             break
         time.sleep(30 * (attempt + 1))
     h = height(src) if os.path.exists(src) else 0
-    if h < 1000:
+    if h < floor:
         tell(f"{key}: could not download a 1080p+ copy from Rumble (got {h or 'nothing'})")
         shutil.rmtree(WORK, ignore_errors=True)
         return False
