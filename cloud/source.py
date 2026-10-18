@@ -60,8 +60,13 @@ def fetch(plan):
     dest = os.path.join(SRC, f"{plan['prefix']} {plan['key']}.mp4")
     os.makedirs(SRC, exist_ok=True)
 
+    # THE 1080p GATE, per plan (18 Oct 2026). "min_height" lowers it for ONE episode that
+    # exists nowhere sharper, and "min_height_why" says so: Hollywood Insider is 720p on
+    # Rumble (7.7 Mbps) and YouTube (2.4 Mbps) alike. Every other plan keeps 1080p.
+    floor = int(plan.get("min_height") or 1000)
+
     def usable():
-        return os.path.exists(dest) and height(dest) >= 1000
+        return os.path.exists(dest) and height(dest) >= floor
 
     if usable():
         return dest
