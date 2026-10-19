@@ -252,13 +252,18 @@ def prep_data(p):
     global SPEAKERS
     SPEAKERS = False
     try:
-        from cloud.speakers import who
+        from cloud.speakers import who, trusted
         sm = json.load(open(os.path.join(d, f"speakers-{p['key']}.json")))
         for w in words:
             w["s"] = who(sm["spans"], (w["a"] + w["b"]) / 2)
-        SPEAKERS = sm["guest_share"] > 0
+        SPEAKERS = trusted(sm)
         print(f"  speaker map: the guest holds {sm['guest_share']:.0%} of the speech"
-              + ("" if SPEAKERS else " - a solo episode"))
+              + ("" if SPEAKERS else " - NOT TRUSTED (the voices do not separate, or a solo "
+                 "episode): no tags, the planner judges who speaks from the words"))
+        if sm["guest_share"] and not SPEAKERS:
+            print(f"::warning::{p['key']}: the speaker map cannot tell Kevin from the guest "
+                  f"({sm.get('kevin_vs_ref')} / {sm.get('guest_vs_ref')} vs his reference) - "
+                  "Kevin focus is the planner's judgment; check every clip's speaker")
     except Exception as e:
         print(f"::warning::{p['key']}: no speaker map ({type(e).__name__}) - cannot check "
               "that clips focus on Kevin")

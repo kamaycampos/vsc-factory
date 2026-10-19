@@ -73,6 +73,11 @@ clips focusing only on John)." When the transcript tags lines `GUEST` (or `GUEST
 - The guest may set it up (a question, a story Kevin answers) and react briefly. A stretch
   where the guest teaches and Kevin listens is not a clip, however good it is.
 - A guest's question can be the open if it is short and Kevin's answer is the clip.
+- **No tags does not mean no guest.** When the voices cannot be told apart (19 Oct, Hollywood
+  Insider: Kevin and John Denney on the same mics), the transcript is untagged. Work out who
+  speaks from the words: the host welcomes and introduces, the guest says "I met Kevin",
+  "Kevin and I", tells his own career; Kevin says "John", asks "tell us about...". A long
+  stretch of the guest's story is not a Kevin clip - choose where KEVIN teaches.
 
 ## Hooks (the first 3 seconds decide whether anyone watches)
 - Name something the viewer can picture AND care about: a number with stakes, a name, an

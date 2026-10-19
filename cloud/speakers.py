@@ -37,6 +37,18 @@ JUDGE = 1.0          # under this much sound a voiceprint is a guess
 MARGIN = 0.03        # a stretch nearer neither voice by this much is "?"
 SOLO = 0.05          # second voice under this share of the speech = a solo episode
 ISLAND = 3.0         # a shorter run between two runs of the other voice is a misread
+APART = 0.05         # the two voices must differ by this much in likeness to Kevin's reference
+
+
+def trusted(m):
+    """Can this map tell Kevin from the guest? (19 Oct 2026, Hollywood Insider: Kevin and
+    John Denney on the same mics in one room came out 0.83 / 0.82 against Kevin's studio
+    voice - one man to the encoder. John's own lines matched Kevin's in-room voice at
+    0.86-0.92, Kevin's 0.91-0.93, and the map called Kevin's 12-minute solo opening the
+    guest's.) An untrusted map is never used to judge a clip."""
+    if not m.get("guest_share"):
+        return False
+    return (m.get("kevin_vs_ref", 0) - m.get("guest_vs_ref", 0)) >= APART
 
 
 def pcm(src):
@@ -122,7 +134,7 @@ def speaker_map(src, words):
             i = max(1, i - 1)
         else:
             i += 1
-    return {"v": 1, "guest_share": round(share, 3),
+    return {"v": 1, "guest_share": round(share, 3), "apart": round(float(cK @ kref - cG @ kref), 3),
             "kevin_vs_ref": round(float(cK @ kref), 3), "guest_vs_ref": round(float(cG @ kref), 3),
             "spans": spans}
 
