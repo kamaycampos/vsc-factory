@@ -12,16 +12,19 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 18 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 19 Oct 2026 - replace this section at every handoff)
 
 - **hollywood_insider_reveals_secret** ("Hollywood Insider Reveals Secret Path to Success",
-  57:48, Kevin with John, Ep. 30 of The Kevin Trudeau Show). Source: Rumble
-  `v572lr0` (Kevin's channel, 3468 s). **720p is the best that exists** - Rumble 7.7 Mbps,
-  YouTube 0pQ0uWuMOA8 2.4 Mbps; the plan's `min_height: 720` + `min_height_why` lowers the
-  gate for this plan only. The catalogue had missed it (Livestreams tab never read - fixed in
-  kt-machine af096e8; rumble_match now names a below-1080p match). Built by the push of
-  18 Oct; clips come out softer than earlier batches (2.7x upscale) - look at a close-up
-  and a wide two-shot on a phone before it goes to GIN.
+  57:48, Kevin with John, Ep. 30 of The Kevin Trudeau Show). Source: Rumble `v572lr0`
+  (Kevin's channel, 3468 s) at **720p - GIN confirmed their original is 720p too** (Kamay,
+  18 Oct), so that is full quality for this episode; `min_height: 720` in the plan. Rumble
+  refused the runners, so the Mac uploaded it: part00 18 Oct (43 min on a phone hotspot),
+  part01 cut off when the Mac shut down and finished 19 Oct morning from the kept file; the
+  same script then started `vsc.yml`. Next: read autoplan's clip list and the verdict table,
+  every caption line, then look at a close-up and a wide two-shot on a phone.
+- **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
+  it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
+  its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.
 - **First batch under Naomi's interview rules** (18 Oct, commit 223d378): 20-90 s, Kevin
   >= 60 % of every clip's speech and the close is his, wide two-shots reframed to whoever
   talks. New and unproven on a real interview: the speaker map (check prep's log "speaker
