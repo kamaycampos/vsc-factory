@@ -28,6 +28,20 @@ limit (see "Token budget").
   plans, commits, and a fresh run builds. **Next session:** read the verdict table and
   EVERY caption line (check each clip is Kevin's, not John alone), write `fixes`, push once;
   then look at a close-up and a wide two-shot ("speaker turns:" in the build log).
+  **The batch is now 6 clips** (19 Oct): the 5 autoplan ones plus HURT-DANNY-OR-NO-DEAL
+  (66 s, Grandmaster Ty: a demo must be dramatic and real or the product won't sell -
+  borderline, Kamay may drop it). Kamay's bar: a clip needs a real teaching Kevin carries or
+  lands. Six hand-made candidates were checked with autoplan's own `problems()` on prep's
+  words + cut points; five were dropped as stories with no lesson (NINE-MEANS-NINE,
+  DANNY-HURT-HIM, the Kiev caviar tin, and the two Trump-assassination clips, which are also
+  political). Rejected on the whole episode: book-test/Hamlet (36:21) and the 50:46-55:00
+  success advice are John's words; "Huh? Wha?" is a joke that would open on John; phone
+  number, snipe hunt, fishing are stories; Bobby Roberts is 90.9 s with no pause to cut in.
+  **ONLY-INFORMATION-ALLOWED failed 3 rounds** ("missing opening", then 29 min searching the
+  whole video): the 12 s word chunking (vsc_clip.word_times) put its open 12 s into a 24 s
+  chunk (likely cause, unproven). Its region now starts at 1765 so the open sits 4 s into a
+  16 s chunk. If it still fails, read the build log for what whisper heard at 29:36.
+  Caption fix still to write: "Bonaducci" -> "Bonaduce" in HURT-DANNY-OR-NO-DEAL.
 - **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
   it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
   its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.
