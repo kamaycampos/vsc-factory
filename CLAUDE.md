@@ -20,8 +20,14 @@ limit (see "Token budget").
   18 Oct), so that is full quality for this episode; `min_height: 720` in the plan. Rumble
   refused the runners, so the Mac uploaded it: part00 18 Oct (43 min on a phone hotspot),
   part01 cut off when the Mac shut down and finished 19 Oct morning from the kept file; the
-  same script then started `vsc.yml`. Next: read autoplan's clip list and the verdict table,
-  every caption line, then look at a close-up and a wide two-shot on a phone.
+  same script then started `vsc.yml`.
+  19 Oct: the speaker map could not tell Kevin from John Denney (same mics - see
+  speakers.trusted), so it is ignored for this episode and the planner judges speakers from
+  the words. First plan: 8 clips, all "NOT RENDERED" by the renderer's own 1080p gate (now
+  reads min_height). Re-planned with conversation clips allowed (commit 8d66ff4); that run
+  plans, commits, and a fresh run builds. **Next session:** read the verdict table and
+  EVERY caption line (check each clip is Kevin's, not John alone), write `fixes`, push once;
+  then look at a close-up and a wide two-shot ("speaker turns:" in the build log).
 - **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
   it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
   its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.
