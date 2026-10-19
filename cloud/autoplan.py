@@ -252,7 +252,7 @@ def prep_data(p):
     global SPEAKERS
     SPEAKERS = False
     try:
-        from cloud.speakers import who, trusted
+        from speakers import who, trusted          # cloud/ is on sys.path (HERE)
         sm = json.load(open(os.path.join(d, f"speakers-{p['key']}.json")))
         for w in words:
             w["s"] = who(sm["spans"], (w["a"] + w["b"]) / 2)

@@ -68,10 +68,14 @@ a phrase there's a phrase").
 "We want clips that focus on Kevin talking (it can be talking with John but we don't want
 clips focusing only on John)." When the transcript tags lines `GUEST` (or `GUEST+KEVIN` /
 `KEVIN+GUEST`), those words are the guest's; untagged lines are Kevin's.
-- Kevin carries the clip: at least 60 % of its speech is his (code checks it), and the
-  close is HIS line, where his teaching lands.
-- The guest may set it up (a question, a story Kevin answers) and react briefly. A stretch
-  where the guest teaches and Kevin listens is not a clip, however good it is.
+- Kevin carries the clip: at least 60 % of its speech is his (code checks it when the
+  voices can be told apart), and the close is HIS line, where his teaching lands.
+- **Conversation clips count** - Naomi: "it can be talking with John". John tells a story
+  and Kevin draws the lesson from it; Kevin asks and they build the point together; they
+  trade a memory that ends on Kevin's lesson. All good clips. What is NOT a clip: John
+  talking alone for the whole clip with Kevin only listening.
+- An interview is full of these. Look through the WHOLE conversation, not only Kevin's
+  monologues - a 58-minute interview usually holds 15-30 clips.
 - A guest's question can be the open if it is short and Kevin's answer is the clip.
 - **No tags does not mean no guest.** When the voices cannot be told apart (19 Oct, Hollywood
   Insider: Kevin and John Denney on the same mics), the transcript is untagged. Work out who

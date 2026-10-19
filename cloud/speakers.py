@@ -59,7 +59,7 @@ def pcm(src):
 
 def encoder():
     sys.path.insert(0, os.path.expanduser("~/Kamay"))
-    import vsc_frame
+    import vsc_frame  # noqa: E402
     if not os.path.exists(vsc_frame.VOICE):
         raise FileNotFoundError(vsc_frame.VOICE)
     return vsc_frame._Voices(vsc_frame.VOICE)

@@ -174,6 +174,7 @@ def main(only=None):
     # and then silently skipped by the builder: "0 made, 0 could not be located".
     # Nothing was wrong with them; nothing was looking for them. Plan entries are merged
     # into CUTS here, and vsc_cuts.py stays the place a cut can be overridden by hand.
+    floors = {}          # a plan's own min_height (cloud/source.py): one episode, never global
     for _f in sorted(sum([glob.glob(os.path.join(_d, "*.json")) for _d in _plandirs], [])):
         try:
             _p = json.load(open(_f))
@@ -201,6 +202,8 @@ def main(only=None):
                     print(f"  !! {_c['name']} is in a plan with no source to cut it from",
                           flush=True)
                     continue
+                if _p.get("min_height"):
+                    floors[_pre] = int(_p["min_height"])
                 CUTS.setdefault(_pre, []).append(
                     (_c["name"], tuple(_c["region"]), _c["open"], _c["close"],
                      _c.get("hook") or ["", ""]))
@@ -215,7 +218,7 @@ def main(only=None):
         src = hit[0]
         base = os.path.splitext(os.path.basename(src))[0]
         h, w = source_is_hd(src)
-        if h < 1000:
+        if h < floors.get(prefix, 1000):
             print(f"!! {prefix}: source is only {w}x{h}. Download the Frame.io ORIGINAL "
                   f"- a small source cannot be rescued by the render.", flush=True)
             continue
