@@ -568,6 +568,10 @@ def main(only=None):
             _crop = None
         lift = fade_in_lift(src, a, crop=_crop)
         cards = card_spans(src, a, b)
+        if r.get("no_cards") and cards:
+            print(f"      no_cards (plan): {[(round(x, 2), round(y, 2)) for x, y in cards]} cropped like Kevin",
+                  flush=True)
+            cards = []
         if lift is not None and cards and cards[0][0] < 0.05:
             if cards[0][1] <= lift[0] + 0.15:
                 # the "card" at the start IS the fade from black (run 39: 0-0.85 s of

@@ -185,6 +185,11 @@ def main(only=None):
                 for _k in ("start_at", "end_at", "end_fade"):
                     if _c.get(_k) is not None:
                         plan_cut.setdefault(_c["name"], {})[_k] = float(_c[_k])
+                # "no_cards": the end is a fade to black over a wide shot, not a title card -
+                # crop it like Kevin (ABANDONED-BY-GOD, Naomi 17 Oct: the last 0.5 s shrank
+                # into a letterboxed box while he was still saying "you").
+                if _c.get("no_cards"):
+                    plan_cut.setdefault(_c["name"], {})["no_cards"] = True
                 if not _c.get("open") or not _c.get("close"):
                     continue
                 # THE PLAN WINS. 30 Sept 2026: ten clips were re-cut in the plan to end
@@ -264,7 +269,8 @@ def main(only=None):
                         "prev_start": vsc_pick.LAST_PREV_START,
                         "start_at": plan_cut.get(name, {}).get("start_at"),
                         "end_at": plan_cut.get(name, {}).get("end_at"),
-                        "end_fade": bool(plan_cut.get(name, {}).get("end_fade"))}
+                        "end_fade": bool(plan_cut.get(name, {}).get("end_fade")),
+                        "no_cards": bool(plan_cut.get(name, {}).get("no_cards"))}
             json.dump(ab, open(abp, "w"), indent=1)
             print(f"  {name:30} {a:8.2f} - {b:8.2f}  ({b - a:5.1f}s)", flush=True)
             # CORRECTIONS COME WITH THE PLAN. 29 Sept: the cloud rebuilt this batch

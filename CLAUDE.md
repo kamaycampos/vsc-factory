@@ -46,7 +46,19 @@ limit (see "Token budget").
   before it). SUED and A-BOOK opened/closed inside words because of the drift below.
   SUED now ends on "This is the quote." (the only real pause; "he never said that. This"
   has none) - its adversity axiom pays off in ONLY-INFORMATION ("out of this adversity"),
-  over 100 s after its open, so SUED is Kamay's call. **Next:** read the verdict table.
+  over 100 s after its open, so SUED is Kamay's call.
+  Run 39408608054: KIEV, SUED, ONLY-INFORMATION (rendered at last), HURT-DANNY PASS.
+  STAGED-RIOT "fail" is a false alarm of the on-screen sampler (scream "ahhh" vs caption
+  "Ahhhh!", off-mic "let me see", "Kiev" heard "key") - its captions are in sync.
+  A-BOOK kept a stray "form." caption at 0.00 (audio clean) - fixed with SUED/ONLY captions.
+- **why_your_prayers_fail - Naomi's Frame.io notes (read 20 Oct):** ABANDONED-BY-GOD ends at
+  1:15 ("...comprehension and understanding."), its second half is the new
+  DESPERATE-PRAYERS-GO-UNHEARD; its end letterboxed a fade-to-black wide shot as a "card" -
+  the plan's `"no_cards": true` crops it like Kevin. OUR-NOT-MY-FATHER ends before the
+  repeated "the source" (89.9 s). Built with `only` (they are delivered names). The 13
+  delivered clips went to the Trash and into ~/VSC/.handled.txt. **Still to do:** once the 3
+  revisions are on Frame.io, retire the batch (plan -> plans/done, clear its releases).
+  **Next:** read the verdict table.
 - **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
   it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
   its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.

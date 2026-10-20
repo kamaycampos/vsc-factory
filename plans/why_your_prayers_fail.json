@@ -6,7 +6,7 @@
  "source_key": "VSC_KEY_B",
  "duration": 1611.0,
  "autoplan": true,
- "note": "Started by vsc-new. Planned on the pause map 13 Oct (8 clips); 15 Oct: 5 more and 3 re-cut on measured breath gaps (start_at/end_at), each edge checked locally by whisper listening on the source before push. Never cut: 09:31-11:01 and 25:58-end (book adverts).",
+ "note": "Started by vsc-new. Planned on the pause map 13 Oct (8 clips); 15 Oct: 5 more and 3 re-cut on measured breath gaps (start_at/end_at), each edge checked locally by whisper listening on the source before push. Never cut: 09:31-11:01 and 25:58-end (book adverts). 20 Oct: Naomi's Frame.io notes - ABANDONED-BY-GOD ends at 1:15 and its second half is DESPERATE-PRAYERS-GO-UNHEARD (end letterbox fixed with no_cards); OUR-NOT-MY-FATHER ends before the repeated 'the source' (1:30 max). Cuts measured in the delivered clips' audio.",
  "clips": [
   {
    "name": "THE-NUMBER-ONE-MISTAKE",
@@ -190,11 +190,11 @@
   {
    "name": "OUR-NOT-MY-FATHER",
    "region": [
-    807.0,
-    907.0
+    808.0,
+    897.0
    ],
    "open": "If you're going to pray for something",
-   "close": "the source of everything in your life.",
+   "close": "you're talking to the source of everything.",
    "hook": [
     "JESUS NEVER SAID",
     "PRAY TO 'MY FATHER'"
@@ -215,7 +215,8 @@
      "The Father Another was the head",
      "The Father was the head"
     ]
-   ]
+   ],
+   "end_at": 898.29
   },
   {
    "name": "HEAVEN-IS-NOT-A-PLACE",
@@ -385,16 +386,16 @@
    "name": "ABANDONED-BY-GOD",
    "region": [
     1455.5,
-    1558.7
+    1531.9
    ],
    "open": "Most people do feel abandoned by God.",
-   "close": "because the universe knows better than you",
+   "close": "all human comprehension and understanding.",
    "hook": [
     "FEEL ABANDONED BY GOD?",
     "YOU'RE PRAYING WRONG"
    ],
    "start_at": 1455.96,
-   "end_at": 1558.15,
+   "end_at": 1531.85,
    "fixes": [
     [
      11.5,
@@ -415,9 +416,28 @@
      71.0,
      "and this enjoy that surpasses",
      "and lasting joy that surpasses"
-    ],
+    ]
+   ]
+  },
+  {
+   "name": "DESPERATE-PRAYERS-GO-UNHEARD",
+   "region": [
+    1531.5,
+    1558.7
+   ],
+   "open": "If you are desperate to have your prayer",
+   "close": "because the universe knows better than you",
+   "hook": [
+    "DESPERATE PRAYERS",
+    "NEVER GET HEARD"
+   ],
+   "short_ok": "Naomi (17 Oct) split ABANDONED-BY-GOD at 1:15: this second half is whole - desperation keeps the prayer unheard, release the need and you get what you desire, usually better.",
+   "start_at": 1531.75,
+   "end_at": 1558.15,
+   "no_cards": true,
+   "fixes": [
     [
-     84.5,
+     8.5,
      "And If you do",
      "And if you do"
     ]
