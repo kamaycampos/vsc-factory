@@ -37,11 +37,16 @@ limit (see "Token budget").
   political). Rejected on the whole episode: book-test/Hamlet (36:21) and the 50:46-55:00
   success advice are John's words; "Huh? Wha?" is a joke that would open on John; phone
   number, snipe hunt, fishing are stories; Bobby Roberts is 90.9 s with no pause to cut in.
-  **ONLY-INFORMATION-ALLOWED failed 3 rounds** ("missing opening", then 29 min searching the
-  whole video): the 12 s word chunking (vsc_clip.word_times) put its open 12 s into a 24 s
-  chunk (likely cause, unproven). Its region now starts at 1765 so the open sits 4 s into a
-  16 s chunk. If it still fails, read the build log for what whisper heard at 29:36.
-  Caption fix still to write: "Bonaducci" -> "Bonaduce" in HURT-DANNY-OR-NO-DEAL.
+  **20 Oct (after run 39319128483):** every caption line of the 5 rendered clips read; fixes
+  written (Bonaduce, Grandmaster Ty, Otto Warburg, "in Kiev" not "in jail", "You all right?",
+  "[Applause]" removed). Three cuts re-aimed on `edges` probes (runs 39407616234, 39408100679):
+  ONLY-INFORMATION-ALLOWED never rendered because whisper hears "**To** make a long story
+  short" where prep heard "Let me make" - the open is now "make a long story short, obviously
+  I settled" (both hearings contain it; the head check allows the sentence's first word
+  before it). SUED and A-BOOK opened/closed inside words because of the drift below.
+  SUED now ends on "This is the quote." (the only real pause; "he never said that. This"
+  has none) - its adversity axiom pays off in ONLY-INFORMATION ("out of this adversity"),
+  over 100 s after its open, so SUED is Kamay's call. **Next:** read the verdict table.
 - **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
   it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
   its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.
@@ -220,6 +225,12 @@ runs, and how to do any of them by hand.)
   then starts ONE run.
 - **One cut per clip in the Mac folder** (15 Oct): when a re-cut passes the gate, older
   cuts of that clip move to `~/Archive/vsc-replaced` (never deleted).
+- **prep's pause map can drift from the renderer's clock** (20 Oct, hollywood_insider):
+  around 28-31 min `pauses-<key>.json` and prep's word times ran 0.6-1.0 s EARLY against
+  ffmpeg's `-ss` on the same source (gap after "book form." 1832.65 in prep, 1833.14-1833.76
+  heard by `edges.py probe`), so autoplan's start_at/end_at landed inside words. Cause not
+  found yet (a 720p source with an audio start offset is the first suspect). Until it is:
+  when an edge fails on a planned start_at/end_at, take the times from a probe, not prep.
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
