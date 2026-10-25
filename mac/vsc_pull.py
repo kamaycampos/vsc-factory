@@ -60,6 +60,31 @@ def main():
         return 1
     assets = [a for a in json.loads(r.stdout).get("assets", [])
               if a["name"].endswith((".mp4", "__caps.json"))]
+    # DROPPED CLIPS (25 Oct 2026): built, then judged not worth sending (Kamay: "dont do
+    # the ones that dont have a lesson"). The cloud session may not delete release files,
+    # so they stay published; cloud/dropped.json names them, they are never pulled, and a
+    # copy already in the folder goes to the Trash - so it cannot be uploaded by mistake.
+    sh("git", "-C", os.path.expanduser("~/vsc-factory"), "pull", "-q", "--ff-only")
+    try:
+        dropped = set(json.load(open(os.path.expanduser("~/vsc-factory/cloud/dropped.json")))["names"])
+    except Exception:
+        dropped = set()
+    clip_of = lambda n: re.sub(r"_\d+s(\.mp4|__caps\.json|__WHY\.txt)$", "", n)
+    assets = [a for a in assets if clip_of(a["name"]) not in dropped]
+    for d in (DEST, DELIVERED, os.path.join(DELIVERED, ".caps"),
+              os.path.join(DELIVERED, "_needs_work"), os.path.join(DELIVERED, "_needs_work", ".caps")):
+        for f in (os.listdir(d) if os.path.isdir(d) else []):
+            if clip_of(f) in dropped and f != clip_of(f):
+                try:
+                    arch = os.path.expanduser("~/.Trash/VSC-dropped")
+                    os.makedirs(arch, exist_ok=True)
+                    os.replace(os.path.join(d, f), os.path.join(arch, f))
+                except OSError:
+                    # macOS may keep a background job out of the Trash (see vsc_gate)
+                    rep = os.path.expanduser("~/VSC/.replaced")
+                    os.makedirs(rep, exist_ok=True)
+                    os.replace(os.path.join(d, f), os.path.join(rep, f))
+                note(f"dropped clip {f} moved out of the folder")
     # ONLY THE NEWEST CUT OF EACH CLIP. The release keeps every length a clip was ever
     # built at (BANNED-FOR-LIFE_53s, _54s, _55s, _65s). 10 Oct 2026: 66 files sat in the
     # holding area for 13 real clips, and each re-cut was pulled as if it were new.
