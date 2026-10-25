@@ -122,6 +122,9 @@ runs, and how to do any of them by hand.)
   (in an interview the guest's question or reaction is fine; the clip is Kevin's).
 - Emphasis capitals never cost a word.
 - **Hook:** two short lines, one idea, concrete (a number, a name, an amount).
+- **No story-only clips** (Kamay, 25 Oct): every clip must carry a lesson or real value. A funny
+  anecdote with no teaching is not a clip, however clean its edges (NINE-MEANS-NINE,
+  HURT-HIM-DANNY and THE-EAGLE-CLAW were built and then dropped for this).
 - **Format 1080x1920 (9:16), 20-90 s** (Naomi, 18 Oct 2026 - was 120 s; `MAX_LEN = 88`,
   `FLOOR = 20`). **Length follows the teaching, never the machine.** A clip runs from the
   start of the thought to where it lands, setup + proof + landing, usually 40-85 s. Under
