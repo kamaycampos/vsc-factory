@@ -1,0 +1,36 @@
+name: retire
+# Clears a finished project (its plan already in plans/done/) out of the clips, prep and
+# sources releases - see cloud/retire.py. A cloud chat session may not delete release
+# files itself, so it starts this.
+on:
+  workflow_dispatch:
+    inputs:
+      keys:
+        description: "Plan keys in plans/done to clear (space separated)"
+        required: true
+      keep_source:
+        description: "Keys whose source video stays in the sources release (space separated)"
+        required: false
+        default: ""
+      dry_run:
+        description: "List what would go, delete nothing"
+        type: boolean
+        default: false
+permissions:
+  contents: write
+jobs:
+  retire:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retire
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEYS: ${{ inputs.keys }}
+          KEEP: ${{ inputs.keep_source }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          args="$KEYS"
+          [ -n "$KEEP" ] && args="$args --keep-source $KEEP"
+          [ "$DRY" = "true" ] && args="$args --dry-run"
+          python3 cloud/retire.py $args

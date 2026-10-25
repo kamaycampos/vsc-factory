@@ -12,65 +12,27 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 19 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 25 Oct 2026 - replace this section at every handoff)
 
-- **hollywood_insider_reveals_secret** ("Hollywood Insider Reveals Secret Path to Success",
-  57:48, Kevin with John, Ep. 30 of The Kevin Trudeau Show). Source: Rumble `v572lr0`
-  (Kevin's channel, 3468 s) at **720p - GIN confirmed their original is 720p too** (Kamay,
-  18 Oct), so that is full quality for this episode; `min_height: 720` in the plan. Rumble
-  refused the runners, so the Mac uploaded it: part00 18 Oct (43 min on a phone hotspot),
-  part01 cut off when the Mac shut down and finished 19 Oct morning from the kept file; the
-  same script then started `vsc.yml`.
-  19 Oct: the speaker map could not tell Kevin from John Denney (same mics - see
-  speakers.trusted), so it is ignored for this episode and the planner judges speakers from
-  the words. First plan: 8 clips, all "NOT RENDERED" by the renderer's own 1080p gate (now
-  reads min_height). Re-planned with conversation clips allowed (commit 8d66ff4); that run
-  plans, commits, and a fresh run builds. **Next session:** read the verdict table and
-  EVERY caption line (check each clip is Kevin's, not John alone), write `fixes`, push once;
-  then look at a close-up and a wide two-shot ("speaker turns:" in the build log).
-  **The batch is now 6 clips** (19 Oct): the 5 autoplan ones plus HURT-DANNY-OR-NO-DEAL
-  (66 s, Grandmaster Ty: a demo must be dramatic and real or the product won't sell -
-  borderline, Kamay may drop it). Kamay's bar: a clip needs a real teaching Kevin carries or
-  lands. Six hand-made candidates were checked with autoplan's own `problems()` on prep's
-  words + cut points; five were dropped as stories with no lesson (NINE-MEANS-NINE,
-  DANNY-HURT-HIM, the Kiev caviar tin, and the two Trump-assassination clips, which are also
-  political). Rejected on the whole episode: book-test/Hamlet (36:21) and the 50:46-55:00
-  success advice are John's words; "Huh? Wha?" is a joke that would open on John; phone
-  number, snipe hunt, fishing are stories; Bobby Roberts is 90.9 s with no pause to cut in.
-  **20 Oct (after run 39319128483):** every caption line of the 5 rendered clips read; fixes
-  written (Bonaduce, Grandmaster Ty, Otto Warburg, "in Kiev" not "in jail", "You all right?",
-  "[Applause]" removed). Three cuts re-aimed on `edges` probes (runs 39407616234, 39408100679):
-  ONLY-INFORMATION-ALLOWED never rendered because whisper hears "**To** make a long story
-  short" where prep heard "Let me make" - the open is now "make a long story short, obviously
-  I settled" (both hearings contain it; the head check allows the sentence's first word
-  before it). SUED and A-BOOK opened/closed inside words because of the drift below.
-  SUED now ends on "This is the quote." (the only real pause; "he never said that. This"
-  has none) - its adversity axiom pays off in ONLY-INFORMATION ("out of this adversity"),
-  over 100 s after its open, so SUED is Kamay's call.
-  Run 39408608054: KIEV, SUED, ONLY-INFORMATION (rendered at last), HURT-DANNY PASS.
-  STAGED-RIOT "fail" is a false alarm of the on-screen sampler (scream "ahhh" vs caption
-  "Ahhhh!", off-mic "let me see", "Kiev" heard "key") - its captions are in sync.
-  A-BOOK kept a stray "form." caption at 0.00 (audio clean) - fixed with SUED/ONLY captions.
-- **why_your_prayers_fail - Naomi's Frame.io notes (read 20 Oct):** ABANDONED-BY-GOD ends at
-  1:15 ("...comprehension and understanding."), its second half is the new
-  DESPERATE-PRAYERS-GO-UNHEARD; its end letterboxed a fade-to-black wide shot as a "card" -
-  the plan's `"no_cards": true` crops it like Kevin. OUR-NOT-MY-FATHER ends before the
-  repeated "the source" (89.9 s). Built with `only` (they are delivered names). The 13
-  delivered clips went to the Trash and into ~/VSC/.handled.txt. **Still to do:** once the 3
-  revisions are on Frame.io, retire the batch (plan -> plans/done, clear its releases).
-  **Next:** read the verdict table.
-- **Lesson (18 Oct):** a Mac upload needs the Mac awake, on the charger and on real Wi-Fi -
-  it died once to sleep and ran at ~3 Mbit/s on the iPhone hotspot. A cut-off upload keeps
-  its locked parts in `~/VSC/.source_work`; upload the missing part, never re-download.
-- **First batch under Naomi's interview rules** (18 Oct, commit 223d378): 20-90 s, Kevin
-  >= 60 % of every clip's speech and the close is his, wide two-shots reframed to whoever
-  talks. New and unproven on a real interview: the speaker map (check prep's log "speaker
-  map: guest NN %" - for an interview expect 20-50 %) and the render's "speaker turns:"
-  lines. Watch the two-shots in this batch before it goes to Kamay.
-- **why_your_prayers_fail: UPLOADED to GIN** (Kamay, 18 Oct); names in `delivered.json`.
-  Kamay has "little things to make better" on it - take his notes FIRST in the next session,
-  turn them into rules here, THEN retire it per "Keep it clean" (plan -> plans/done/, clear
-  releases, clips to Trash). Not retired yet so the notes can be checked against the clips.
+- **Nothing in production.** Kamay uploaded both projects to GIN's Frame.io (25 Oct) and said
+  they are done; both plans are in `plans/done/` and were cleared from the releases by the
+  `retire` workflow (`cloud/retire.py`). Next: Kamay sends the next assignment.
+- **hollywood_insider_reveals_secret** (Ep. 30, Kevin with John, 720p): 8 clips delivered -
+  THE-STAGED-RIOT (re-cut 25 Oct to end on "100% fake."), REMEMBER-KIEV, SUED-FOR-QUOTING-
+  THE-TIMES, ONLY-INFORMATION-ALLOWED, A-BOOK-THAT-DIDNT-EXIST, HURT-DANNY-OR-NO-DEAL,
+  THE-THRONE, THE-MAGICIAN-PHOTOGRAPHER. NINE-MEANS-NINE, HURT-HIM-DANNY and THE-EAGLE-CLAW
+  were built and dropped (no lesson; `cloud/dropped.json`). **Its encrypted source is KEPT
+  in `sources`** until GIN approves the 8 (Rumble refuses the runners; bringing it back is a
+  long Mac upload). Once approved: run `retire` again with only `hollywood_insider_reveals_secret`.
+  For a re-cut: move the plan back to `plans/`, rebuild with `only`, then retire again.
+- **why_your_prayers_fail**: Naomi's 3 revisions (ABANDONED-BY-GOD_76s, DESPERATE-PRAYERS-
+  GO-UNHEARD_26s, OUR-NOT-MY-FATHER_90s) delivered; fully retired, source deleted.
+- **Lessons this round:** the renderer's 12 s whisper pass hears a close differently from
+  prep ("he wanted to" vs "he wants to") - keep `close` to the last 3-4 words that every
+  hearing agrees on. A caption can begin with a word the audio no longer has when
+  `start_at` cuts it ("And At the time") - fix it with a `fixes` entry. Edge listening can
+  miss a quiet last word that IS in the file (STAGED-RIOT_88s "fake"); measure the file's
+  levels before re-cutting. The Mac gate holds such a clip in `_needs_work`.
 - GIN wants a perfect batch before giving more than one assignment at a time.
 
 ## Making a batch (the whole loop)

@@ -69,6 +69,14 @@ def main():
         dropped = set(json.load(open(os.path.expanduser("~/vsc-factory/cloud/dropped.json")))["names"])
     except Exception:
         dropped = set()
+    # ...and every clip of a FINISHED project (plans/done/, 25 Oct 2026): "Clips holds only
+    # the CURRENT project's clips" - once Kamay confirms an upload, its clips go to the Trash
+    import glob
+    for f in glob.glob(os.path.expanduser("~/vsc-factory/plans/done/*.json")):
+        try:
+            dropped |= {c["name"] for c in json.load(open(f))["clips"]}
+        except Exception:
+            pass
     clip_of = lambda n: re.sub(r"_\d+s(\.mp4|__caps\.json|__WHY\.txt)$", "", n)
     assets = [a for a in assets if clip_of(a["name"]) not in dropped]
     for d in (DEST, DELIVERED, os.path.join(DELIVERED, ".caps"),
