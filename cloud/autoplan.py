@@ -360,6 +360,27 @@ def at_pauses(c):
         # 15 Oct: start up to 0.25 s before the voice, end 0.15 s into the gap.
         nxt = ws[je + 1]["a"] if je + 1 < len(ws) else t1 + 0.5
         rs, re_ = cut_near(pauses, t0), cut_near(pauses, nxt)
+        # THE END GAP IS THE ONE BEFORE THE NEXT WORD, never the one after it (28 Oct 2026):
+        # THE-CHRISTMAS-CRASH closed "...seeking anything" and the longest gap in reach was
+        # the pause AFTER "because" (378.82-379.69), so end_at kept "because" - the first
+        # word of "because you have it all", the landing. A gap may end at most 0.5 s past
+        # the next word's start (whisper's times run early), no later.
+        if re_ and re_[1] > nxt + 0.5:
+            re_ = cut_near([r for r in pauses if r[1] <= nxt + 0.5], nxt)
+        # ...and the start gap is the one AFTER the word before the open: DHARMA-IS-DUTY's
+        # longest gap in reach (179.80-180.24) sat before the interviewer's "Is it?", so the
+        # clip would have opened on his question.
+        # (A gap that ends before the previous word even starts has a word between it and
+        # the open; FOCUS-ONLY-ON-TODAY's gap overlaps whisper's late "loose." and is right.)
+        if rs and i > 0 and rs[1] <= ws[i - 1]["a"] + 0.05:
+            rs = cut_near([r for r in pauses if r[1] > ws[i - 1]["a"] + 0.05], t0)
+        # WHISPER SWALLOWS THE PAUSE INTO A LONG LAST WORD (CLAUDE.md): "all." ran
+        # 380.41-382.48 and held the gap at 380.67; nothing lay near the next word.
+        lw = ws[min(je, len(ws) - 1)]
+        if re_ is None and lw["b"] - lw["a"] > 0.8:
+            inside = [r for r in pauses if lw["a"] + 0.15 <= r[0] < lw["b"]
+                      and r[1] - r[0] >= CLOSE_GAP]
+            re_ = inside[0] if inside else None
         if rs:
             c["start_at"] = round(max(rs[0], rs[1] - 0.25), 2)
         if re_:

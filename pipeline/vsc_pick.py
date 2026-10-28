@@ -158,3 +158,35 @@ def locate(src, base, S, region, first_words, last_words, tag, dur=None):
     # (vsc_v2_render), from LAST_OPEN_WORD / LAST_SPEECH_END / LAST_NEXT_WORD.
     end = end + min(TAIL, max(0.18, (nxt - end) * 0.75))
     return (round(max(0.0, start), 3), round(end, 3)), "ok"
+
+
+def locate_at(src, base, S, region, start_at, end_at, tag):
+    """The clip at the plan's MEASURED edges, when its words cannot be found.
+
+    28 Oct 2026, your_purpose_is_a: DHARMA-IS-DUTY and TAKE-THE-NEXT-STEP failed three
+    builds each with "missing closing" although autoplan had measured both edges in the
+    sound (start_at / end_at). This 12 s pass heard the close differently from prep
+    ("missing. on the inside"), and the times that would have cut the clip were never
+    read. The times are the cut; the words are only how they were found. The edge
+    listening (edges.py) still judges the file.
+    """
+    global LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS, LAST_OPEN_WORD, LAST_PREV_END, LAST_PREV_START
+    LAST_SPEECH_END, LAST_NEXT_WORD, LAST_WORDS = None, None, []
+    LAST_OPEN_WORD = LAST_PREV_END = LAST_PREV_START = None
+    a0, b0 = max(0.0, region[0] - 22), region[1] + 28
+    if not (a0 <= start_at < end_at <= b0):
+        a0, b0 = max(0.0, start_at - 22), end_at + 28
+    w = words_in(src, a0, b0, tag, S)
+    inside = [k for k, x in enumerate(w) if x["b"] > start_at and x["a"] < end_at]
+    if not inside:
+        return None, "no speech between start_at and end_at"
+    i, j = inside[0], inside[-1]
+    end = min(w[j]["b"], end_at)
+    LAST_SPEECH_END, LAST_WORDS = round(end, 3), w[i:j + 1]
+    LAST_NEXT_WORD = round(w[j + 1]["a"], 3) if j + 1 < len(w) else None
+    LAST_OPEN_WORD = round(max(w[i]["a"], start_at), 3)
+    LAST_PREV_END = round(w[i - 1]["b"], 3) if i > 0 else None
+    LAST_PREV_START = round(w[i - 1]["a"], 3) if i > 0 else None
+    print(f"      words not heard as planned - cut on the plan's measured "
+          f"{start_at:.2f}-{end_at:.2f}", flush=True)
+    return (round(max(0.0, start_at - LEAD), 3), round(end_at, 3)), "ok (measured times)"

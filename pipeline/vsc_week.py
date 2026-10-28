@@ -237,6 +237,10 @@ def main(only=None):
                 print(f"  -- {name}: already made", flush=True); continue
             tag = re.sub(r"\W+", "", name)[:18]
             got, why = vsc_pick.locate(src, base, S, region, first, last, tag, dur=dur)
+            _pc = plan_cut.get(name, {})
+            if not got and _pc.get("start_at") is not None and _pc.get("end_at") is not None:
+                got, why = vsc_pick.locate_at(src, base, S, region, _pc["start_at"],
+                                              _pc["end_at"], tag)
             if not got:
                 print(f"  !! {name}: {why} - check the words against the transcript", flush=True)
                 failed.append((name, why)); continue

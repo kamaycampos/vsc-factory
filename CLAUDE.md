@@ -12,27 +12,23 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 25 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 28 Oct 2026 - replace this section at every handoff)
 
-- **Nothing in production.** Kamay uploaded both projects to GIN's Frame.io (25 Oct) and said
-  they are done; both plans are in `plans/done/` and were cleared from the releases by the
-  `retire` workflow (`cloud/retire.py`). Next: Kamay sends the next assignment.
-- **hollywood_insider_reveals_secret** (Ep. 30, Kevin with John, 720p): 8 clips delivered -
-  THE-STAGED-RIOT (re-cut 25 Oct to end on "100% fake."), REMEMBER-KIEV, SUED-FOR-QUOTING-
-  THE-TIMES, ONLY-INFORMATION-ALLOWED, A-BOOK-THAT-DIDNT-EXIST, HURT-DANNY-OR-NO-DEAL,
-  THE-THRONE, THE-MAGICIAN-PHOTOGRAPHER. NINE-MEANS-NINE, HURT-HIM-DANNY and THE-EAGLE-CLAW
-  were built and dropped (no lesson; `cloud/dropped.json`). **Its encrypted source is KEPT
-  in `sources`** until GIN approves the 8 (Rumble refuses the runners; bringing it back is a
-  long Mac upload). Once approved: run `retire` again with only `hollywood_insider_reveals_secret`.
-  For a re-cut: move the plan back to `plans/`, rebuild with `only`, then retire again.
-- **why_your_prayers_fail**: Naomi's 3 revisions (ABANDONED-BY-GOD_76s, DESPERATE-PRAYERS-
-  GO-UNHEARD_26s, OUR-NOT-MY-FATHER_90s) delivered; fully retired, source deleted.
-- **Lessons this round:** the renderer's 12 s whisper pass hears a close differently from
-  prep ("he wanted to" vs "he wants to") - keep `close` to the last 3-4 words that every
-  hearing agrees on. A caption can begin with a word the audio no longer has when
-  `start_at` cuts it ("And At the time") - fix it with a `fixes` entry. Edge listening can
-  miss a quiet last word that IS in the file (STAGED-RIOT_88s "fake"); measure the file's
-  levels before re-cutting. The Mac gate holds such a clip in `_needs_work`.
+- **In production: your_purpose_is_a** - GIN's Frame.io "Your Purpose is a Lie: The Ancient Truth
+  You're Missing" (item 25 of 25 in GIN's folder, NOT an episode number - Kamay called it "Episode 25
+  of the Classified Files"; KT Show Ep. 25 Gary Spivey was a wrong guess, removed). Rumble 1198 s, 2160p.
+  9 clips planned. PASSED and on the Mac: YOU-SIGNED-A-CONTRACT, FOCUS-ONLY-ON-TODAY, PATTON-AND-BRADLEY,
+  DUTY-AND-BLISS, KEEP-YOUR-AGREEMENTS. Re-cut 28 Oct and rebuilding: DHARMA-IS-DUTY, TAKE-THE-NEXT-STEP
+  (never rendered: close not heard as planned), NOTHING-OUTSIDE-FILLS-IT (ended mid-sentence) and
+  THE-CHRISTMAS-CRASH (opened mid-sentence) - re-split at "...will ever satisfy you. | Things on the
+  external world...". Next: read every caption line of all 9 (`<clip>__caps.json`), push fixes once.
+  DUTY-AND-BLISS and KEEP-YOUR-AGREEMENTS share 18 s (995-1013) - decide before delivery.
+- **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
+  start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
+  the catalogue's `rumble_hls` either way (a hand-given URL used to drop it; prep then failed with
+  "Rumble refused every attempt").
+- hollywood_insider_reveals_secret: delivered; its encrypted source is KEPT in `sources` until GIN
+  approves the 8, then `retire` with only that key. why_your_prayers_fail: delivered, fully retired.
 - GIN wants a perfect batch before giving more than one assignment at a time.
 
 ## Making a batch (the whole loop)
@@ -208,6 +204,17 @@ runs, and how to do any of them by hand.)
   heard by `edges.py probe`), so autoplan's start_at/end_at landed inside words. Cause not
   found yet (a 720p source with an audio start offset is the first suspect). Until it is:
   when an edge fails on a planned start_at/end_at, take the times from a probe, not prep.
+- **The plan's measured times are the cut when the words are not heard** (28 Oct). DHARMA-IS-DUTY and
+  TAKE-THE-NEXT-STEP failed three builds each ("missing closing") with exact start_at/end_at in the
+  plan: the 12 s pass heard "missing. on the inside" differently, and `locate` threw the clip away.
+  `vsc_pick.locate_at` now cuts on start_at/end_at; edges.py still judges the file.
+- **autoplan picks the gap NEXT TO the words, not the longest in reach** (28 Oct). The end gap must
+  finish by 0.5 s after the next word starts (CHRISTMAS-CRASH's end_at kept "because" of "because you
+  have it all"); the start gap must not have a whole word between it and the open (DHARMA would have
+  opened on the interviewer's "Is it?"); a last word over 0.8 s is searched inside for its gap ("all."
+  ran 2 s). Replayed on all 9 clips: the 5 that passed keep identical times.
+- **A clip never ends on a clause that continues** ("temporary happiness, but it's fleeting" - the
+  sentence went on into Christmas). Split a long teaching where a SENTENCE ends.
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.

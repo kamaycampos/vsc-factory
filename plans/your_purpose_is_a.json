@@ -14,13 +14,13 @@
     236.0
    ],
    "open": "Dharma is duty. You know what your",
-   "close": "path to nowhere. But duty is simple.",
+   "close": "But duty is simple.",
    "hook": [
     "'FIND YOUR PURPOSE' IS",
     "A MYTH FED TO YOU"
    ],
    "fixes": [],
-   "start_at": 179.99,
+   "start_at": 180.86,
    "end_at": 232.58
   },
   {
@@ -42,34 +42,35 @@
   {
    "name": "NOTHING-OUTSIDE-FILLS-IT",
    "region": [
-    274.0,
-    323.0
+    275.0,
+    316.0
    ],
    "open": "They think that if I find my purpose in life,",
-   "close": "give you some temporary happiness but it's fleeting",
+   "close": "of yourself will ever satisfy you",
    "hook": [
     "MORE WOMEN, MORE MONEY",
     "WON'T FILL THE EMPTINESS"
    ],
    "fixes": [],
+   "short_ok": "complete teaching: the belief (finding your purpose fills the emptiness), the chase (more women, drugs, money) and the answer - nothing outside of yourself will ever satisfy you",
    "start_at": 275.78,
-   "end_at": 319.81
+   "end_at": 315.16
   },
   {
    "name": "THE-CHRISTMAS-CRASH",
    "region": [
-    320.0,
+    315.0,
     381.0
    ],
-   "open": "we wake up when we're kids",
-   "close": "means you know are no longer seeking anything",
+   "open": "things on the external world will give you",
+   "close": "because you have it all.",
    "hook": [
     "CHRISTMAS JOY CRASHES.",
     "BLISS NEVER DOES."
    ],
    "fixes": [],
-   "start_at": 322.28,
-   "end_at": 378.97
+   "start_at": 315.09,
+   "end_at": 380.82
   },
   {
    "name": "FOCUS-ONLY-ON-TODAY",
@@ -142,7 +143,7 @@
     1108.0
    ],
    "open": "release a need to know your mission or purpose",
-   "close": "that you think is missing. on the inside.",
+   "close": "think is missing on the inside.",
    "hook": [
     "STUCK? STOP SEARCHING",
     "AND TAKE ONE STEP"
