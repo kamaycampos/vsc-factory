@@ -14,19 +14,15 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 28 Oct 2026 - replace this section at every handoff)
 
-- **In production: your_purpose_is_a** - GIN's Frame.io "Your Purpose is a Lie: The Ancient Truth
-  You're Missing" (item 25 of 25 in GIN's folder, NOT an episode number - Kamay called it "Episode 25
-  of the Classified Files"; KT Show Ep. 25 Gary Spivey was a wrong guess, removed). Rumble 1198 s, 2160p.
-  9 clips planned. PASSED and on the Mac: YOU-SIGNED-A-CONTRACT, FOCUS-ONLY-ON-TODAY, PATTON-AND-BRADLEY,
-  DUTY-AND-BLISS, KEEP-YOUR-AGREEMENTS. Re-cut 28 Oct and rebuilding: DHARMA-IS-DUTY, TAKE-THE-NEXT-STEP
-  (never rendered: close not heard as planned), NOTHING-OUTSIDE-FILLS-IT (ended mid-sentence) and
-  THE-CHRISTMAS-CRASH (opened mid-sentence) - re-split at "...will ever satisfy you. | Things on the
-  external world...". The caption read is automatic since 28 Oct (capread): its first real run
-  reads all 9; watch that run's "Caption read" summary - the model call is untested in the cloud.
-  DUTY-AND-BLISS / KEEP-YOUR-AGREEMENTS overlapped 18 s (capread flagged it too): re-split 28 Oct at
-  "...what gives you pleasure. | But remember, some elements of duty..." (72.0 s + 28.6 s).
-  First cloud caption read (run 40767844063): 27 fixes on 9 clips, 4 LOOKs; two answered with
-  `look_ok` (DHARMA's close, CHRISTMAS's open).
+- **READY FOR GIN: your_purpose_is_a** (28 Oct) - GIN's Frame.io "Your Purpose is a Lie: The Ancient
+  Truth You're Missing" (item 25 of 25 in GIN's folder, not an episode number). Rumble 1198 s, 2160p.
+  9 clips in ~/Desktop/VSC/Clips, every caption read by capread with its fixes confirmed on screen,
+  no LOOK: DHARMA-IS-DUTY_52s, YOU-SIGNED-A-CONTRACT_43s, NOTHING-OUTSIDE-FILLS-IT_39s,
+  THE-CHRISTMAS-CRASH_66s, FOCUS-ONLY-ON-TODAY_59s, PATTON-AND-BRADLEY_57s, DUTY-AND-BLISS_72s,
+  KEEP-YOUR-AGREEMENTS_29s, TAKE-THE-NEXT-STEP_49s. Next: Kamay uploads to Frame.io; then put the
+  9 names in `cloud/delivered.json` and `retire` the key.
+  The first fully automatic loop (run 40773217445): build -> capread (27 + 7 fixes, 4 LOOKs, two
+  answered with `look_ok`, the DUTY/KEEP overlap re-split) -> rebuild -> confirm -> Mac.
 - **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
   start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
   the catalogue's `rumble_hls` either way (a hand-given URL used to drop it; prep then failed with
