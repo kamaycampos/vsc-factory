@@ -27,6 +27,9 @@ def fingerprint(clip):
     # every clip built under the old one could carry Kevin's next words, but no plan
     # entry changed, so nothing would have been rebuilt. Bump RULES when a change to
     # the factory means every clip must be made again.
+    # look_ok (a person's answer to a caption-read LOOK, cloud/capread.py) changes no
+    # pixel, so it is left out: a plan without it fingerprints exactly as before.
+    clip = {k: v for k, v in clip.items() if k != "look_ok"}
     return hashlib.sha1((json.dumps(clip, sort_keys=True) + RULES).encode()).hexdigest()[:12]
 
 

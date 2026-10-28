@@ -21,6 +21,8 @@ rebuilds only those clips. That run CONFIRMS each fix in the new captions (no mo
 call): every `right` must be on screen, or the clip is a LOOK.
 
 capread.json (clips release), per clip:
+  A LOOK a person has answered is cleared by the clip's plan field "look_ok": "<why>"
+  (not part of the fingerprint, so it rebuilds nothing).
   {"fp": plan fingerprint read, "file": file confirmed or null, "status": "read" |
    "fixing", "fixes": [...applied], "look": [...]}
 The Mac gate passes a clip only when status is "read", file is that exact file and
@@ -267,7 +269,8 @@ def main(dry=False):
             if e and e.get("fp") == fp and e.get("status") == "fixing":
                 # rebuilt with the fixes this step wrote: confirm, no second model call
                 miss = confirm(e, cap)
-                done[n] = dict(e, file=file, status="read", look=e.get("look", []) + miss)
+                look = ([] if c.get("look_ok") else e.get("look", [])) + miss
+                done[n] = dict(e, file=file, status="read", look=look)
                 summary.append(f"{n}: {len(e.get('fixes', []))} fix(es) confirmed on screen"
                                + (f" - LOOK: {'; '.join(miss)}" if miss else ""))
                 continue
@@ -295,6 +298,11 @@ def main(dry=False):
             for b in bad:
                 print(f"    rejected - {b}")
             look = a.get("look", [])
+            if c.get("look_ok") and look:
+                # A PERSON ANSWERED THIS LOOK in the plan ("look_ok": "<why>"); it is kept
+                # in capread.json for the record and no longer holds the clip
+                print(f"    {c['name']}: LOOK answered by look_ok ({c['look_ok']}): {'; '.join(look)}")
+                look = []
             if kept:
                 c["fixes"] = c.get("fixes", []) + kept
                 done[c["name"]] = {"fp": fingerprint(c), "file": None, "status": "fixing",

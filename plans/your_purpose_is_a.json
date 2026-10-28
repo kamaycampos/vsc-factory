@@ -42,7 +42,8 @@
     ]
    ],
    "start_at": 180.86,
-   "end_at": 232.58
+   "end_at": 232.58,
+   "look_ok": "Kevin pauses 1.4 s after 'But duty is simple.' - the contrast the clip lands on (purpose is a myth, duty is simple); the next clip opens on the explanation (Claude, 28 Oct)"
   },
   {
    "name": "YOU-SIGNED-A-CONTRACT",
@@ -134,7 +135,8 @@
     ]
    ],
    "start_at": 315.09,
-   "end_at": 380.82
+   "end_at": 380.82,
+   "look_ok": "the open sits in a measured 0.15 s gap at -44 dB (315.09-315.24); the build's head check and edge listening both passed it (Claude, 28 Oct)"
   },
   {
    "name": "FOCUS-ONLY-ON-TODAY",
@@ -209,10 +211,10 @@
    "name": "DUTY-AND-BLISS",
    "region": [
     949.0,
-    1016.0
+    1024.0
    ],
    "open": "People always ask, how is doing your duty",
-   "close": "and I'm following my bliss.",
+   "close": "to follow what gives you pleasure.",
    "hook": [
     "FROM EMPLOYEE TO CARPENTER",
     "WITHOUT BREAKING YOUR WORD"
@@ -235,43 +237,23 @@
     ]
    ],
    "start_at": 950.75,
-   "end_at": 1013.16
+   "end_at": 1022.79
   },
   {
    "name": "KEEP-YOUR-AGREEMENTS",
    "region": [
-    994.0,
-    1055.0
+    1023.0,
+    1053.0
    ],
-   "open": "My duty is to be a good employee.",
+   "open": "But remember, some elements of duty",
    "close": "all the good things that life can give you.",
    "hook": [
     "KEPT PROMISES MAKE YOU",
     "WORTHY OF THE GOOD LIFE"
    ],
-   "fixes": [
-    [
-     12.07,
-     "my ethics in?",
-     "my ethics in,"
-    ],
-    [
-     13.37,
-     "my agreements. And I'm following",
-     "my agreements, and I'm following"
-    ],
-    [
-     27.86,
-     "But Remember, some",
-     "But remember, some"
-    ],
-    [
-     54.45,
-     "life can give you?",
-     "life can give you."
-    ]
-   ],
-   "start_at": 995.93,
+   "fixes": [],
+   "short_ok": "complete teaching: duty you do not love, done anyway out of responsibility, commitment and agreement, shifts your life - you become worthy and deserving of all the good things life can give you",
+   "start_at": 1023.39,
    "end_at": 1051.95
   },
   {

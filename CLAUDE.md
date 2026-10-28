@@ -23,7 +23,10 @@ limit (see "Token budget").
   THE-CHRISTMAS-CRASH (opened mid-sentence) - re-split at "...will ever satisfy you. | Things on the
   external world...". The caption read is automatic since 28 Oct (capread): its first real run
   reads all 9; watch that run's "Caption read" summary - the model call is untested in the cloud.
-  DUTY-AND-BLISS and KEEP-YOUR-AGREEMENTS share 18 s (995-1013) - decide before delivery.
+  DUTY-AND-BLISS / KEEP-YOUR-AGREEMENTS overlapped 18 s (capread flagged it too): re-split 28 Oct at
+  "...what gives you pleasure. | But remember, some elements of duty..." (72.0 s + 28.6 s).
+  First cloud caption read (run 40767844063): 27 fixes on 9 clips, 4 LOOKs; two answered with
+  `look_ok` (DHARMA's close, CHRISTMAS's open).
 - **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
   start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
   the catalogue's `rumble_hls` either way (a hand-given URL used to drop it; prep then failed with
@@ -60,7 +63,8 @@ runs, and how to do any of them by hand.)
    commits them to the plan and dispatches a run that rebuilds those clips and confirms each
    fix on screen (no second model call - the loop ends). `capread.json` in the clips release
    holds the state; the Mac gate keeps a clip in `.incoming` until its exact file is read and
-   puts a LOOK in `_needs_work` with the reason. By hand, the old way: **read every caption line** of every clip in the verdict table (`<clip>__caps.json`
+   puts a LOOK in `_needs_work` with the reason. A person answers a LOOK with the clip's plan field
+   `"look_ok": "<why>"` - left out of the fingerprint, so it rebuilds nothing. By hand, the old way: **read every caption line** of every clip in the verdict table (`<clip>__caps.json`
    in the release is what the SERVER burned in). Write corrections as `fixes` against
    THOSE captions, not the Mac's transcript - they must match letter for letter.
    Never let a second fix rewrite text a first fix produced: fixes apply once, in
