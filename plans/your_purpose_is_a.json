@@ -234,6 +234,26 @@
      35.3,
      "keeping in agreement.",
      "keeping an agreement."
+    ],
+    [
+     70.31,
+     "to follow what gives you pleasure,",
+     "to follow what gives you pleasure."
+    ],
+    [
+     53.83,
+     "I need to get my notice",
+     "I need to give my notice"
+    ],
+    [
+     57.25,
+     "I've kept my ethics in.",
+     "I've kept my ethics in,"
+    ],
+    [
+     69.24,
+     "of dharma,",
+     "of Dharma,"
     ]
    ],
    "start_at": 950.75,
@@ -251,7 +271,13 @@
     "KEPT PROMISES MAKE YOU",
     "WORTHY OF THE GOOD LIFE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     25.18,
+     "of all that. All good the things",
+     "of all the good things"
+    ]
+   ],
    "short_ok": "complete teaching: duty you do not love, done anyway out of responsibility, commitment and agreement, shifts your life - you become worthy and deserving of all the good things life can give you",
    "start_at": 1023.39,
    "end_at": 1051.95
