@@ -135,6 +135,24 @@ def check(mp4):
 SOUND = ("first word heard", "last word heard", "opening:", "no pause after the close")
 
 
+def caption_read(mp4):
+    """("read" | "pending" | "look", why) from the cloud's caption read (cloud/capread.py).
+
+    28 Oct 2026: reading every caption line was the one step every batch waited on a
+    person for. The cloud reads them now, fixes what it can and rebuilds; a clip reaches
+    Clips only when its EXACT file is read (and its fixes confirmed on screen). Until
+    then it waits in the holding area, like a clip still arriving - not in _needs_work,
+    where nothing would look at it again."""
+    try:
+        r = json.load(open(os.path.expanduser("~/VSC/.capread.json")))
+    except Exception:
+        return "pending", []
+    e = r.get(re.sub(r"_\d+s\.mp4$", "", os.path.basename(mp4))) or {}
+    if e.get("status") != "read" or e.get("file") != os.path.basename(mp4):
+        return "pending", []
+    return ("look", ["caption read: " + x for x in e["look"]]) if e.get("look") else ("read", [])
+
+
 def cloud_sound_faults(mp4):
     """12 Oct 2026: FIRED-FROM-HIS-OWN-COMPANY was a cloud FAIL ("first word heard is not
     'steve'") and this gate delivered it, because the verdict never came down with the
@@ -164,7 +182,12 @@ def main():
         if not os.path.exists(mp4[:-4] + "__caps.json"):
             print(f"  still arriving, left alone  {os.path.basename(mp4)}")
             continue
+        state, read_why = caption_read(mp4)
+        if state == "pending":
+            print(f"  captions not read yet, left alone  {os.path.basename(mp4)}")
+            continue
         ok, why = check(mp4)
+        ok, why = ok and not read_why, why + read_why
         base = os.path.basename(mp4)
         dest = DEST if ok else BAD
         os.makedirs(dest, exist_ok=True)

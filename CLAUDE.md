@@ -21,7 +21,8 @@ limit (see "Token budget").
   DUTY-AND-BLISS, KEEP-YOUR-AGREEMENTS. Re-cut 28 Oct and rebuilding: DHARMA-IS-DUTY, TAKE-THE-NEXT-STEP
   (never rendered: close not heard as planned), NOTHING-OUTSIDE-FILLS-IT (ended mid-sentence) and
   THE-CHRISTMAS-CRASH (opened mid-sentence) - re-split at "...will ever satisfy you. | Things on the
-  external world...". Next: read every caption line of all 9 (`<clip>__caps.json`), push fixes once.
+  external world...". The caption read is automatic since 28 Oct (capread): its first real run
+  reads all 9; watch that run's "Caption read" summary - the model call is untested in the cloud.
   DUTY-AND-BLISS and KEEP-YOUR-AGREEMENTS share 18 s (995-1013) - decide before delivery.
 - **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
   start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
@@ -53,7 +54,13 @@ runs, and how to do any of them by hand.)
    release with a per-clip verdict table.
    **Every push to `plans/` cancels the build that is running** (newer run wins), so
    batch your corrections into ONE push.
-4. **Read every caption line** of every clip in the verdict table (`<clip>__caps.json`
+4. **The cloud reads every caption line** (`cloud/capread.py`, the run's last job, 28 Oct):
+   one Claude call reads each built clip's `__caps.json` beside prep's transcript, code keeps
+   only fixes that apply exactly (wrong words found near their time, no overlap, no stacking),
+   commits them to the plan and dispatches a run that rebuilds those clips and confirms each
+   fix on screen (no second model call - the loop ends). `capread.json` in the clips release
+   holds the state; the Mac gate keeps a clip in `.incoming` until its exact file is read and
+   puts a LOOK in `_needs_work` with the reason. By hand, the old way: **read every caption line** of every clip in the verdict table (`<clip>__caps.json`
    in the release is what the SERVER burned in). Write corrections as `fixes` against
    THOSE captions, not the Mac's transcript - they must match letter for letter.
    Never let a second fix rewrite text a first fix produced: fixes apply once, in
@@ -265,8 +272,8 @@ too short was made deep inside that context.
 
 One-time setup: repository secret `ANTHROPIC_API_KEY` (console.anthropic.com, pay per use,
 roughly $0.20-0.60 a batch). Optional variable `VSC_PLANNER_MODEL`. No key = the stub
-waits and the run says so. Still human: watching the clips, caption `fixes` after the
-first render, and uploading to Frame.io (automatic once `FRAMEIO_TOKEN` exists).
+waits and the run says so. Still human: watching the clips and uploading to Frame.io (caption `fixes`
+are automatic since 28 Oct - see step 4 of "Making a batch") (automatic once `FRAMEIO_TOKEN` exists).
 **`ANTHROPIC_API_KEY` is set (Kamay, 6 Oct).**
 
 **How a batch starts now (Kamay, 6 Oct):** Kamay sends a chat "New VSC: <title>, <length>".

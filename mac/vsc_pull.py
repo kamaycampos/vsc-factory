@@ -188,6 +188,9 @@ def main():
     # the cloud's verdict per clip (edge listening the Mac cannot redo) - see vsc_gate
     sh(GH, "release", "download", "clips", "-R", REPO, "-p", "verdicts.json",
        "-O", os.path.expanduser("~/VSC/.verdicts.json"), "--clobber")
+    # the cloud's caption read per clip (cloud/capread.py) - the gate waits for it
+    sh(GH, "release", "download", "clips", "-R", REPO, "-p", "capread.json",
+       "-O", os.path.expanduser("~/VSC/.capread.json"), "--clobber")
     g = subprocess.run([sys.executable, GATE], capture_output=True, text=True)
     print(g.stdout.strip() or g.stderr.strip()[-400:])
     note(g.stdout.strip().splitlines()[-1] if g.stdout.strip() else "the gate did not run")

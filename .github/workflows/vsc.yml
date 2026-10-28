@@ -285,3 +285,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python cloud/verify.py
+
+  # THE CAPTION READ (28 Oct 2026). Reading every caption line was the one step every
+  # batch still waited on a person for. cloud/capread.py reads each built, unread clip's
+  # burned captions (one Claude call per batch), keeps only fixes that will apply exactly,
+  # writes them into the plan and starts a fresh run that rebuilds just those clips - and
+  # that run confirms every fix on screen without asking the model again, so it ends.
+  # Last, after verify: a dispatch cancels this run (newer wins), and nothing is left.
+  capread:
+    needs: verify
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - id: r
+        run: |
+          pip install -q anthropic
+          python cloud/capread.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VSC_CAPREAD_MODEL: ${{ vars.VSC_CAPREAD_MODEL }}
+      - name: Save the caption fixes and rebuild those clips
+        if: steps.r.outputs.fixed == '1'
+        run: |
+          git config user.name "vsc-capread"
+          git config user.email "vsc-capread@users.noreply.github.com"
+          git add plans/
+          git commit -q -m "capread: caption fixes for ${{ steps.r.outputs.keys }}"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
+          gh workflow run vsc.yml --ref main

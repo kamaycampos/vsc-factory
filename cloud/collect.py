@@ -60,8 +60,8 @@ def main():
                     f"{'; '.join(w) or '-'} |")
     if bad:
         body += ["", "**Read the captions of the ones marked LOOK before they go to Frame.io.**"]
-    body += ["", "Still a human's job: read every caption line, and watch the first 3 "
-             "seconds and the last 2 of each clip."]
+    body += ["", "Every caption line is read in the cloud after the build (capread, the last "
+             "job): fixes rebuild the clip, LOOKs are held on the Mac with the reason."]
     for f in mp4 + sorted(glob.glob(os.path.join(IN, "**", "*__caps.json"), recursive=True)):
         u = sh("gh", "release", "upload", "clips", f, "--clobber", "-R", REPO)
         if u.returncode:
