@@ -55,7 +55,7 @@ def _why(w):
 def main(key, names):
     import vsc_week, vsc_v2_onscreen
     plan = [p for p in plans() if p["key"] == key][0]
-    from cloud.shard import fingerprint    # ONE definition of "built from this"
+    from cloud.shard import fingerprint, locator_code    # ONE definition of "built from this"
     fp = {c["name"]: fingerprint(c) for c in plan["clips"]}
     src = fetch(plan)
     reuse_prep(key, src)
@@ -72,6 +72,11 @@ def main(key, names):
             sys.stderr.write(f"  {name}: {type(e).__name__}: {e}\n")
         f = glob.glob(os.path.join(CLIPS, name + "_*.mp4"))
         if not f:
+            if name in vsc_week.UNLOCATED:
+                report.append({"clip": name, "ok": False, "verdict": "unlocated",
+                               "why": f"cut not found ({vsc_week.UNLOCATED[name]}) - fix the plan",
+                               "unlocated": f"{fp.get(name)}:{locator_code()}"})
+                continue
             report.append({"clip": name, "ok": False, "why": "nothing was rendered"})
             continue
         # THE GATE. Every mechanical check there is, run on the finished file: captions
@@ -134,7 +139,7 @@ def main(key, names):
     # uploaded by then (the upload step runs even on failure), so nothing is lost by
     # failing here. A QC verdict of "look" is NOT this: that is a judgement for a human
     # and it stays green, named in the release notes.
-    gone = [x["clip"] for x in report if x.get("why") == "nothing was rendered"]
+    gone = [x["clip"] for x in report if x.get("why") == "nothing was rendered" or x.get("unlocated")]
     if gone:
         sys.exit("NOT RENDERED: " + ", ".join(gone))
 

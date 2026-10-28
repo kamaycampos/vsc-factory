@@ -148,6 +148,9 @@ def _match_prefix(plan, clip):
     return None
 
 
+UNLOCATED = {}    # name -> why, for clips whose cut could not be found (cloud/build.py)
+
+
 def main(only=None):
     os.makedirs(WORK, exist_ok=True); os.makedirs(OUT, exist_ok=True)
     abp = os.path.join(WORK, "v2_ab.json")
@@ -243,7 +246,7 @@ def main(only=None):
                                               _pc["end_at"], tag)
             if not got:
                 print(f"  !! {name}: {why} - check the words against the transcript", flush=True)
-                failed.append((name, why)); continue
+                failed.append((name, why)); UNLOCATED[name] = why; continue
             a, b = got
             if name in END_OVERRIDE:
                 b = END_OVERRIDE[name]

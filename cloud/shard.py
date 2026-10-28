@@ -30,6 +30,25 @@ def fingerprint(clip):
     return hashlib.sha1((json.dumps(clip, sort_keys=True) + RULES).encode()).hexdigest()[:12]
 
 
+def locator_code():
+    """The code that finds a clip's cut. A clip that could not be located is only tried
+    again when its plan entry OR this code changes (28 Oct 2026, see main)."""
+    h = hashlib.sha1()
+    for f in ("pipeline/vsc_pick.py", "pipeline/vsc_week.py"):
+        h.update(open(os.path.join(HERE, f), "rb").read())
+    return h.hexdigest()[:12]
+
+
+def unlocated():
+    d = subprocess.run(["gh", "release", "download", "clips", "-R", REPO, "-p",
+                        "unlocated.json", "-D", "/tmp/ul", "--clobber"],
+                       capture_output=True, text=True)
+    try:
+        return json.load(open("/tmp/ul/unlocated.json")) if d.returncode == 0 else {}
+    except Exception:
+        return {}
+
+
 def already_built():
     r = subprocess.run(["gh", "release", "view", "clips", "-R", REPO, "--json", "assets"],
                        capture_output=True, text=True)
@@ -58,6 +77,11 @@ def main():
     # identical to the Mac's, and how a single bad clip gets redone without a batch.
     only = [x for x in os.environ.get("ONLY", "").split() if x]
     done, built = already_built()
+    # A CUT THAT CANNOT BE FOUND IS NOT RETRIED UNCHANGED (28 Oct 2026). Rounds 2 and 3
+    # exist for runners that die; DHARMA-IS-DUTY, THE-CHRISTMAS-CRASH and TAKE-THE-NEXT-STEP
+    # were re-run in both, ~30 runner minutes, to the same "missing closing". The run still
+    # ends RED naming them (verify); a new plan entry or locator code tries again.
+    nope, code = unlocated(), locator_code()
     # DELIVERED CLIPS ARE FINISHED. 3 Oct 2026: four of the 23 delivered to GIN carried a
     # FAIL "listen" verdict, so collect never recorded their fingerprint, and Monday's
     # scheduled build would have rebuilt them under new shared framing - a different
@@ -79,6 +103,9 @@ def main():
             if c["name"] in locked:
                 continue
             if c["name"] not in done:
+                if nope.get(c["name"]) == f"{fingerprint(c)}:{code}":
+                    print(f"{c['name']}: its cut could not be found with this plan and "
+                          "this locator - not retried", file=sys.stderr); continue
                 todo.append(c["name"]); continue
             if built.get(c["name"]) != fingerprint(c):
                 todo.append(c["name"]); stale.append(c["name"])

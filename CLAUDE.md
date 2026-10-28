@@ -213,6 +213,11 @@ runs, and how to do any of them by hand.)
   have it all"); the start gap must not have a whole word between it and the open (DHARMA would have
   opened on the interviewer's "Is it?"); a last word over 0.8 s is searched inside for its gap ("all."
   ran 2 s). Replayed on all 9 clips: the 5 that passed keep identical times.
+- **A cut that cannot be found is not retried unchanged** (28 Oct). Retry rounds are for runners
+  that die; three clips burned rounds 2 and 3 (~30 runner minutes) on the same "missing closing".
+  build.py reports them, collect.py keeps `unlocated.json` in the clips release (clip -> plan
+  fingerprint : locator-code hash), shard.py skips a match. The run still ends RED naming them; a
+  plan change or a change to vsc_pick/vsc_week tries again.
 - **A clip never ends on a clause that continues** ("temporary happiness, but it's fleeting" - the
   sentence went on into Christmas). Split a long teaching where a SENTENCE ends.
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).

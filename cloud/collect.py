@@ -21,6 +21,25 @@ def main():
     rep = []
     for f in glob.glob(os.path.join(IN, "**", "report-*.json"), recursive=True):
         rep += json.load(open(f))
+    # (before the early return: a round can end with cuts not found and no file)
+    # WHICH CUTS COULD NOT BE FOUND, and with what plan and locator (28 Oct 2026):
+    # shard.py does not retry them unchanged. A clip that rendered later drops out.
+    ul = {}
+    d = sh("gh", "release", "download", "clips", "-R", REPO, "-p", "unlocated.json",
+           "-D", "/tmp/ul", "--clobber")
+    if d.returncode == 0:
+        try:
+            ul = json.load(open("/tmp/ul/unlocated.json"))
+        except Exception:
+            ul = {}
+    for r in rep:
+        if r.get("unlocated"):
+            ul[r["clip"]] = r["unlocated"]
+        elif r.get("file"):
+            ul.pop(r["clip"], None)
+    os.makedirs("/tmp/ul", exist_ok=True)
+    json.dump(ul, open("/tmp/ul/unlocated.json", "w"), indent=1, sort_keys=True)
+    sh("gh", "release", "upload", "clips", "/tmp/ul/unlocated.json", "--clobber", "-R", REPO)
     if not mp4:
         # NOT A FAILURE. Every clip in the plans is already built, which is the normal
         # state between assignments - the Monday run has nothing to do. A machine that
