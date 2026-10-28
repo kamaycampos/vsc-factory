@@ -47,16 +47,22 @@ def main():
             "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the "
                     "transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
             "clips": []}
+    import rumble_match as M
+    cat = M.catalog()
     if rumble:
-        plan["rumble"] = rumble
+        # A URL given by hand still takes the catalogue's stream (28 Oct 2026): without
+        # rumble_hls prep only has the page, which refuses the runners - run 40742098561.
+        u, e, why = rumble, cat.get(rumble), "URL given by hand"
+        if not e:
+            plan["rumble"] = rumble
+            print(f"Rumble: {why}, not in the catalogue - prep has no stream for it")
     else:
-        import rumble_match as M
-        u, e, why = M.match(M.catalog(), dur, title)
-        if u:
-            plan.update(rumble=u, duration=e["dur"], height=e["height"], rumble_title=e["title"])
-            if e.get("hls"):
-                plan["rumble_hls"] = e["hls"]      # the stream Cloudflare does not guard (source.py)
-        print(f"Rumble: {why}")
+        u, e, why = M.match(cat, dur, title)
+    if u and e:
+        plan.update(rumble=u, duration=e["dur"], height=e["height"], rumble_title=e["title"])
+        if e.get("hls"):
+            plan["rumble_hls"] = e["hls"]      # the stream Cloudflare does not guard (source.py)
+    print(f"Rumble: {why}")
     # ONE EPISODE, ONE PLAN. GIN titles differ from Rumble's, so a second title for the
     # same interview would otherwise start a second batch of the same clips.
     import glob

@@ -7,5 +7,8 @@
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
  "clips": [],
- "rumble": "https://rumble.com/v787nba-your-purpose-is-a-lie-the-ancient-truth-youre-missing.html"
+ "rumble": "https://rumble.com/v787nba-your-purpose-is-a-lie-the-ancient-truth-youre-missing.html",
+ "height": 2160,
+ "rumble_title": "Your Purpose is a Lie: The Ancient Truth You're Missing",
+ "rumble_hls": "https://rumble.com/hls-vod/QUODdJQZIyI/playlist.m3u8"
 }
