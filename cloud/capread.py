@@ -282,6 +282,15 @@ def main(dry=False):
             continue
         for c, cap, file, fp in todo:
             a = ans.get(c["name"], {"fixes": [], "look": ["the reader returned nothing for this clip"]})
+            # THE LAST CAPTION ENDS THE SENTENCE (28 Oct 2026). A clip ends where the
+            # teaching lands - a finished sentence - but the caption pass, cut off at the
+            # clip's end, dropped the stop ("But duty is simple"), and kt_qc failed
+            # DHARMA-IS-DUTY and THE-CHRISTMAS-CRASH as "ends mid-thought". Code, not the
+            # model: first, so a model fix over the same words is the one rejected.
+            last = cap[-1][2].strip() if cap else ""
+            if last and not re.search(r"[.?!][\"')]*$", last):
+                a["fixes"] = [{"t": cap[-1][0], "wrong": last, "right": last.rstrip(",;:-") + ".",
+                               "why": "the clip ends a sentence"}] + a.get("fixes", [])
             kept, bad = validate(c, cap, a.get("fixes", []))
             for b in bad:
                 print(f"    rejected - {b}")
