@@ -6,7 +6,152 @@
  "duration": 1198.0,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "DHARMA-IS-DUTY",
+   "region": [
+    179.0,
+    236.0
+   ],
+   "open": "Dharma is duty. You know what your",
+   "close": "path to nowhere. But duty is simple.",
+   "hook": [
+    "'FIND YOUR PURPOSE' IS",
+    "A MYTH FED TO YOU"
+   ],
+   "fixes": [],
+   "start_at": 179.99,
+   "end_at": 232.58
+  },
+  {
+   "name": "YOU-SIGNED-A-CONTRACT",
+   "region": [
+    231.0,
+    279.0
+   ],
+   "open": "If we understand past lives, we come",
+   "close": "down the wrong road seeking the wrong thing.",
+   "hook": [
+    "YOU SIGNED A CONTRACT",
+    "BEFORE YOU WERE BORN"
+   ],
+   "fixes": [],
+   "start_at": 232.95,
+   "end_at": 275.9
+  },
+  {
+   "name": "NOTHING-OUTSIDE-FILLS-IT",
+   "region": [
+    274.0,
+    323.0
+   ],
+   "open": "They think that if I find my purpose in life,",
+   "close": "give you some temporary happiness but it's fleeting",
+   "hook": [
+    "MORE WOMEN, MORE MONEY",
+    "WON'T FILL THE EMPTINESS"
+   ],
+   "fixes": [],
+   "start_at": 275.78,
+   "end_at": 319.81
+  },
+  {
+   "name": "THE-CHRISTMAS-CRASH",
+   "region": [
+    320.0,
+    381.0
+   ],
+   "open": "we wake up when we're kids",
+   "close": "means you know are no longer seeking anything",
+   "hook": [
+    "CHRISTMAS JOY CRASHES.",
+    "BLISS NEVER DOES."
+   ],
+   "fixes": [],
+   "start_at": 322.28,
+   "end_at": 378.97
+  },
+  {
+   "name": "FOCUS-ONLY-ON-TODAY",
+   "region": [
+    546.0,
+    610.0
+   ],
+   "open": "The only thing you should be focusing on",
+   "close": "you seek nothing because you have it all.",
+   "hook": [
+    "IN THE PRESENT MOMENT",
+    "THERE IS NO PAIN"
+   ],
+   "fixes": [],
+   "start_at": 548.37,
+   "end_at": 607.51
+  },
+  {
+   "name": "PATTON-AND-BRADLEY",
+   "region": [
+    674.0,
+    737.0
+   ],
+   "open": "Do you need to love what your Dharma is?",
+   "close": "necessarily love it but you embrace it.",
+   "hook": [
+    "GENERAL PATTON LOVED IT.",
+    "BRADLEY DID HIS DUTY."
+   ],
+   "fixes": [],
+   "start_at": 676.58,
+   "end_at": 733.33
+  },
+  {
+   "name": "DUTY-AND-BLISS",
+   "region": [
+    949.0,
+    1016.0
+   ],
+   "open": "People always ask, how is doing your duty",
+   "close": "and I'm following my bliss.",
+   "hook": [
+    "FROM EMPLOYEE TO CARPENTER",
+    "WITHOUT BREAKING YOUR WORD"
+   ],
+   "fixes": [],
+   "start_at": 950.75,
+   "end_at": 1013.16
+  },
+  {
+   "name": "KEEP-YOUR-AGREEMENTS",
+   "region": [
+    994.0,
+    1055.0
+   ],
+   "open": "My duty is to be a good employee.",
+   "close": "all the good things that life can give you.",
+   "hook": [
+    "KEPT PROMISES MAKE YOU",
+    "WORTHY OF THE GOOD LIFE"
+   ],
+   "fixes": [],
+   "start_at": 995.93,
+   "end_at": 1051.95
+  },
+  {
+   "name": "TAKE-THE-NEXT-STEP",
+   "region": [
+    1056.0,
+    1108.0
+   ],
+   "open": "release a need to know your mission or purpose",
+   "close": "that you think is missing. on the inside.",
+   "hook": [
+    "STUCK? STOP SEARCHING",
+    "AND TAKE ONE STEP"
+   ],
+   "fixes": [],
+   "start_at": 1057.87,
+   "end_at": 1106.62
+  }
+ ],
  "rumble": "https://rumble.com/v787nba-your-purpose-is-a-lie-the-ancient-truth-youre-missing.html",
  "height": 2160,
  "rumble_title": "Your Purpose is a Lie: The Ancient Truth You're Missing",
