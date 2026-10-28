@@ -19,7 +19,28 @@
     "'FIND YOUR PURPOSE' IS",
     "A MYTH FED TO YOU"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     50.1,
+     "But duty is simple",
+     "But duty is simple."
+    ],
+    [
+     12.27,
+     "You're a You're policeman a There's somebody",
+     "You're a policeman, there's somebody"
+    ],
+    [
+     17.59,
+     "duty is, the agreement",
+     "duty is, is the agreement"
+    ],
+    [
+     36.5,
+     "the holy grail.",
+     "the Holy Grail."
+    ]
+   ],
    "start_at": 180.86,
    "end_at": 232.58
   },
@@ -35,7 +56,13 @@
     "YOU SIGNED A CONTRACT",
     "BEFORE YOU WERE BORN"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     36.83,
+     "they search for it. Because they are",
+     "they search forever because they are"
+    ]
+   ],
    "start_at": 232.95,
    "end_at": 275.9
   },
@@ -51,7 +78,18 @@
     "MORE WOMEN, MORE MONEY",
     "WON'T FILL THE EMPTINESS"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     10.51,
+     "they're-- We're seeking is oneness,",
+     "what they're seeking is oneness,"
+    ],
+    [
+     22.29,
+     "more sex. Sexual exploits,",
+     "more sex, sexual exploits,"
+    ]
+   ],
    "short_ok": "complete teaching: the belief (finding your purpose fills the emptiness), the chase (more women, drugs, money) and the answer - nothing outside of yourself will ever satisfy you",
    "start_at": 275.78,
    "end_at": 315.16
@@ -68,7 +106,33 @@
     "CHRISTMAS JOY CRASHES.",
     "BLISS NEVER DOES."
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     64.6,
+     "because you have it all",
+     "because you have it all."
+    ],
+    [
+     13.44,
+     "were opened... We had",
+     "were opened, we had"
+    ],
+    [
+     23.32,
+     "and Bliss or joy",
+     "and bliss or joy"
+    ],
+    [
+     25.43,
+     "eternal weather. When you are",
+     "eternal well when you are"
+    ],
+    [
+     53.48,
+     "of this oneness. This connectedness,",
+     "of this oneness, this connectedness,"
+    ]
+   ],
    "start_at": 315.09,
    "end_at": 380.82
   },
@@ -84,7 +148,33 @@
     "IN THE PRESENT MOMENT",
     "THERE IS NO PAIN"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     11.65,
+     "This allows you How to... do we operate in a space",
+     "This allows you to operate in a space"
+    ],
+    [
+     20.41,
+     "to be in present time?",
+     "to be in present time."
+    ],
+    [
+     22.32,
+     "great book called. The Power of now,",
+     "great book called The Power of Now,"
+    ],
+    [
+     27.26,
+     "When You are in present time. There is no",
+     "When you are in present time, there is no"
+    ],
+    [
+     53.43,
+     "no pain. No and pain no wanting. And you seek",
+     "no pain and no wanting and you seek"
+    ]
+   ],
    "start_at": 548.37,
    "end_at": 607.51
   },
@@ -100,7 +190,18 @@
     "GENERAL PATTON LOVED IT.",
     "BRADLEY DID HIS DUTY."
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     1.23,
+     "your dharma is?",
+     "your Dharma is?"
+    ],
+    [
+     50.16,
+     "which is Your duty. You",
+     "which is your duty, you"
+    ]
+   ],
    "start_at": 676.58,
    "end_at": 733.33
   },
@@ -116,7 +217,23 @@
     "FROM EMPLOYEE TO CARPENTER",
     "WITHOUT BREAKING YOUR WORD"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     3.42,
+     "following your dharma? Consistent with",
+     "following your Dharma consistent with"
+    ],
+    [
+     13.14,
+     "with one another?",
+     "with one another."
+    ],
+    [
+     35.3,
+     "keeping in agreement.",
+     "keeping an agreement."
+    ]
+   ],
    "start_at": 950.75,
    "end_at": 1013.16
   },
@@ -132,7 +249,28 @@
     "KEPT PROMISES MAKE YOU",
     "WORTHY OF THE GOOD LIFE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     12.07,
+     "my ethics in?",
+     "my ethics in,"
+    ],
+    [
+     13.37,
+     "my agreements. And I'm following",
+     "my agreements, and I'm following"
+    ],
+    [
+     27.86,
+     "But Remember, some",
+     "But remember, some"
+    ],
+    [
+     54.45,
+     "life can give you?",
+     "life can give you."
+    ]
+   ],
    "start_at": 995.93,
    "end_at": 1051.95
   },
@@ -148,7 +286,13 @@
     "STUCK? STOP SEARCHING",
     "AND TAKE ONE STEP"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     35.92,
+     "of money? Limitless bliss.",
+     "of limitless bliss."
+    ]
+   ],
    "start_at": 1057.87,
    "end_at": 1106.62
   }
