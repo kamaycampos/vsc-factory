@@ -175,6 +175,21 @@ def main():
     os.makedirs(DEST, exist_ok=True)
     os.makedirs(HOLD, exist_ok=True)
     moved, held = [], []
+    # A HELD CLIP IS JUDGED AGAIN EVERY RUN (28 Oct 2026). FOCUS-ONLY-ON-TODAY was held for
+    # kt_qc's false alarm on "called The Power of Now"; the shared rule was fixed within the
+    # hour, but nothing ever looked at _needs_work again, while the OLD uncorrected cut sat
+    # in Clips under the same name. Held clips go back to the holding area and are judged
+    # with today's rules; one that still fails is held again with a fresh reason.
+    for mp4 in sorted(glob.glob(os.path.join(BAD, "*.mp4"))):
+        base = os.path.basename(mp4)
+        cap = os.path.join(BAD, ".caps", base[:-4] + "__caps.json")
+        if not os.path.exists(cap) or os.path.exists(os.path.join(HOLD, base)):
+            continue
+        os.replace(mp4, os.path.join(HOLD, base))
+        os.replace(cap, os.path.join(HOLD, base[:-4] + "__caps.json"))
+        why_f = os.path.join(BAD, base[:-4] + "__WHY.txt")
+        if os.path.exists(why_f):
+            os.remove(why_f)
     for mp4 in sorted(glob.glob(os.path.join(HOLD, "*.mp4"))):
         # STILL ARRIVING. A clip whose caption file has not landed yet is not a bad
         # clip, it is an unfinished download - judging it would file a good clip under
