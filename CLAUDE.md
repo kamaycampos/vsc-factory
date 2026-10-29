@@ -12,17 +12,23 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 28 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 29 Oct 2026 - replace this section at every handoff)
 
-- **READY FOR GIN: your_purpose_is_a** (28 Oct) - GIN's Frame.io "Your Purpose is a Lie: The Ancient
-  Truth You're Missing" (item 25 of 25 in GIN's folder, not an episode number). Rumble 1198 s, 2160p.
-  9 clips in ~/Desktop/VSC/Clips, every caption read by capread with its fixes confirmed on screen,
-  no LOOK: DHARMA-IS-DUTY_52s, YOU-SIGNED-A-CONTRACT_43s, NOTHING-OUTSIDE-FILLS-IT_39s,
-  THE-CHRISTMAS-CRASH_66s, FOCUS-ONLY-ON-TODAY_59s, PATTON-AND-BRADLEY_57s, DUTY-AND-BLISS_72s,
-  KEEP-YOUR-AGREEMENTS_29s, TAKE-THE-NEXT-STEP_49s. Next: Kamay uploads to Frame.io; then put the
-  9 names in `cloud/delivered.json` and `retire` the key.
-  The first fully automatic loop (run 40773217445): build -> capread (27 + 7 fixes, 4 LOOKs, two
-  answered with `look_ok`, the DUTY/KEEP overlap re-split) -> rebuild -> confirm -> Mac.
+- **IN THE FACTORY: they_re_not_hiding** (29 Oct, 14:31 ET) - GIN's Frame.io "They're Not Hiding
+  Aliens. They're Hiding This." (item 20 of 25 in GIN's folder; Kamay calls it Episode 20 of the
+  Classified Files). Frame.io file 1623.4 s = catalogue 1623 s, title word for word, 2160p, with
+  `rumble_hls`. vsc-new run 40931578010 green, stub `plans/they_re_not_hiding.json` (c6deb2c),
+  vsc run 40931607728 started. Next: clips land in ~/Desktop/VSC/Clips; Kamay watches and uploads.
+- **your_purpose_is_a: DELIVERED** (Kamay uploaded the 9 to Frame.io, 29 Oct). Names in
+  `cloud/delivered.json`, plan in `plans/done/`, retired from `clips` and `prep`; its encrypted
+  source is KEPT in `sources` until GIN approves the 9 (same as hollywood), then `retire` again.
+- **Housekeeping pushes that touch `plans/` (moving a plan to done/) go with `[skip ci]`** in the
+  commit message, or they cancel the build that is running (29 Oct: the aliens build was live).
+- **A clip Kamay deletes from Clips comes BACK on the next 15-min pull** while it is still in the
+  `clips` release and not in `~/VSC/.handled.txt`. When he deletes uploaded clips, add their file
+  names to `.handled.txt` at once, then retire.
+- This Mac has no `gh` binary; the GitHub API works with the gh token in the keychain
+  (`security find-generic-password -s gh:github.com -w`, strip `go-keyring-base64:`, base64 -d).
 - **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
   start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
   the catalogue's `rumble_hls` either way (a hand-given URL used to drop it; prep then failed with
