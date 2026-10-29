@@ -1,0 +1,55 @@
+# THE PAUSE MAP ON A CACHED SOURCE (cloud/pauses.py), 29 Oct 2026.
+# Manual only. Reads the cached sources, writes NOTHING to the repo or any release: it
+# prints each episode's pause / cut-point counts and leaves its 10 ms level track
+# (cloud/pauses.db_frames, encrypted with VSC_KEY) as a 2-day artifact, so a change to
+# the cut rule can be replayed on the Mac without fetching gigabytes.
+name: pause-test
+on:
+  workflow_dispatch:
+    inputs:
+      keys:
+        description: "Episodes (sources cached in the sources release), space separated"
+        default: "they_re_not_hiding your_purpose_is_a"
+permissions:
+  contents: read
+concurrency:
+  group: pause-test
+  cancel-in-progress: true
+env:
+  GH_TOKEN: ${{ github.token }}
+  VSC_KEY: ${{ secrets.VSC_KEY }}
+jobs:
+  levels:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Level track and pause map per episode
+        run: |
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y ffmpeg >/dev/null
+          pip -q install numpy
+          mkdir -p /tmp/up
+          for K in ${{ inputs.keys }}; do
+            rm -rf /tmp/src && gh release download sources -R "$GITHUB_REPOSITORY" -p "$K.mp4.enc*" -D /tmp/src
+            cat $(ls /tmp/src/* | sort) | openssl enc -d -aes-256-cbc -pbkdf2 -pass env:VSC_KEY -out /tmp/src.mp4
+            python - "$K" <<'EOF'
+          import json, sys
+          import numpy as np
+          sys.path.insert(0, "cloud")
+          import pauses
+          k = sys.argv[1]
+          db = pauses.db_frames("/tmp/src.mp4")
+          np.save(f"/tmp/{k}.npy", db.astype(np.float32))
+          m = pauses.pause_map("/tmp/src.mp4")
+          json.dump(m, open(f"/tmp/up/pauses-{k}.json", "w"))
+          print(f"{k}: {m['dur']:.0f} s, {len(m['pauses'])} pauses, {len(m['cuts'])} cut points, "
+                f"level pct 5/15/50/90 {[round(float(np.percentile(db, p)), 1) for p in (5, 15, 50, 90)]}")
+          EOF
+            openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:VSC_KEY -in /tmp/$K.npy -out /tmp/up/$K.npy.enc
+            rm /tmp/src.mp4 /tmp/$K.npy
+          done
+          ls -la /tmp/up
+      - uses: actions/upload-artifact@v4
+        with: { name: levels, path: /tmp/up, retention-days: 2 }
