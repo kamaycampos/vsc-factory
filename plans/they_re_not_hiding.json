@@ -19,7 +19,38 @@
     "THE BIBLE DESCRIBES",
     "A ROCKET LANDING"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     82.93,
+     "coming from other planets,",
+     "coming from other planets."
+    ],
+    [
+     7.26,
+     "dripping out the data. About",
+     "dripping out the data about"
+    ],
+    [
+     21.61,
+     "started... back in Back the in '60s,",
+     "started back in the '60s,"
+    ],
+    [
+     24.21,
+     "Erick von Donaghan",
+     "Erich von D\u00e4niken"
+    ],
+    [
+     56.53,
+     "a chariot, It slowly",
+     "a chariot, that slowly"
+    ],
+    [
+     68.83,
+     "got to the earth. The earth",
+     "got to the earth, the earth"
+    ]
+   ],
    "start_at": 108.06,
    "end_at": 192.6
   }
