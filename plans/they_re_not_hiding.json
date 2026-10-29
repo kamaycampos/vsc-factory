@@ -6,7 +6,24 @@
  "duration": 1623,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "ANCIENT-TEXTS-DESCRIBE-SPACECRAFT",
+   "region": [
+    107.0,
+    194.0
+   ],
+   "open": "You're going to bury your head",
+   "close": "the gods coming from other planets. coming",
+   "hook": [
+    "THE BIBLE DESCRIBES",
+    "A ROCKET LANDING"
+   ],
+   "fixes": [],
+   "start_at": 108.06,
+   "end_at": 192.6
+  }
+ ],
  "rumble": "https://rumble.com/v72iprm-theyre-not-hiding-aliens.-theyre-hiding-this..html",
  "height": 2160,
  "rumble_title": "They're Not Hiding Aliens. They're Hiding This.",
