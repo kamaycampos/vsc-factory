@@ -52,9 +52,10 @@ def build(plan):
 
     def stale():
         # a map older than v3 has no cut points under a music bed (cloud/pauses.bed_cuts,
-        # 29 Oct 2026) - an episode still being planned gets it measured again
+        # 29 Oct 2026), older than v4 none where the bed swells (swell_cuts, 30 Oct) - an
+        # episode still being planned gets it measured again
         try:
-            return json.load(open(pz)).get("v", 1) < 3
+            return json.load(open(pz)).get("v", 1) < 4
         except Exception:
             return True
     if sh("gh", "release", "download", "prep", "-R", REPO, "-p", os.path.basename(pz),

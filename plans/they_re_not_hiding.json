@@ -5,7 +5,7 @@
  "source": "they_re_not_hiding.mp4.enc",
  "duration": 1623,
  "autoplan": true,
- "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3). Re-cut by hand 29 Oct as whole teachings (9 clips): edges measured on the level track and edges.py probes; 7 claim-only or mid-thought clips dropped (cloud/dropped.json).",
+ "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3). Re-cut by hand 29 Oct as whole teachings (9 clips): edges measured on the level track and edges.py probes; 7 claim-only or mid-thought clips dropped (cloud/dropped.json). Grown 30 Oct from 9 to 18: the 15 uncut minutes re-cut as 9 whole teachings (each claim with its proof and landing), every edge on the 10 ms level track and checked by two edges.py probe runs before the build.",
  "clips": [
   {
    "name": "FEAR-KEEPS-YOU-INACTIVE",
@@ -50,6 +50,54 @@
    "end_at": 107.9
   },
   {
+   "name": "WE-WOULD-BE-GODS",
+   "region": [
+    188.0,
+    253.0
+   ],
+   "open": "It talks about the gods coming from other planets.",
+   "close": "connected with beings from other planets.",
+   "hook": [
+    "A PHONE 100 YEARS AGO",
+    "WOULD MAKE YOU A GOD"
+   ],
+   "start_at": 188.26,
+   "end_at": 252.3,
+   "fixes": []
+  },
+  {
+   "name": "THEY-LEAK-IT-ON-PURPOSE",
+   "region": [
+    252.5,
+    310.0
+   ],
+   "open": "There is an intergalactic federation,",
+   "close": "and not listen and pay attention.",
+   "hook": [
+    "THEY LEAK ALIEN SECRETS",
+    "SO YOU'LL STOP LISTENING"
+   ],
+   "start_at": 252.85,
+   "end_at": 309.45,
+   "fixes": []
+  },
+  {
+   "name": "THE-CIA-TELLS-CONGRESS-NOTHING",
+   "region": [
+    320.0,
+    383.0
+   ],
+   "open": "Why was I there? I was there",
+   "close": "other than what we want them to know.",
+   "hook": [
+    "YOUR PRESIDENT KNOWS ONLY",
+    "WHAT THE CIA SAYS"
+   ],
+   "start_at": 320.08,
+   "end_at": 382.28,
+   "fixes": []
+  },
+  {
    "name": "OPEN-UP-TO-POSSIBILITY",
    "region": [
     412.0,
@@ -91,6 +139,102 @@
    "start_at": 413.85,
    "end_at": 491.2,
    "look_ok": "Kamay, 30 Oct: 'Keep both'. 'This' is the disclosure the whole episode is about; the clip is the warning to stay open to it, and its full setup does not fit under 88 s."
+  },
+  {
+   "name": "I-DONT-BELIEVE-I-KNOW",
+   "region": [
+    536.0,
+    615.0
+   ],
+   "open": "So in the brotherhood, those who are in my position,",
+   "close": "from personal, direct experience.",
+   "hook": [
+    "I DON'T BELIEVE IN ALIENS",
+    "I KNOW"
+   ],
+   "start_at": 536.45,
+   "end_at": 614.76,
+   "fixes": []
+  },
+  {
+   "name": "HUNDREDS-OF-CREDIBLE-WITNESSES",
+   "region": [
+    636.0,
+    722.5
+   ],
+   "open": "Alizandro, top official at the Pentagon, that's just one person.",
+   "close": "We don't listen to him.",
+   "hook": [
+    "HUNDREDS OF OFFICIALS SAY",
+    "WE ARE NOT ALONE"
+   ],
+   "start_at": 636.6,
+   "end_at": 722.25,
+   "fixes": []
+  },
+  {
+   "name": "EVERY-CULTURE-SAW-THEM",
+   "region": [
+    722.5,
+    790.0
+   ],
+   "open": "You look at presidents who've seen",
+   "close": "Every culture says the same thing.",
+   "hook": [
+    "GEORGE WASHINGTON SAW THEM",
+    "SO DID COLUMBUS"
+   ],
+   "start_at": 722.7,
+   "end_at": 789.47,
+   "fixes": []
+  },
+  {
+   "name": "DNA-ALTERED-BY-DESIGN",
+   "region": [
+    850.5,
+    929.0
+   ],
+   "open": "You take a DNA out of it.",
+   "close": "or an extraterrestrial with advanced technology.",
+   "hook": [
+    "YOUR DNA HAS SIGNS",
+    "OF BEING EDITED"
+   ],
+   "start_at": 850.71,
+   "end_at": 928.5,
+   "fixes": []
+  },
+  {
+   "name": "THEY-CAME-FOR-GOLD",
+   "region": [
+    951.5,
+    1018.0
+   ],
+   "open": "Earth is a colony. Why did countries",
+   "close": "And we had gold.",
+   "hook": [
+    "THEY CAME TO EARTH",
+    "FOR ONE THING: GOLD"
+   ],
+   "start_at": 951.6,
+   "end_at": 1017.45,
+   "fixes": []
+  },
+  {
+   "name": "SIGHTINGS-SOARED-AFTER-THE-BOMB",
+   "region": [
+    1019.0,
+    1064.0
+   ],
+   "open": "its natural resources, its power and control",
+   "close": "you know, under wraps.",
+   "hook": [
+    "ONE BOMB MADE UFO",
+    "SIGHTINGS SKYROCKET"
+   ],
+   "start_at": 1019.3,
+   "end_at": 1063.4,
+   "fixes": []
   },
   {
    "name": "YOU-ARE-A-SPIRITUAL-ESSENCE",

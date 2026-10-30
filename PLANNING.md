@@ -19,6 +19,13 @@ answer comes back as JSON, is checked by code, and is committed only if it passe
    can"). Quality first: a teaching you cannot open and close cleanly is left out.
    Two tellings of one lesson are fine (affiliates want variety). Skip the intro chatter,
    the outro and anything after the ad wall / testimonial at the end - never cut those.
+   **Never shrink the batch** (Kamay, 30 Oct: "8 clips are to less"). they_re_not_hiding
+   (27 min) first came out 9 clips with 15 minutes uncut: stretches that read as bare claims
+   were dropped instead of re-cut. A claim is not a clip, but the stretch around it nearly
+   always holds a whole teaching - the claim WITH its proof and its landing ("If we showed
+   somebody a hundred years ago a cell phone... we would be gods"). When a clip cannot open
+   or close cleanly, move the edge to the nearest clean line or extend it to the lesson;
+   never drop it. Code counts the batch and names every stretch no clip covers.
 4. For each clip give:
    - `name`: UPPER-DASHED, 2-5 words, the idea (`RUN-AT-THE-PROBLEM`).
    - `region`: `[start, end]` in source seconds, a few seconds of air either side of
@@ -76,7 +83,10 @@ clips focusing only on John)." When the transcript tags lines `GUEST` (or `GUEST
   talking alone for the whole clip with Kevin only listening.
 - An interview is full of these. Look through the WHOLE conversation, not only Kevin's
   monologues - a 58-minute interview usually holds 15-30 clips.
-- A guest's question can be the open if it is short and Kevin's answer is the clip.
+- A guest's question can be the open if it is short and Kevin's answer is the clip - but
+  only when it is clearly audible. The interviewer's mic is often 15-20 dB under Kevin's
+  (they_re_not_hiding: "Why did you go to Area 51?" and the religion question were too faint
+  to caption), so open on KEVIN's first words and let the hook state the question.
 - **No tags does not mean no guest.** When the voices cannot be told apart (19 Oct, Hollywood
   Insider: Kevin and John Denney on the same mics), the transcript is untagged. Work out who
   speaks from the words: the host welcomes and introduces, the guest says "I met Kevin",

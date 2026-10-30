@@ -14,61 +14,51 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 30 Oct 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: grow they_re_not_hiding from 9 to 12-18 clips (Kamay, 30 Oct)
-Kamay: "8 clips are to less". PLANNING.md step 3: a 25-30 min episode is usually 12-18 clips ("the
-most amount of high quality clips, never less"); why_your_prayers_fail (27 min) shipped 14. The batch
-shrank to 9 because a brief allowed dropping fragments instead of re-cutting them - never again.
-1. **Keep the 9 below exactly as they are** (two carry Kamay's `look_ok`). Do not upload; Kamay holds
-   the upload until the batch is full.
-2. **Fix `pauses.bed_cuts` first** - the weak spot below (bed swells 3-7 dB over its 16 s floor while
-   Kevin is silent). Use a more local floor; prove `your_purpose_is_a`'s map is unchanged by replaying
-   its level track (`pause-test` workflow). Details in commit 751d504's message.
-3. **Cut the uncut stretches: 0-46 s, 110-412 s, 493-1081 s** (about 15 minutes with no clip). Topics
-   there that were dropped as fragments: Area 51 / what he saw, CIA tells Congress nothing, CRISPR /
-   human DNA edit, Earth is a colony / gold, Moses and the alien, seeing past and future, government
-   in the dark, every culture says it, hundreds of officials. Each as a WHOLE teaching: open and close
-   on measured cut points, 40-118 s, Kevin >= 60 % of the speech. NEW names only (never one in
-   `cloud/dropped.json` or `cloud/delivered.json`). A topic with no clean whole teaching is listed
-   with the reason, never padded.
-4. ONE push to `plans/` (a push cancels the running build). Then: green run, capread verdicts, new
-   clips in ~/VSC/Clips (not `_needs_work`). Content LOOKs go to Kamay with a recommendation.
-5. Replace this section; add to "Do not reintroduce": never shrink a batch by dropping - re-cut as
-   whole teachings to reach PLANNING.md's count. Hand off before ~150K tokens (see "Token budget").
-Done = 12-18 clips, list with lengths and verdicts, all in ~/VSC/Clips. Nothing to Frame.io.
+### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 18 clips (30 Oct)
+The batch grew from 9 to 18 (PLANNING.md: 12-18 for 27 min). ONE push (this commit) started vsc.yml;
+it builds only the 9 NEW clips (the 9 old ones are byte-identical in the plan, so their hashes match).
+1. When the run is green: the verdict table in the `clips` release, then capread's verdicts. A FAIL
+   on an edge: take the times from a probe (`edges.py probe`), never from prep's word times
+   (see "Do not reintroduce", 30 Oct: whisper runs 0.4-0.9 s off around here).
+2. Check the 9 new clips landed in ~/VSC/Clips (not `_needs_work`). Content LOOKs go to Kamay with a
+   recommendation. Do not upload; Kamay uploads when he says the batch is right.
+3. Then the usual: delivered.json, plan to `plans/done/` ([skip ci]), `retire`.
 
-- **they_re_not_hiding, 9 clips clean so far** (30 Oct) - GIN's Frame.io "They're Not Hiding Aliens.
-  They're Hiding This." (item 20 of 25; Kamay's Episode 20 of the Classified Files), 1623 s, 2160p.
-  **9 clips in ~/Desktop/VSC/Clips, every one clean on edges, kt_qc and capread**: FEAR-KEEPS-YOU-INACTIVE
-  60 s [46-110], OPEN-UP-TO-POSSIBILITY 77 [412-493], YOU-ARE-A-SPIRITUAL-ESSENCE 82 [1081-1165],
-  AN-ALIEN-ON-TV 79, NO-GOD-NO-SIN 50, DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60,
-  SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-NEED-TO-KNOW 61 (1184-1590).
-  After the batch is full: Kamay uploads to Frame.io, then the usual delivered.json / plans/done / retire.
-  How it got here: the first plan had ONE clip (music bed, see "Do not reintroduce" 29 Oct; fixed in
-  pauses.py v3, 338de25); autoplan's 13 tiled the episode into claims; re-cut by hand as whole
-  teachings with every edge on a measured silence (751d504, c2f4e1d). Kamay kept SPIRIT and OPEN-UP
-  over capread LOOKs with `look_ok` (ddbf485). Dropped names are in `cloud/dropped.json`; their files
-  and the old cuts still sit in the `clips` release (nothing deleted without Kamay's OK) - `retire`
-  clears them with the batch.
-- autoplan installs numpy since 751d504, so the Kevin >= 60 % speaker check runs from the next batch.
-- Weak spot in `pauses.bed_cuts`: where the bed swells 3-7 dB over its 16 s floor (they_re_not_hiding
-  490.9-492.9, 1315.2-1316.45) Kevin's silence is missed; a more local floor would find it.
+- **they_re_not_hiding, 18 clips** - GIN's Frame.io "They're Not Hiding Aliens. They're Hiding
+  This." (item 20 of 25), 1623 s, 2160p. The 9 already clean in ~/Desktop/VSC/Clips: FEAR-KEEPS-YOU-
+  INACTIVE 60, OPEN-UP-TO-POSSIBILITY 77, YOU-ARE-A-SPIRITUAL-ESSENCE 82, AN-ALIEN-ON-TV 79, NO-GOD-
+  NO-SIN 50, DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60, SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-
+  NEED-TO-KNOW 61. NEW (built by this run): WE-WOULD-BE-GODS 64 [188-252], THEY-LEAK-IT-ON-PURPOSE 57,
+  THE-CIA-TELLS-CONGRESS-NOTHING 62 [320-382], I-DONT-BELIEVE-I-KNOW 78 [536-615], HUNDREDS-OF-
+  CREDIBLE-WITNESSES 86 [637-722], EVERY-CULTURE-SAW-THEM 67, DNA-ALTERED-BY-DESIGN 78 [851-929],
+  THEY-CAME-FOR-GOLD 66 [952-1017], SIGHTINGS-SOARED-AFTER-THE-BOMB 44 [1019-1063].
+  Every new edge: the 10 ms level track + two `edges.py probe` runs (41094292094 and the one after).
+  Tightest edges: I-DONT-BELIEVE ends 0.04 s before the interviewer's faint "Let's talk" (614.76);
+  EVERY-CULTURE ends 0.07 s before his "Kevin, what..." (789.47).
+  Content to put to Kamay: THEY-CAME-FOR-GOLD carries Kevin's claim that human races come from
+  different extraterrestrial races (970-985 s) - his words, but affiliates will post it.
+  Left uncut, with the reason: 0-47 (intro claims; its lesson is FEAR's), 382-413 (the interviewer
+  asks what he saw at Area 51; Kevin never answers - it runs into OPEN-UP), 493-536 (an aside: "X-Men"
+  abilities and "you're resisting already" - OPEN-UP's warning again, no landing of its own).
+- Code fixed this session (30 Oct): pauses v4 `swell_cuts` (the bed-swell weak spot, both missed
+  gaps found, every v3 cut kept on both episodes - prep re-measures maps older than v4); autoplan
+  will not settle under `target()` clips and names the uncut stretches ("BATCH:" problem, UNDER
+  TARGET on the run page); autoplan searches a long last word for its gap (whisper's 10-s
+  "experience." would have put the interviewer's question inside a clip). PLANNING.md: never
+  shrink; never open on the interviewer's faint question.
 - `pause-test` workflow (manual): pause map + encrypted 10 ms level track of any cached source, to
-  replay a change to the cut rule on the Mac without fetching gigabytes (the release downloads to
-  this Mac at ~350 KB/s).
-- **your_purpose_is_a: DELIVERED** (Kamay uploaded the 9 to Frame.io, 29 Oct). Names in
-  `cloud/delivered.json`, plan in `plans/done/`, retired from `clips` and `prep`; its encrypted
-  source is KEPT in `sources` until GIN approves the 9 (same as hollywood), then `retire` again.
+  replay a change to the cut rule on the Mac without fetching gigabytes. Its artifact lives 2 days.
+- **your_purpose_is_a: DELIVERED** (29 Oct). Its encrypted source is KEPT in `sources` until GIN
+  approves the 9 (same as hollywood), then `retire` again.
 - **Housekeeping pushes that touch `plans/` (moving a plan to done/) go with `[skip ci]`** in the
-  commit message, or they cancel the build that is running (29 Oct: the aliens build was live).
+  commit message, or they cancel the build that is running.
 - **A clip Kamay deletes from Clips comes BACK on the next 15-min pull** while it is still in the
   `clips` release and not in `~/VSC/.handled.txt`. When he deletes uploaded clips, add their file
   names to `.handled.txt` at once, then retire.
 - This Mac has no `gh` binary; the GitHub API works with the gh token in the keychain
   (`security find-generic-password -s gh:github.com -w`, strip `go-keyring-base64:`, base64 -d).
 - **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
-  start vsc-new WITHOUT a rumble URL or with one from the catalogue - since 28 Oct new_batch.py takes
-  the catalogue's `rumble_hls` either way (a hand-given URL used to drop it; prep then failed with
-  "Rumble refused every attempt").
+  start vsc-new WITHOUT a rumble URL or with one from the catalogue.
 - hollywood_insider_reveals_secret: delivered; its encrypted source is KEPT in `sources` until GIN
   approves the 8, then `retire` with only that key. why_your_prayers_fail: delivered, fully retired.
 - GIN wants a perfect batch before giving more than one assignment at a time.
@@ -260,6 +250,25 @@ runs, and how to do any of them by hand.)
   fingerprint, so a clip already read is never read again, and the Mac gate judges by `capread.json`
   alone: Kamay's "Keep both" held SPIRIT in `_needs_work`. capread's read-and-confirmed branch now
   clears the LOOK when the plan answers it (kept as "answered").
+- **Never shrink a batch by dropping** (Kamay, 30 Oct: "8 clips are to less"). they_re_not_hiding
+  went 13 -> 9 because claim-only and mid-thought clips were DROPPED instead of re-cut, leaving
+  15 of 27 minutes uncut. Re-cut every stretch as whole teachings (the claim WITH its proof and
+  landing) up to PLANNING.md's count. autoplan now sends a "BATCH:" problem back while the batch
+  is under `target()` (0.45 clips a minute: 27 min -> 12) naming every stretch no clip covers,
+  and writes UNDER TARGET on the run page if it still is after the last round.
+- **Whisper's word times run 0.4-0.9 s off around soft, slow speech, and drop speech it cannot
+  hear** (30 Oct, they_re_not_hiding): "It talks" was really before the gap the plan opened in,
+  "attention." ended 2 s before prep's time, and "experience." ran 613.83-623.94 over the
+  interviewer's whole question. Hand edges come from the 10 ms level track (pause-test) PLUS one
+  `edges.py probe` run over every new edge before the build - one probe run for all edges
+  costs ~5 min and saves a rebuild round. autoplan now searches a long last word for its gap
+  first (longest inside the first 2 s, none = no clean close) instead of the gap beside a next
+  word 10 s away; replayed on the delivered your_purpose_is_a plan: all 9 cuts identical.
+- **The interviewer's mic is 15-20 dB under Kevin's** in the Classified interviews: his questions
+  are too faint to caption. Open on Kevin's first words; the hook states the question.
+- **pauses v4 `swell_cuts`** (30 Oct): where the bed swells over its 16 s floor, a gap is measured
+  against a local floor (see the docstring). Every v3 cut is kept (they_re_not_hiding 391 + 286,
+  your_purpose_is_a 328 + 51); prep re-measures maps older than v4.
 - **prep's pause map can drift from the renderer's clock** (20 Oct, hollywood_insider):
   around 28-31 min `pauses-<key>.json` and prep's word times ran 0.6-1.0 s EARLY against
   ffmpeg's `-ss` on the same source (gap after "book form." 1832.65 in prep, 1833.14-1833.76

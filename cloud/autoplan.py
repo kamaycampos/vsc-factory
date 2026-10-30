@@ -37,6 +37,7 @@ REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-factory")
 MODEL = os.environ.get("VSC_PLANNER_MODEL") or "claude-opus-5-5"
 ATTEMPTS = 4        # the first answer, then up to three repair rounds with the problems listed
 MIN_KEEP = 6        # after the last round, keep the clips that pass if at least this many do
+PER_MIN = 0.45      # whole teachings a minute of episode holds (PLANNING.md step 3: 27 min -> 12)
 
 SCHEMA = {
     "type": "object",
@@ -359,13 +360,22 @@ def at_pauses(c):
         # and its edge listening checks the result. Same placement as the 8 hand cuts of
         # 15 Oct: start up to 0.25 s before the voice, end 0.15 s into the gap.
         nxt = ws[je + 1]["a"] if je + 1 < len(ws) else t1 + 0.5
+        lw = ws[min(je, len(ws) - 1)]
         rs, re_ = cut_near(pauses, t0), cut_near(pauses, nxt)
+        # A LONG LAST WORD IS SEARCHED FIRST (30 Oct 2026, they_re_not_hiding): whisper ran
+        # "experience." 613.83-623.94 over the interviewer's whole question, so the "next
+        # word" sat 10 s on and the gap beside it would have put his question in the clip.
+        # The gap is the longest inside the word's first 2 s; none there = no clean close.
+        if lw["b"] - lw["a"] > 0.8:
+            inside = [r for r in pauses if lw["a"] + 0.15 <= r[0] < min(lw["b"], lw["a"] + 2.0)
+                      and r[1] - r[0] >= CLOSE_GAP]
+            re_ = max(inside, key=lambda r: r[1] - r[0]) if inside else (re_ if lw["b"] - lw["a"] <= 2.0 else None)
         # THE END GAP IS THE ONE BEFORE THE NEXT WORD, never the one after it (28 Oct 2026):
         # THE-CHRISTMAS-CRASH closed "...seeking anything" and the longest gap in reach was
         # the pause AFTER "because" (378.82-379.69), so end_at kept "because" - the first
         # word of "because you have it all", the landing. A gap may end at most 0.5 s past
         # the next word's start (whisper's times run early), no later.
-        if re_ and re_[1] > nxt + 0.5:
+        if re_ and re_[1] > nxt + 0.5 and lw["b"] - lw["a"] <= 0.8:
             re_ = cut_near([r for r in pauses if r[1] <= nxt + 0.5], nxt)
         # ...and the start gap is the one AFTER the word before the open: DHARMA-IS-DUTY's
         # longest gap in reach (179.80-180.24) sat before the interviewer's "Is it?", so the
@@ -374,13 +384,8 @@ def at_pauses(c):
         # the open; FOCUS-ONLY-ON-TODAY's gap overlaps whisper's late "loose." and is right.)
         if rs and i > 0 and rs[1] <= ws[i - 1]["a"] + 0.05:
             rs = cut_near([r for r in pauses if r[1] > ws[i - 1]["a"] + 0.05], t0)
-        # WHISPER SWALLOWS THE PAUSE INTO A LONG LAST WORD (CLAUDE.md): "all." ran
-        # 380.41-382.48 and held the gap at 380.67; nothing lay near the next word.
-        lw = ws[min(je, len(ws) - 1)]
-        if re_ is None and lw["b"] - lw["a"] > 0.8:
-            inside = [r for r in pauses if lw["a"] + 0.15 <= r[0] < lw["b"]
-                      and r[1] - r[0] >= CLOSE_GAP]
-            re_ = inside[0] if inside else None
+        # (WHISPER SWALLOWS THE PAUSE INTO A LONG LAST WORD, CLAUDE.md: "all." ran
+        # 380.41-382.48 and held the gap at 380.67 - the long-word search above finds it.)
         if rs:
             c["start_at"] = round(max(rs[0], rs[1] - 0.25), 2)
         if re_:
@@ -408,11 +413,47 @@ def at_pauses(c):
     return out
 
 
+def target(p):
+    """How many whole teachings the episode holds, at least (PLANNING.md step 3)."""
+    return max(MIN_KEEP, round(float(p.get("duration") or 0) / 60 * PER_MIN))
+
+
+def uncut(clips, tw, dur, least=150.0):
+    """[(start, end)] stretches of at least `least` seconds that no clip covers."""
+    spans = []
+    for c in clips:
+        o, e = searched(c, tw)
+        if o and e:
+            spans.append((o[0][0], e[-1][1]))
+    out, t = [], 0.0
+    for a, b in sorted(spans) + [(dur, dur)]:
+        if a - t >= least:
+            out.append((t, a))
+        t = max(t, b)
+    return out
+
+
 def problems(p, clips, text):
-    """Everything code can check. Empty list = keep it."""
+    """Everything code can check. Empty list = keep it. A "BATCH:" problem is about the
+    whole batch (too few clips): it goes back to the planner, but never sinks the clips
+    that pass at the end."""
     out = []
     if not clips:
         return ["no clips"]
+    # NEVER SHRINK A BATCH (Kamay, 30 Oct 2026: "8 clips are to less"). they_re_not_hiding
+    # came out 9 clips from a 27-min episode with 15 minutes uncut: fragments were dropped
+    # instead of re-cut as whole teachings. The planner hears the count and the uncut
+    # stretches until the batch is full.
+    want, dur = target(p), float(p.get("duration") or 0)
+    if len(clips) < want:
+        holes = uncut(clips, timed_words(text), dur)
+        out.append(f"BATCH: only {len(clips)} clips - a {dur / 60:.0f}-minute episode holds at least "
+                   f"{want} whole teachings (PLANNING.md step 3). Add the missing ones. Never fix a "
+                   "problem by dropping or merging a clip: move its open or close to the nearest clean "
+                   "line, or extend it to the lesson it is missing."
+                   + (" No clip covers " + ", ".join(f"{mmss(a)}-{mmss(b)}" for a, b in holes)
+                      + " - cut every whole teaching there (skip only intro chatter and the ad wall)."
+                      if holes else ""))
     # The [mm:ss.ss] stamps come out first: left in, a phrase that runs across two
     # transcript lines would have a timestamp in the middle of it and never match.
     words = norm(LINE.sub(r"\3", text))
@@ -544,7 +585,12 @@ def plan_one(client, p, text):
             clips, bad = [], [f"the answer was not the JSON batch asked for ({e})"]
         print(f"  attempt {attempt}: {len(clips)} clips, {len(bad)} problem(s) "
               f"[{r.usage.input_tokens} in / {r.usage.output_tokens} out]")
-        if not bad:
+        if not bad or (attempt == ATTEMPTS and all(b.startswith("BATCH:") for b in bad)):
+            if bad:
+                print(f"::warning::{p['key']}: UNDER TARGET - {len(clips)} clips, the episode holds "
+                      f"at least {target(p)}. {bad[0]}")
+                summary([f"**{p['key']}: UNDER TARGET** - {len(clips)} of at least {target(p)} clips. "
+                         "Cut the uncut stretches as whole teachings before it goes to GIN."])
             return clips
         for b in bad:
             print("    - " + b)
@@ -558,11 +604,16 @@ def plan_one(client, p, text):
     if clips:
         names = {c["name"] for c in clips}
         failing = {b.split(":")[0] for b in bad if b.split(":")[0] in names}
-        general = [b for b in bad if b.split(":")[0] not in names]
+        general = [b for b in bad if b.split(":")[0] not in names and not b.startswith("BATCH:")]
         keep = [c for c in clips if c["name"] not in failing]
-        if not general and len(keep) >= MIN_KEEP and not problems(p, keep, text):
+        if (not general and len(keep) >= MIN_KEEP
+                and not [b for b in problems(p, keep, text) if not b.startswith("BATCH:")]):
             print(f"::warning::{p['key']}: kept {len(keep)} clips that pass; dropped "
                   f"{', '.join(sorted(failing))} - they could not be put on a clean pause")
+            if len(keep) < target(p):
+                summary([f"**{p['key']}: UNDER TARGET** - kept {len(keep)} of at least {target(p)} "
+                         f"clips; {', '.join(sorted(failing))} could not be put on a clean pause. "
+                         "Re-cut them as whole teachings before it goes to GIN."])
             return keep
     return None
 
