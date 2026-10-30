@@ -61,7 +61,28 @@
     "99.9% WILL RESIST THIS",
     "OPEN UP INSTEAD"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     12.76,
+     "there's It's going to be",
+     "There's going to be"
+    ],
+    [
+     25.63,
+     "it so it's very interesting",
+     "it. So it's very interesting"
+    ],
+    [
+     72.61,
+     "to the impact. Influence of those",
+     "to the influence of those"
+    ],
+    [
+     76.36,
+     "who control you?",
+     "who control you."
+    ]
+   ],
    "start_at": 413.85,
    "end_at": 491.2
   },
@@ -77,7 +98,23 @@
     "ALIENS DON'T CHANGE",
     "WHO YOU REALLY ARE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     1.21,
+     "the answer",
+     "The answer"
+    ],
+    [
+     11.9,
+     "as a word, For religion?",
+     "as a word for religion?"
+    ],
+    [
+     50.27,
+     "It expands",
+     "it expands"
+    ]
+   ],
    "start_at": 1082.4,
    "end_at": 1135.65
   },
@@ -103,6 +140,16 @@
      51.45,
      "If People saw",
      "If people saw"
+    ],
+    [
+     58.2,
+     "it's not, We're not ready",
+     "it's not, we're not ready"
+    ],
+    [
+     75.14,
+     "riding in the streets.",
+     "rioting in the streets."
     ]
    ],
    "start_at": 1185.55,
@@ -120,7 +167,18 @@
     "THEIR BIG FEAR:",
     "NO GOD MEANS NO SIN"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     22.46,
+     "some mass. Now, chaos.",
+     "some mass chaos. Now,"
+    ],
+    [
+     25.01,
+     "Certainly we have punishment here,",
+     "certainly we have punishment here,"
+    ]
+   ],
    "start_at": 1264.92,
    "end_at": 1315.4
   },
@@ -136,7 +194,23 @@
     "NEVER TRY TO",
     "MAKE A PIG SING"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     11.36,
+     "anything. Because I understand it.",
+     "anything because I understand it."
+    ],
+    [
+     46.8,
+     "who was...",
+     "who was"
+    ],
+    [
+     48.85,
+     "the main. The character main there says,",
+     "the main character there, says,"
+    ]
+   ],
    "start_at": 1316.2,
    "end_at": 1387.51
   },
@@ -152,7 +226,33 @@
     "YOUR LIFE DOESN'T END",
     "WHEN YOUR BODY DOES"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     8.74,
+     "that I should know? no,",
+     "that I should know"
+    ],
+    [
+     14.32,
+     "that will help me in my life.",
+     "that will help me in my life?"
+    ],
+    [
+     39.86,
+     "in your life, it isn't.",
+     "in your life. It isn't."
+    ],
+    [
+     43.61,
+     "spiritual essence. It's basically",
+     "spiritual essence that's basically"
+    ],
+    [
+     49.08,
+     "And when your body... If you die,",
+     "And when your body dies,"
+    ]
+   ],
    "start_at": 1387.42,
    "end_at": 1447.4
   },
@@ -168,7 +268,33 @@
     "SEE THE BIGGER PICTURE",
     "AND LOSE THE FEAR"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     67.01,
+     "This is trust,",
+     "This is trust."
+    ],
+    [
+     12.49,
+     "and not be Not stressed be out and not",
+     "and not be stressed out and not"
+    ],
+    [
+     25.11,
+     "that there are Our beings",
+     "that there are beings"
+    ],
+    [
+     36.76,
+     "This should help us",
+     "this should help us"
+    ],
+    [
+     50.27,
+     "asking so many questions. There many are questions.",
+     "asking so many questions."
+    ]
+   ],
    "start_at": 1450.65,
    "end_at": 1518.75
   },
