@@ -14,25 +14,21 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 29 Oct 2026 - replace this section at every handoff)
 
-- **IN THE FACTORY: they_re_not_hiding, REPLANNED** (29 Oct, ~20:15 ET) - GIN's Frame.io "They're
-  Not Hiding Aliens. They're Hiding This." (item 20 of 25 in GIN's folder; Kamay calls it Episode 20
-  of the Classified Files), 1623 s, 2160p. The first plan came out with ONE clip
-  (ANCIENT-TEXTS-DESCRIBE-SPACECRAFT, held in `_needs_work`: opens mid-thought, ends mid-sentence)
-  because a music bed under the whole episode left the pause map with 6 cut points (see "Do not
-  reintroduce", 29 Oct). Fixed in `cloud/pauses.py` v3 (338de25); autoplan replanned 13 clips
-  (d80079b), capread fixed captions (f9bfcfb), vsc run 40982239094 GREEN. Edge listening heard every
-  start and end on the planned word through the bed, except at 21:58, where whisper's word stream lost
-  the interviewer's "What's the one truth about reality and...". **The batch is NOT ready for GIN**:
-  only FEAR-KEEPS-YOU-INACTIVE and RELEASE-THE-NEED-TO-KNOW clear every check. FAIL: NO-GOD-NO-SIN
-  (ends inside that question), DONT-MAKE-A-PIG-SING (opens mid-question), AN-ALIEN-ON-TV (cut right,
-  captions stop at "start" before "rioting in the streets"), YOU-WILL-RESIST-THIS ("nine point nine";
-  close stops before "a sense of possibility"). Content LOOKs from capread on most others: the planner
-  tiled the episode back to back (AREA-51 -> FEAR, HUMAN-DNA -> EARTH, MOSES -> AN-ALIEN -> NO-GOD -> PIG)
-  instead of choosing whole teachings ("no lesson", "ends before the landing"). Next: a repair pass on
-  those clips (probe the times at 21:58), then Kamay watches and uploads. The old ANCIENT cut is in
-  `.handled.txt` and the Trash.
-- autoplan's job installs only `anthropic`; `cloud/speakers.py` needs numpy, so the Kevin-focus check
-  has not run in autoplan ("no speaker map (ModuleNotFoundError)", also on 40931607728).
+- **READY FOR GIN: they_re_not_hiding** (30 Oct) - GIN's Frame.io "They're Not Hiding Aliens.
+  They're Hiding This." (item 20 of 25; Kamay's Episode 20 of the Classified Files), 1623 s, 2160p.
+  **9 clips in ~/Desktop/VSC/Clips, every one clean on edges, kt_qc and capread**: FEAR-KEEPS-YOU-INACTIVE
+  60 s, OPEN-UP-TO-POSSIBILITY 77, YOU-ARE-A-SPIRITUAL-ESSENCE 82, AN-ALIEN-ON-TV 79, NO-GOD-NO-SIN 50,
+  DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60, SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-NEED-TO-KNOW 61.
+  Next: Kamay uploads them to Frame.io, then the usual delivered.json / plans/done / retire.
+  How it got here: the first plan had ONE clip (music bed, see "Do not reintroduce" 29 Oct; fixed in
+  pauses.py v3, 338de25); autoplan's 13 tiled the episode into claims; re-cut by hand as whole
+  teachings with every edge on a measured silence (751d504, c2f4e1d). Kamay kept SPIRIT and OPEN-UP
+  over capread LOOKs with `look_ok` (ddbf485). Dropped names are in `cloud/dropped.json`; their files
+  and the old cuts still sit in the `clips` release (nothing deleted without Kamay's OK) - `retire`
+  clears them with the batch.
+- autoplan installs numpy since 751d504, so the Kevin >= 60 % speaker check runs from the next batch.
+- Weak spot in `pauses.bed_cuts`: where the bed swells 3-7 dB over its 16 s floor (they_re_not_hiding
+  490.9-492.9, 1315.2-1316.45) Kevin's silence is missed; a more local floor would find it.
 - `pause-test` workflow (manual): pause map + encrypted 10 ms level track of any cached source, to
   replay a change to the cut rule on the Mac without fetching gigabytes (the release downloads to
   this Mac at ~350 KB/s).
@@ -237,6 +233,10 @@ runs, and how to do any of them by hand.)
   is kept (bed gaps only fill where none lies); your_purpose_is_a replayed: `pauses` identical, all
   225 cuts kept, 103 added in its own bed stretches. prep re-measures a published map older than v3.
   A pause map with under ~1 cut point a minute is this bug, not a dull episode.
+- **A LOOK answered after the read must be cleared by capread** (30 Oct). `look_ok` is left out of the
+  fingerprint, so a clip already read is never read again, and the Mac gate judges by `capread.json`
+  alone: Kamay's "Keep both" held SPIRIT in `_needs_work`. capread's read-and-confirmed branch now
+  clears the LOOK when the plan answers it (kept as "answered").
 - **prep's pause map can drift from the renderer's clock** (20 Oct, hollywood_insider):
   around 28-31 min `pauses-<key>.json` and prep's word times ran 0.6-1.0 s EARLY against
   ffmpeg's `-ss` on the same source (gap after "book form." 1832.65 in prep, 1833.14-1833.76
