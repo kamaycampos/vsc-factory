@@ -25,7 +25,10 @@ answer comes back as JSON, is checked by code, and is committed only if it passe
    always holds a whole teaching - the claim WITH its proof and its landing ("If we showed
    somebody a hundred years ago a cell phone... we would be gods"). When a clip cannot open
    or close cleanly, move the edge to the nearest clean line or extend it to the lesson;
-   never drop it. Code counts the batch and names every stretch no clip covers.
+   never drop it. Code counts the batch and names every stretch no clip covers. Leave a stretch
+   out only when it surely cannot stand on its own (Kamay, 30 Oct: "only take out things we know
+   100% are not going to be fine") - a question Kevin never answers, a fragment. A short stretch
+   that holds together (a question and its answer) is a clip with `short_ok`.
 4. For each clip give:
    - `name`: UPPER-DASHED, 2-5 words, the idea (`RUN-AT-THE-PROBLEM`).
    - `region`: `[start, end]` in source seconds, a few seconds of air either side of

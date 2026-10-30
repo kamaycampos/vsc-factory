@@ -14,9 +14,12 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 30 Oct 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 18 clips (30 Oct)
-The batch grew from 9 to 18 (PLANNING.md: 12-18 for 27 min). ONE push (this commit) started vsc.yml;
-it builds only the 9 NEW clips (the 9 old ones are byte-identical in the plan, so their hashes match).
+### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 20 clips (30 Oct)
+The batch grew from 9 to 20 (PLANNING.md: 12-18 for 27 min). Kamay, 30 Oct: "don't leave anything out,
+only take out things we know 100% are not going to be fine" - a standing order for every batch.
+Run 41095849254 built 9 new clips; a second push added I-WAS-INSIDE-AREA-51 (36 s, short_ok, 0-35.9)
+and YOURE-RESISTING-RIGHT-NOW (43 s, 492.6-536.0), edges probed (run 41098314970). ONE push (this commit) started vsc.yml;
+each run builds only clips not yet built (the 9 old ones are byte-identical in the plan, so their hashes match).
 1. When the run is green: the verdict table in the `clips` release, then capread's verdicts. A FAIL
    on an edge: take the times from a probe (`edges.py probe`), never from prep's word times
    (see "Do not reintroduce", 30 Oct: whisper runs 0.4-0.9 s off around here).
@@ -37,9 +40,9 @@ it builds only the 9 NEW clips (the 9 old ones are byte-identical in the plan, s
   EVERY-CULTURE ends 0.07 s before his "Kevin, what..." (789.47).
   Content to put to Kamay: THEY-CAME-FOR-GOLD carries Kevin's claim that human races come from
   different extraterrestrial races (970-985 s) - his words, but affiliates will post it.
-  Left uncut, with the reason: 0-47 (intro claims; its lesson is FEAR's), 382-413 (the interviewer
-  asks what he saw at Area 51; Kevin never answers - it runs into OPEN-UP), 493-536 (an aside: "X-Men"
-  abilities and "you're resisting already" - OPEN-UP's warning again, no landing of its own).
+  Kamay keeps THEY-CAME-FOR-GOLD as it is ("it will be fine"). Left uncut, surely not a clip:
+  382-413 only (the interviewer asks what he saw at Area 51; Kevin never answers - 23 s that runs
+  into OPEN-UP).
 - Code fixed this session (30 Oct): pauses v4 `swell_cuts` (the bed-swell weak spot, both missed
   gaps found, every v3 cut kept on both episodes - prep re-measures maps older than v4); autoplan
   will not settle under `target()` clips and names the uncut stretches ("BATCH:" problem, UNDER
@@ -264,6 +267,9 @@ runs, and how to do any of them by hand.)
   costs ~5 min and saves a rebuild round. autoplan now searches a long last word for its gap
   first (longest inside the first 2 s, none = no clean close) instead of the gap beside a next
   word 10 s away; replayed on the delivered your_purpose_is_a plan: all 9 cuts identical.
+- **Leave nothing out unless it is surely not fine** (Kamay, 30 Oct): a stretch that holds together
+  (a question and its answer, an aside with its point) is a clip, even short (`short_ok`). Only a
+  stretch that cannot stand (an unanswered question, a fragment) stays out, named with the reason.
 - **The interviewer's mic is 15-20 dB under Kevin's** in the Classified interviews: his questions
   are too faint to caption. Open on Kevin's first words; the hook states the question.
 - **pauses v4 `swell_cuts`** (30 Oct): where the bed swells over its 16 s floor, a gap is measured

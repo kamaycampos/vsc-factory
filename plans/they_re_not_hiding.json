@@ -5,8 +5,25 @@
  "source": "they_re_not_hiding.mp4.enc",
  "duration": 1623,
  "autoplan": true,
- "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3). Re-cut by hand 29 Oct as whole teachings (9 clips): edges measured on the level track and edges.py probes; 7 claim-only or mid-thought clips dropped (cloud/dropped.json). Grown 30 Oct from 9 to 18: the 15 uncut minutes re-cut as 9 whole teachings (each claim with its proof and landing), every edge on the 10 ms level track and checked by two edges.py probe runs before the build.",
+ "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3). Re-cut by hand 29 Oct as whole teachings (9 clips): edges measured on the level track and edges.py probes; 7 claim-only or mid-thought clips dropped (cloud/dropped.json). Grown 30 Oct from 9 to 20: the 15 uncut minutes re-cut as 9 whole teachings (each claim with its proof and landing), every edge on the 10 ms level track and checked by two edges.py probe runs before the build. Kamay, 30 Oct: leave nothing out unless it is surely not fine - intro and the resisting aside added; 382-413 stays out (a question Kevin never answers).",
  "clips": [
+  {
+   "name": "I-WAS-INSIDE-AREA-51",
+   "region": [
+    0.0,
+    36.0
+   ],
+   "open": "What's the truth about Area 51",
+   "close": "technology exists, including extraterrestrials.",
+   "hook": [
+    "AREA 51 HOLDS ALIEN TECH",
+    "AND ALIENS"
+   ],
+   "short_ok": "A whole question and answer: what is the truth about Area 51 - he was there, and extraterrestrial technology and extraterrestrials exist. The next sentence begins the brotherhood's purpose, which FEAR-KEEPS-YOU-INACTIVE carries.",
+   "start_at": 0.0,
+   "end_at": 35.92,
+   "fixes": []
+  },
   {
    "name": "FEAR-KEEPS-YOU-INACTIVE",
    "region": [
@@ -177,6 +194,22 @@
    "start_at": 413.85,
    "end_at": 491.2,
    "look_ok": "Kamay, 30 Oct: 'Keep both'. 'This' is the disclosure the whole episode is about; the clip is the warning to stay open to it, and its full setup does not fit under 88 s."
+  },
+  {
+   "name": "YOURE-RESISTING-RIGHT-NOW",
+   "region": [
+    492.5,
+    536.0
+   ],
+   "open": "So, in the brotherhood, certain people,",
+   "close": "I mean, it's right there.",
+   "hook": [
+    "YOU'RE RESISTING THIS",
+    "RIGHT NOW"
+   ],
+   "start_at": 492.6,
+   "end_at": 536.0,
+   "fixes": []
   },
   {
    "name": "I-DONT-BELIEVE-I-KNOW",
