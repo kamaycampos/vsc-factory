@@ -5,40 +5,8 @@
  "source": "they_re_not_hiding.mp4.enc",
  "duration": 1623,
  "autoplan": true,
- "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3).",
+ "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3). Re-cut by hand 29 Oct as whole teachings (9 clips): edges measured on the level track and edges.py probes; 7 claim-only or mid-thought clips dropped (cloud/dropped.json).",
  "clips": [
-  {
-   "name": "AREA-51-IS-REAL",
-   "region": [
-    0.0,
-    50.0
-   ],
-   "open": "What's the truth about Area 51 or extraterrestrials?",
-   "close": "small group of people here on earth.",
-   "hook": [
-    "AREA 51 HOLDS REAL",
-    "ALIEN TECHNOLOGY"
-   ],
-   "fixes": [
-    [
-     12.09,
-     "and it is not. What do you think?",
-     "and it is not what you think."
-    ],
-    [
-     27.37,
-     "around the world. Where",
-     "around the world where"
-    ],
-    [
-     38.4,
-     "of the brotherhood,",
-     "of the Brotherhood,"
-    ]
-   ],
-   "start_at": 0.0,
-   "end_at": 47.56
-  },
   {
    "name": "FEAR-KEEPS-YOU-INACTIVE",
    "region": [
@@ -82,251 +50,50 @@
    "end_at": 107.9
   },
   {
-   "name": "GOVERNMENT-IN-THE-DARK",
+   "name": "OPEN-UP-TO-POSSIBILITY",
    "region": [
-    316.0,
-    345.0
+    412.0,
+    493.0
    ],
-   "open": "Why did you go to area 51?",
-   "close": "the universal group that is all interplaying with Earth.",
+   "open": "So when I say this, I know that the majority",
+   "close": "to the influence of those in authority who control you.",
    "hook": [
-    "YOUR GOVERNMENT DOESN'T",
-    "KNOW WHAT WE KNOW"
+    "99.9% WILL RESIST THIS",
+    "OPEN UP INSTEAD"
    ],
-   "short_ok": "One complete answer: why Kevin was at Area 51, landing on the point that the government does not know what the Brotherhood knows about the beings interplaying with Earth.",
-   "fixes": [
-    [
-     30.12,
-     "with Earth,",
-     "with Earth."
-    ],
-    [
-     12.53,
-     "what was happening. What's going on? Our government",
-     "what was happening and going on, our government"
-    ]
-   ],
-   "start_at": 316.98,
-   "end_at": 347.36
+   "fixes": [],
+   "start_at": 413.85,
+   "end_at": 491.2
   },
   {
-   "name": "YOU-WILL-RESIST-THIS",
+   "name": "YOU-ARE-A-SPIRITUAL-ESSENCE",
    "region": [
-    390.0,
-    470.0
+    1081.0,
+    1137.0
    ],
-   "open": "what I'm describing is belong beyond the",
-   "close": "when you hear this, to try to open up.",
+   "open": "The answer is yes",
+   "close": "it expands the reality of what is.",
    "hook": [
-    "99.9% OF PEOPLE",
-    "WILL RESIST THIS"
+    "ALIENS DON'T CHANGE",
+    "WHO YOU REALLY ARE"
    ],
-   "fixes": [
-    [
-     74.34,
-     "to open up",
-     "to open up."
-    ],
-    [
-     1.55,
-     "is belong beyond",
-     "is beyond"
-    ],
-    [
-     16.95,
-     "Who had the ability",
-     "who have the ability"
-    ],
-    [
-     19.95,
-     "at a high frequency?",
-     "at a high frequency."
-    ],
-    [
-     25.77,
-     "feel... Resistance.",
-     "feel... resistance."
-    ],
-    [
-     29.8,
-     "this No, no,",
-     "No, no,"
-    ],
-    [
-     44.61,
-     "don't want to hear I it,",
-     "don't want to hear it,"
-    ],
-    [
-     70.77,
-     "this, To try",
-     "this, to try"
-    ]
-   ],
-   "start_at": 392.66,
-   "end_at": 468.28
-  },
-  {
-   "name": "PAST-AND-FUTURE",
-   "region": [
-    503.0,
-    556.0
-   ],
-   "open": "We had the ability to go back in time",
-   "close": "because we could past and the future.",
-   "hook": [
-    "WE COULD SEE THE",
-    "PAST AND THE FUTURE"
-   ],
-   "fixes": [
-    [
-     0.28,
-     "We have the ability to go back",
-     "We had the ability to go back"
-    ],
-    [
-     26.5,
-     "It already is it is right",
-     "Already. It is right"
-    ]
-   ],
-   "start_at": 505.18,
-   "end_at": 553.59
-  },
-  {
-   "name": "HUMAN-DNA-WAS-ALTERED",
-   "region": [
-    858.0,
-    930.0
-   ],
-   "open": "CRISPR is a device, a technology, that",
-   "close": "or an extraterrestrial with advanced technology.",
-   "hook": [
-    "HUMAN DNA CARRIES",
-    "A CRISPR EDIT MARK"
-   ],
-   "fixes": [
-    [
-     17.27,
-     "it back in, You have",
-     "it back in, you have"
-    ],
-    [
-     46.69,
-     "Well, That's impossible.",
-     "Well, that's impossible."
-    ],
-    [
-     50.96,
-     "So human DNA It has been altered.",
-     "So human DNA has been altered."
-    ],
-    [
-     60.6,
-     "Or an extraterrestrial? With advanced technology?",
-     "Or an extraterrestrial with advanced technology?"
-    ]
-   ],
-   "start_at": 860.49,
-   "end_at": 929.13
-  },
-  {
-   "name": "EARTH-IS-A-COLONY",
-   "region": [
-    927.0,
-    997.0
-   ],
-   "open": "We have this technology today, we go",
-   "close": "Earth was colonized by other planets.",
-   "hook": [
-    "EARTH WAS COLONIZED",
-    "FOR ITS RESOURCES"
-   ],
-   "fixes": [
-    [
-     11.9,
-     "an a new species.",
-     "a new species."
-    ],
-    [
-     13.34,
-     "It's the island of Dr.",
-     "It's the Island of Dr."
-    ],
-    [
-     23.74,
-     "Health is a colony.",
-     "Earth is a colony."
-    ],
-    [
-     34.74,
-     "and expanding power.",
-     "and expanding power and control."
-    ],
-    [
-     58.99,
-     "and the same exact",
-     "And the same exact"
-    ]
-   ],
-   "start_at": 929.03,
-   "end_at": 995.08
-  },
-  {
-   "name": "MOSES-AND-THE-ALIEN",
-   "region": [
-    1133.0,
-    1187.0
-   ],
-   "open": "from the spiritual standpoint no, but from traditional religions,",
-   "close": "this is going to dramatically cause an upheaval.",
-   "hook": [
-    "IF MOSES WAS TALKING",
-    "TO AN ALIEN"
-   ],
-   "fixes": [
-    [
-     11.93,
-     "to an alien. And Yahweh,",
-     "to an alien and Yahweh,"
-    ],
-    [
-     17.37,
-     "the planets. Okay,",
-     "the planets, okay,"
-    ],
-    [
-     24.76,
-     "create Change,",
-     "create change,"
-    ],
-    [
-     33.67,
-     "ever before. Although,",
-     "ever before, although,"
-    ]
-   ],
-   "start_at": 1135.64,
-   "end_at": 1185.28
+   "fixes": [],
+   "start_at": 1082.4,
+   "end_at": 1135.65
   },
   {
    "name": "AN-ALIEN-ON-TV",
    "region": [
     1184.0,
-    1262.0
+    1266.0
    ],
    "open": "By the way, there are... And it's been referenced",
-   "close": "people aren't gonna start rioting. in the streets.",
+   "close": "I don't have to be moral anymore because there is no God.",
    "hook": [
-    "GOVERNMENTS STUDY WHAT IF",
-    "AN ALIEN WENT ON TV"
+    "WHAT IF AN ALIEN SAID",
+    "\"HI, I'M ZOTAR\" ON TV?"
    ],
    "fixes": [
-    [
-     75.33,
-     "people aren't going to start",
-     "people aren't going to start."
-    ],
     [
      35.65,
      "Yahweh in the well,",
@@ -339,94 +106,71 @@
     ]
    ],
    "start_at": 1185.55,
-   "end_at": 1261.12
+   "end_at": 1264.97
   },
   {
    "name": "NO-GOD-NO-SIN",
    "region": [
-    1259.0,
-    1322.0
+    1263.0,
+    1317.0
    ],
-   "open": "Oh, I don't have to be moral anymore,",
-   "close": "not going to have a mass calamity.",
+   "open": "The big fear years ago when you looked at these reports",
+   "close": "we're not going to have a mass calamity.",
    "hook": [
     "THEIR BIG FEAR:",
     "NO GOD MEANS NO SIN"
    ],
-   "fixes": [
-    [
-     41.82,
-     "here's my craft. Because when",
-     "here's my craft, because when"
-    ]
-   ],
-   "start_at": 1260.99,
-   "end_at": 1320.05
+   "fixes": [],
+   "start_at": 1264.92,
+   "end_at": 1315.4
   },
   {
    "name": "DONT-MAKE-A-PIG-SING",
    "region": [
-    1318.0,
-    1390.0
+    1315.0,
+    1389.0
    ],
-   "open": "alien existence that you wish everyone could understand.",
+   "open": "What is the one truth about reality and alien existence",
    "close": "Most people do the same way.",
    "hook": [
     "NEVER TRY TO",
     "MAKE A PIG SING"
    ],
-   "fixes": [
-    [
-     34.95,
-     "and then the movie Jaws,",
-     "and in the movie Jaws,"
-    ],
-    [
-     40.17,
-     "there was like. We have 12. Guys in this",
-     "there was like 12 guys in this"
-    ],
-    [
-     43.04,
-     "Richard Dreyfus,",
-     "Richard Dreyfuss,"
-    ],
-    [
-     62.92,
-     "who's an expert? that they know better.",
-     "who's an expert that they know better?"
-    ]
-   ],
-   "start_at": 1319.96,
+   "fixes": [],
+   "start_at": 1316.2,
    "end_at": 1387.51
   },
   {
    "name": "YOUR-LIFE-IS-ETERNAL",
    "region": [
-    1408.0,
-    1450.0
+    1386.0,
+    1449.0
    ],
-   "open": "you create your own reality and your life",
-   "close": "existence is infinite. It is eternal.",
+   "open": "So, there's nothing that I wish anybody would grasp.",
+   "close": "Existence is infinite, it is eternal.",
    "hook": [
     "YOUR LIFE DOESN'T END",
     "WHEN YOUR BODY DOES"
    ],
-   "short_ok": "One whole teaching from claim to landing: you create your reality, you are a spiritual essence in a body, and your existence is eternal.",
-   "fixes": [
-    [
-     10.8,
-     "You think you are born,",
-     "You think you were born,"
-    ],
-    [
-     12.72,
-     "you're going You're to going die,",
-     "you're going to die,"
-    ]
+   "fixes": [],
+   "start_at": 1387.42,
+   "end_at": 1447.4
+  },
+  {
+   "name": "SEE-THE-BIGGER-PICTURE",
+   "region": [
+    1449.0,
+    1520.0
    ],
-   "start_at": 1410.11,
-   "end_at": 1448.04
+   "open": "If you can see the bigger picture",
+   "close": "you'll see further. This is trust.",
+   "hook": [
+    "SEE THE BIGGER PICTURE",
+    "AND LOSE THE FEAR"
+   ],
+   "fixes": [],
+   "start_at": 1450.65,
+   "end_at": 1518.75
   },
   {
    "name": "RELEASE-THE-NEED-TO-KNOW",

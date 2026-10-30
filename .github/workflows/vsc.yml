@@ -81,7 +81,8 @@ jobs:
         with: { python-version: "3.11" }
       - id: a
         run: |
-          pip install -q anthropic
+          # numpy: cloud/speakers.py, the Kevin-focus check (missing until 29 Oct 2026)
+          pip install -q anthropic numpy
           python cloud/autoplan.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

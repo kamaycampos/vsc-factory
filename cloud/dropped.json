@@ -1,4 +1,16 @@
 {
  "_why": "Clips built, then judged not worth sending to GIN. Their files may still sit in the clips release (a cloud session cannot delete release files); mac/vsc_pull.py never pulls these names and moves any local copy to the Trash.",
- "names": ["NINE-MEANS-NINE", "HURT-HIM-DANNY", "THE-EAGLE-CLAW"]
+ "names": [
+  "NINE-MEANS-NINE",
+  "HURT-HIM-DANNY",
+  "THE-EAGLE-CLAW",
+  "AREA-51-IS-REAL",
+  "GOVERNMENT-IN-THE-DARK",
+  "YOU-WILL-RESIST-THIS",
+  "PAST-AND-FUTURE",
+  "HUMAN-DNA-WAS-ALTERED",
+  "EARTH-IS-A-COLONY",
+  "MOSES-AND-THE-ALIEN",
+  "ANCIENT-TEXTS-DESCRIBE-SPACECRAFT"
+ ]
 }
