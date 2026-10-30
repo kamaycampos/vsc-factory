@@ -19,7 +19,23 @@
     "AREA 51 HOLDS REAL",
     "ALIEN TECHNOLOGY"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     12.09,
+     "and it is not. What do you think?",
+     "and it is not what you think."
+    ],
+    [
+     27.37,
+     "around the world. Where",
+     "around the world where"
+    ],
+    [
+     38.4,
+     "of the brotherhood,",
+     "of the Brotherhood,"
+    ]
+   ],
    "start_at": 0.0,
    "end_at": 47.56
   },
@@ -35,7 +51,33 @@
     "THE ELITES WANT YOU",
     "TOO SCARED TO REBEL"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     3.8,
+     "in active.",
+     "inactive."
+    ],
+    [
+     9.55,
+     "to have control over you. Over their ability",
+     "to have control over their ability"
+    ],
+    [
+     20.9,
+     "if I tell you... It something is that is beyond",
+     "if I tell you something that is beyond"
+    ],
+    [
+     33.63,
+     "your religious politics. Beliefs,",
+     "your religious beliefs,"
+    ],
+    [
+     36.6,
+     "You will resist.",
+     "you will resist."
+    ]
+   ],
    "start_at": 47.52,
    "end_at": 107.9
   },
@@ -52,7 +94,18 @@
     "KNOW WHAT WE KNOW"
    ],
    "short_ok": "One complete answer: why Kevin was at Area 51, landing on the point that the government does not know what the Brotherhood knows about the beings interplaying with Earth.",
-   "fixes": [],
+   "fixes": [
+    [
+     30.12,
+     "with Earth,",
+     "with Earth."
+    ],
+    [
+     12.53,
+     "what was happening. What's going on? Our government",
+     "what was happening and going on, our government"
+    ]
+   ],
    "start_at": 316.98,
    "end_at": 347.36
   },
@@ -68,7 +121,48 @@
     "99.9% OF PEOPLE",
     "WILL RESIST THIS"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     74.34,
+     "to open up",
+     "to open up."
+    ],
+    [
+     1.55,
+     "is belong beyond",
+     "is beyond"
+    ],
+    [
+     16.95,
+     "Who had the ability",
+     "who have the ability"
+    ],
+    [
+     19.95,
+     "at a high frequency?",
+     "at a high frequency."
+    ],
+    [
+     25.77,
+     "feel... Resistance.",
+     "feel... resistance."
+    ],
+    [
+     29.8,
+     "this No, no,",
+     "No, no,"
+    ],
+    [
+     44.61,
+     "don't want to hear I it,",
+     "don't want to hear it,"
+    ],
+    [
+     70.77,
+     "this, To try",
+     "this, to try"
+    ]
+   ],
    "start_at": 392.66,
    "end_at": 468.28
   },
@@ -84,7 +178,18 @@
     "WE COULD SEE THE",
     "PAST AND THE FUTURE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     0.28,
+     "We have the ability to go back",
+     "We had the ability to go back"
+    ],
+    [
+     26.5,
+     "It already is it is right",
+     "Already. It is right"
+    ]
+   ],
    "start_at": 505.18,
    "end_at": 553.59
   },
@@ -100,7 +205,28 @@
     "HUMAN DNA CARRIES",
     "A CRISPR EDIT MARK"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     17.27,
+     "it back in, You have",
+     "it back in, you have"
+    ],
+    [
+     46.69,
+     "Well, That's impossible.",
+     "Well, that's impossible."
+    ],
+    [
+     50.96,
+     "So human DNA It has been altered.",
+     "So human DNA has been altered."
+    ],
+    [
+     60.6,
+     "Or an extraterrestrial? With advanced technology?",
+     "Or an extraterrestrial with advanced technology?"
+    ]
+   ],
    "start_at": 860.49,
    "end_at": 929.13
   },
@@ -116,7 +242,33 @@
     "EARTH WAS COLONIZED",
     "FOR ITS RESOURCES"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     11.9,
+     "an a new species.",
+     "a new species."
+    ],
+    [
+     13.34,
+     "It's the island of Dr.",
+     "It's the Island of Dr."
+    ],
+    [
+     23.74,
+     "Health is a colony.",
+     "Earth is a colony."
+    ],
+    [
+     34.74,
+     "and expanding power.",
+     "and expanding power and control."
+    ],
+    [
+     58.99,
+     "and the same exact",
+     "And the same exact"
+    ]
+   ],
    "start_at": 929.03,
    "end_at": 995.08
   },
@@ -132,7 +284,28 @@
     "IF MOSES WAS TALKING",
     "TO AN ALIEN"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     11.93,
+     "to an alien. And Yahweh,",
+     "to an alien and Yahweh,"
+    ],
+    [
+     17.37,
+     "the planets. Okay,",
+     "the planets, okay,"
+    ],
+    [
+     24.76,
+     "create Change,",
+     "create change,"
+    ],
+    [
+     33.67,
+     "ever before. Although,",
+     "ever before, although,"
+    ]
+   ],
    "start_at": 1135.64,
    "end_at": 1185.28
   },
@@ -148,7 +321,23 @@
     "GOVERNMENTS STUDY WHAT IF",
     "AN ALIEN WENT ON TV"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     75.33,
+     "people aren't going to start",
+     "people aren't going to start."
+    ],
+    [
+     35.65,
+     "Yahweh in the well,",
+     "Yahweh in the, well,"
+    ],
+    [
+     51.45,
+     "If People saw",
+     "If people saw"
+    ]
+   ],
    "start_at": 1185.55,
    "end_at": 1261.12
   },
@@ -164,7 +353,13 @@
     "THEIR BIG FEAR:",
     "NO GOD MEANS NO SIN"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     41.82,
+     "here's my craft. Because when",
+     "here's my craft, because when"
+    ]
+   ],
    "start_at": 1260.99,
    "end_at": 1320.05
   },
@@ -180,7 +375,28 @@
     "NEVER TRY TO",
     "MAKE A PIG SING"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     34.95,
+     "and then the movie Jaws,",
+     "and in the movie Jaws,"
+    ],
+    [
+     40.17,
+     "there was like. We have 12. Guys in this",
+     "there was like 12 guys in this"
+    ],
+    [
+     43.04,
+     "Richard Dreyfus,",
+     "Richard Dreyfuss,"
+    ],
+    [
+     62.92,
+     "who's an expert? that they know better.",
+     "who's an expert that they know better?"
+    ]
+   ],
    "start_at": 1319.96,
    "end_at": 1387.51
   },
@@ -197,7 +413,18 @@
     "WHEN YOUR BODY DOES"
    ],
    "short_ok": "One whole teaching from claim to landing: you create your reality, you are a spiritual essence in a body, and your existence is eternal.",
-   "fixes": [],
+   "fixes": [
+    [
+     10.8,
+     "You think you are born,",
+     "You think you were born,"
+    ],
+    [
+     12.72,
+     "you're going You're to going die,",
+     "you're going to die,"
+    ]
+   ],
    "start_at": 1410.11,
    "end_at": 1448.04
   },
@@ -213,7 +440,18 @@
     "ALIENS OR NOT, YOUR",
     "TOMORROW WON'T CHANGE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     10.39,
+     "whether there are not. How is that",
+     "whether there are not, how is that"
+    ],
+    [
+     55.44,
+     "your ability to cry. Create a manifested",
+     "your ability to create a manifested"
+    ]
+   ],
    "start_at": 1526.0,
    "end_at": 1587.33
   }
