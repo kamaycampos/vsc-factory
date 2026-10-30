@@ -261,7 +261,14 @@ def main(dry=False):
                 continue                    # delivered, not built from this entry, or no file
             e = done.get(n)
             if e and e.get("fp") == fp and e.get("file") == file:
-                continue                    # read and confirmed
+                # read and confirmed. A LOOK ANSWERED AFTER THE READ (30 Oct 2026): look_ok
+                # is left out of the fingerprint, so this clip is never read again, and the
+                # Mac gate judges by capread.json alone - the answer must clear it here.
+                # they_re_not_hiding's two LOOKs, answered by Kamay, held their clips back.
+                if c.get("look_ok") and e.get("look"):
+                    done[n] = dict(e, look=[], answered=e["look"])
+                    summary.append(f"{n}: LOOK answered by look_ok ({c['look_ok']}): {'; '.join(e['look'])}")
+                continue
             cap = caps(file)
             if cap is None:
                 summary.append(f"{n}: no caption file for {file} - not read")
