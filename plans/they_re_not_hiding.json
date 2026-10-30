@@ -6,7 +6,218 @@
  "duration": 1623,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md. Reset to a stub 29 Oct: the first plan (1 clip) was made on a pause map that could not see through the music bed (pauses.py v3).",
- "clips": [],
+ "clips": [
+  {
+   "name": "AREA-51-IS-REAL",
+   "region": [
+    0.0,
+    50.0
+   ],
+   "open": "What's the truth about Area 51 or extraterrestrials?",
+   "close": "small group of people here on earth.",
+   "hook": [
+    "AREA 51 HOLDS REAL",
+    "ALIEN TECHNOLOGY"
+   ],
+   "fixes": [],
+   "start_at": 0.0,
+   "end_at": 47.56
+  },
+  {
+   "name": "FEAR-KEEPS-YOU-INACTIVE",
+   "region": [
+    46.0,
+    110.0
+   ],
+   "open": "The main objective is to keep the masses",
+   "close": "You're not going to go against authority.",
+   "hook": [
+    "THE ELITES WANT YOU",
+    "TOO SCARED TO REBEL"
+   ],
+   "fixes": [],
+   "start_at": 47.52,
+   "end_at": 107.9
+  },
+  {
+   "name": "GOVERNMENT-IN-THE-DARK",
+   "region": [
+    316.0,
+    345.0
+   ],
+   "open": "Why did you go to area 51?",
+   "close": "the universal group that is all interplaying with Earth.",
+   "hook": [
+    "YOUR GOVERNMENT DOESN'T",
+    "KNOW WHAT WE KNOW"
+   ],
+   "short_ok": "One complete answer: why Kevin was at Area 51, landing on the point that the government does not know what the Brotherhood knows about the beings interplaying with Earth.",
+   "fixes": [],
+   "start_at": 316.98,
+   "end_at": 347.36
+  },
+  {
+   "name": "YOU-WILL-RESIST-THIS",
+   "region": [
+    390.0,
+    470.0
+   ],
+   "open": "what I'm describing is belong beyond the",
+   "close": "when you hear this, to try to open up.",
+   "hook": [
+    "99.9% OF PEOPLE",
+    "WILL RESIST THIS"
+   ],
+   "fixes": [],
+   "start_at": 392.66,
+   "end_at": 468.28
+  },
+  {
+   "name": "PAST-AND-FUTURE",
+   "region": [
+    503.0,
+    556.0
+   ],
+   "open": "We had the ability to go back in time",
+   "close": "because we could past and the future.",
+   "hook": [
+    "WE COULD SEE THE",
+    "PAST AND THE FUTURE"
+   ],
+   "fixes": [],
+   "start_at": 505.18,
+   "end_at": 553.59
+  },
+  {
+   "name": "HUMAN-DNA-WAS-ALTERED",
+   "region": [
+    858.0,
+    930.0
+   ],
+   "open": "CRISPR is a device, a technology, that",
+   "close": "or an extraterrestrial with advanced technology.",
+   "hook": [
+    "HUMAN DNA CARRIES",
+    "A CRISPR EDIT MARK"
+   ],
+   "fixes": [],
+   "start_at": 860.49,
+   "end_at": 929.13
+  },
+  {
+   "name": "EARTH-IS-A-COLONY",
+   "region": [
+    927.0,
+    997.0
+   ],
+   "open": "We have this technology today, we go",
+   "close": "Earth was colonized by other planets.",
+   "hook": [
+    "EARTH WAS COLONIZED",
+    "FOR ITS RESOURCES"
+   ],
+   "fixes": [],
+   "start_at": 929.03,
+   "end_at": 995.08
+  },
+  {
+   "name": "MOSES-AND-THE-ALIEN",
+   "region": [
+    1133.0,
+    1187.0
+   ],
+   "open": "from the spiritual standpoint no, but from traditional religions,",
+   "close": "this is going to dramatically cause an upheaval.",
+   "hook": [
+    "IF MOSES WAS TALKING",
+    "TO AN ALIEN"
+   ],
+   "fixes": [],
+   "start_at": 1135.64,
+   "end_at": 1185.28
+  },
+  {
+   "name": "AN-ALIEN-ON-TV",
+   "region": [
+    1184.0,
+    1262.0
+   ],
+   "open": "By the way, there are... And it's been referenced",
+   "close": "people aren't gonna start rioting. in the streets.",
+   "hook": [
+    "GOVERNMENTS STUDY WHAT IF",
+    "AN ALIEN WENT ON TV"
+   ],
+   "fixes": [],
+   "start_at": 1185.55,
+   "end_at": 1261.12
+  },
+  {
+   "name": "NO-GOD-NO-SIN",
+   "region": [
+    1259.0,
+    1322.0
+   ],
+   "open": "Oh, I don't have to be moral anymore,",
+   "close": "not going to have a mass calamity.",
+   "hook": [
+    "THEIR BIG FEAR:",
+    "NO GOD MEANS NO SIN"
+   ],
+   "fixes": [],
+   "start_at": 1260.99,
+   "end_at": 1320.05
+  },
+  {
+   "name": "DONT-MAKE-A-PIG-SING",
+   "region": [
+    1318.0,
+    1390.0
+   ],
+   "open": "alien existence that you wish everyone could understand.",
+   "close": "Most people do the same way.",
+   "hook": [
+    "NEVER TRY TO",
+    "MAKE A PIG SING"
+   ],
+   "fixes": [],
+   "start_at": 1319.96,
+   "end_at": 1387.51
+  },
+  {
+   "name": "YOUR-LIFE-IS-ETERNAL",
+   "region": [
+    1408.0,
+    1450.0
+   ],
+   "open": "you create your own reality and your life",
+   "close": "existence is infinite. It is eternal.",
+   "hook": [
+    "YOUR LIFE DOESN'T END",
+    "WHEN YOUR BODY DOES"
+   ],
+   "short_ok": "One whole teaching from claim to landing: you create your reality, you are a spiritual essence in a body, and your existence is eternal.",
+   "fixes": [],
+   "start_at": 1410.11,
+   "end_at": 1448.04
+  },
+  {
+   "name": "RELEASE-THE-NEED-TO-KNOW",
+   "region": [
+    1524.0,
+    1590.0
+   ],
+   "open": "Release attachment to needing to know. It doesn't",
+   "close": "So release attachment to needing to know",
+   "hook": [
+    "ALIENS OR NOT, YOUR",
+    "TOMORROW WON'T CHANGE"
+   ],
+   "fixes": [],
+   "start_at": 1526.0,
+   "end_at": 1587.33
+  }
+ ],
  "rumble": "https://rumble.com/v72iprm-theyre-not-hiding-aliens.-theyre-hiding-this..html",
  "height": 2160,
  "rumble_title": "They're Not Hiding Aliens. They're Hiding This.",
