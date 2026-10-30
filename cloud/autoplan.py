@@ -613,6 +613,10 @@ def main():
             # are the pauses the renderer can cut in
             text = paused_transcript(*PAUSE)
             print(f"  pause map: {len(PAUSE[1])} pauses, {text.count(chr(10)) + 1} lines of speech")
+            if len(PAUSE[1]) < p.get("duration", 0) / 60:
+                # they_re_not_hiding, 29 Oct 2026: 6 cut points in 27 min was a music bed the
+                # map could not see through, not an episode without pauses (CLAUDE.md)
+                print(f"::warning::{p['key']}: under one cut point a minute - check the pause map")
         thin = thin_punctuation(text)
         for a, b, rate in thin:
             print(f"::warning::{p['key']}: {mmss(a)}-{mmss(b)} has {rate:.1f} full stops a "

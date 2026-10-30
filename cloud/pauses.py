@@ -11,8 +11,8 @@ QUIET by vsc_v2_render.quiet_runs' rule - at least 35 dB under the speech around
 and in the bottom of the local range - lasting >= 0.15 s. autoplan marks them in the
 transcript it hands the planner and refuses an open or close that is not on one.
 
-Output: {"v": 2, "dur": seconds, "pauses": [[start, end], ...],
-         "cuts": [[start, end, depth_db], ...]}  (cuts: see cut_points)
+Output: {"v": 3, "dur": seconds, "pauses": [[start, end], ...],
+         "cuts": [[start, end, depth_db], ...]}  (cuts: see cut_points and bed_cuts)
 """
 import json, os, subprocess, sys
 
@@ -59,7 +59,10 @@ def pause_map(src):
             k = j
         else:
             k += 1
-    return {"v": 2, "dur": round(n * STEP, 2), "pauses": out, "cuts": cut_points(db)}
+    cuts = cut_points(db)
+    # a bed gap is added only where no measured cut already lies, so every v2 cut stays
+    cuts += [r for r in bed_cuts(db) if not any(o[1] > r[0] and o[0] < r[1] for o in cuts)]
+    return {"v": 3, "dur": round(n * STEP, 2), "pauses": out, "cuts": sorted(cuts)}
 
 
 def cut_points(db):
@@ -88,6 +91,40 @@ def cut_points(db):
             L = (j - k) * STEP
             if (L >= 0.15 and depth <= -38) or (L >= 0.12 and depth <= -55):
                 out.append([round(k * STEP, 2), round(j * STEP, 2), round(depth)])
+            k = j
+        else:
+            k += 1
+    return out
+
+
+def bed_cuts(db):
+    """Breath gaps UNDER A MUSIC BED, measured against the bed itself.
+
+    29 Oct 2026, they_re_not_hiding: 6 cut points in 27 minutes, and autoplan turned
+    20 of 21 good clips away ("not after a pause"). A bed runs under the whole episode:
+    the quietest 5 % of it sits at 39 dB against 62-65 dB of voice (your_purpose_is_a:
+    17.6 dB), so no gap can drop the 38 dB cut_points needs - 0 of its 248 sentence ends
+    did. The gaps are there: the quietest 0.15 s of a sentence end sits a median 1.7 dB
+    above the floor. Where the floor never drops 35 dB under the voice (5th vs 90th
+    percentile within 8 s), a cut point is >= 0.15 s within 3 dB of that floor, touching
+    it (1 dB), and 15 dB under the voice within 1.3 s. 93 of the 248 sentence ends get
+    one; 12 % of these gaps sit inside a short whisper word, as 15 % of the v2 rule's did
+    on your_purpose_is_a (whisper's times, not the gaps). Edge listening judges the file."""
+    n, out, k = len(db), [], 0
+    hop, w, fw = 20, int(1.3 / STEP), int(8.0 / STEP)
+    hi, fl, top = np.empty(n), np.empty(n), np.empty(n)
+    for c in range(0, n, hop):
+        hi[c:c + hop] = np.percentile(db[max(0, c - w):min(n, c + w)], 90)
+        s = db[max(0, c - fw):min(n, c + fw)]
+        fl[c:c + hop], top[c:c + hop] = np.percentile(s, 5), np.percentile(s, 90)
+    q = (top - fl < 35) & (db <= fl + 3) & (db <= hi - 15)
+    while k < n:
+        if q[k]:
+            j = k
+            while j < n and q[j]:
+                j += 1
+            if (j - k) * STEP >= 0.15 and (db[k:j] - fl[k:j]).min() <= 1.0:
+                out.append([round(k * STEP, 2), round(j * STEP, 2), round(float((db[k:j] - hi[k:j]).min()))])
             k = j
         else:
             k += 1

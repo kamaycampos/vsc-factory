@@ -14,11 +14,17 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 29 Oct 2026 - replace this section at every handoff)
 
-- **IN THE FACTORY: they_re_not_hiding** (29 Oct, 14:31 ET) - GIN's Frame.io "They're Not Hiding
-  Aliens. They're Hiding This." (item 20 of 25 in GIN's folder; Kamay calls it Episode 20 of the
-  Classified Files). Frame.io file 1623.4 s = catalogue 1623 s, title word for word, 2160p, with
-  `rumble_hls`. vsc-new run 40931578010 green, stub `plans/they_re_not_hiding.json` (c6deb2c),
-  vsc run 40931607728 started. Next: clips land in ~/Desktop/VSC/Clips; Kamay watches and uploads.
+- **IN THE FACTORY: they_re_not_hiding, REPLANNED** (29 Oct, ~20:15 ET) - GIN's Frame.io "They're
+  Not Hiding Aliens. They're Hiding This." (item 20 of 25 in GIN's folder; Kamay calls it Episode 20
+  of the Classified Files), 1623 s, 2160p. The first plan came out with ONE clip
+  (ANCIENT-TEXTS-DESCRIBE-SPACECRAFT, held in `_needs_work`: opens mid-thought, ends mid-sentence)
+  because a music bed under the whole episode left the pause map with 6 cut points (see "Do not
+  reintroduce", 29 Oct). Fixed in `cloud/pauses.py` v3; the plan was reset to a stub so prep
+  re-measures the map and autoplan chooses the full batch. Next: clips land in ~/Desktop/VSC/Clips;
+  Kamay watches and uploads. The old ANCIENT cut is in `.handled.txt` and the Trash.
+- `pause-test` workflow (manual): pause map + encrypted 10 ms level track of any cached source, to
+  replay a change to the cut rule on the Mac without fetching gigabytes (the release downloads to
+  this Mac at ~350 KB/s).
 - **your_purpose_is_a: DELIVERED** (Kamay uploaded the 9 to Frame.io, 29 Oct). Names in
   `cloud/delivered.json`, plan in `plans/done/`, retired from `clips` and `prep`; its encrypted
   source is KEPT in `sources` until GIN approves the 9 (same as hollywood), then `retire` again.
@@ -211,6 +217,15 @@ runs, and how to do any of them by hand.)
   then starts ONE run.
 - **One cut per clip in the Mac folder** (15 Oct): when a re-cut passes the gate, older
   cuts of that clip move to `~/Archive/vsc-replaced` (never deleted).
+- **A music bed hides every pause from a rule measured against the voice** (29 Oct,
+  they_re_not_hiding). The episode's floor sits at 39 dB (5th percentile, every 3 minutes) against
+  62-65 dB of voice; cut_points needs a 38 dB dip, so 0 of 248 sentence ends could be cut, the map
+  held 6 cut points in 27 min, and autoplan rejected 20 of 21 good clips ("not after a pause") and
+  then planned ONE. `pauses.bed_cuts` (map v3) measures gaps against the floor where the floor never
+  drops 35 dB under the voice: 93 of 248 sentence ends, 431 transcript lines (was 6). Every v2 cut
+  is kept (bed gaps only fill where none lies); your_purpose_is_a replayed: `pauses` identical, all
+  225 cuts kept, 103 added in its own bed stretches. prep re-measures a published map older than v3.
+  A pause map with under ~1 cut point a minute is this bug, not a dull episode.
 - **prep's pause map can drift from the renderer's clock** (20 Oct, hollywood_insider):
   around 28-31 min `pauses-<key>.json` and prep's word times ran 0.6-1.0 s EARLY against
   ffmpeg's `-ss` on the same source (gap after "book form." 1832.65 in prep, 1833.14-1833.76

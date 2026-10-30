@@ -48,10 +48,18 @@ def build(plan):
     # THE PAUSE MAP (13 Oct 2026): where the sound is quiet enough to cut, by the
     # renderer's rule - autoplan plans on it (cloud/pauses.py). Once per source, seconds.
     pz = f"/tmp/pauses-{plan['key']}.json"
+    import json
+
+    def stale():
+        # a map older than v3 has no cut points under a music bed (cloud/pauses.bed_cuts,
+        # 29 Oct 2026) - an episode still being planned gets it measured again
+        try:
+            return json.load(open(pz)).get("v", 1) < 3
+        except Exception:
+            return True
     if sh("gh", "release", "download", "prep", "-R", REPO, "-p", os.path.basename(pz),
-          "-D", "/tmp", "--clobber").returncode:
+          "-D", "/tmp", "--clobber").returncode or stale():
         from cloud.pauses import pause_map
-        import json
         json.dump(pause_map(src), open(pz, "w"))
         sh("gh", "release", "create", "prep", "-R", REPO, "-t", "prep", "-n",
            "Transcripts, word timings and shot maps, one bundle per source.")
