@@ -65,9 +65,25 @@ def same_start(got, cap):
     # ...and its SPELLING: run 38316915072 heard "Stephen" for the same clip. A clipped
     # word has lost its first sound, so the same first three letters at full length or
     # longer is the whole word ("teve" for "steve" still fails).
+    # ...and a NAME whisper spells its own way (30 Oct, they_re_not_hiding): "Elizondo" on
+    # screen, "Alessandro" heard. Same consonants in the same order (z~s, c~k, doubles
+    # collapsed) and the same kind of first letter, so a word that lost its first sound
+    # ("lizondo") still fails.
     return got == cap or (bool(cap) and len(cap) >= 4 and (
         (got.startswith(cap) and len(got) - len(cap) <= 2)
-        or (got[:3] == cap[:3] and len(cap) <= len(got) <= len(cap) + 3)))
+        or (got[:3] == cap[:3] and len(cap) <= len(got) <= len(cap) + 3)
+        or (len(cap) >= 5 and (got[0] in VOWELS) == (cap[0] in VOWELS)
+            and (got[0] in VOWELS or got[0] == cap[0])
+            and len(skeleton(cap)) >= 3 and skeleton(got).startswith(skeleton(cap)))))
+
+
+VOWELS = "aeiouy"
+
+
+def skeleton(w):
+    """The consonants of a word as whisper hears them: 'alessandro' and 'elizondo' -> 'lsnd...'."""
+    w = re.sub(r"[^a-z]", "", w).replace("z", "s").replace("c", "k").replace("ph", "f")
+    return re.sub(r"(.)\1+", r"\1", re.sub(f"[{VOWELS}]", "", w))
 
 
 def check(p, caps=None, plan_clip=None, work="/tmp/edges"):

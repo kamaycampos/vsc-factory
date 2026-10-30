@@ -36,8 +36,12 @@ each run builds only clips not yet built (the 9 old ones are byte-identical in t
   CREDIBLE-WITNESSES 86 [637-722], EVERY-CULTURE-SAW-THEM 67, DNA-ALTERED-BY-DESIGN 78 [851-929],
   THEY-CAME-FOR-GOLD 66 [952-1017], SIGHTINGS-SOARED-AFTER-THE-BOMB 44 [1019-1063].
   Every new edge: the 10 ms level track + two `edges.py probe` runs (41094292094 and the one after).
-  Tightest edges: I-DONT-BELIEVE ends 0.04 s before the interviewer's faint "Let's talk" (614.76);
-  EVERY-CULTURE ends 0.07 s before his "Kevin, what..." (789.47).
+  First build (41095849254): GODS, LEAK, CIA, GOLD PASS; I-DONT-BELIEVE and DNA LOOK (word sync on
+  screen, capread's call); three FAILs fixed in d81ce9d's follow-up push: SIGHTINGS (plan said "its",
+  captions "It's"), HUNDREDS (Kevin's soft "So," 636.90-637.10 before a 0.3 s pause - whisper heard
+  it as "-"; now starts 637.22 on "Elizondo", and edges.same_start accepts a name whisper spells
+  its own way, "Alessandro"), EVERY-CULTURE ("thing" ran into the interviewer's faint "Kevin,
+  what"; now ends on "...that the gods travel in." 786.95, 1.3 s of silence after it).
   Content to put to Kamay: THEY-CAME-FOR-GOLD carries Kevin's claim that human races come from
   different extraterrestrial races (970-985 s) - his words, but affiliates will post it.
   Kamay keeps THEY-CAME-FOR-GOLD as it is ("it will be fine"). Left uncut, surely not a clip:
