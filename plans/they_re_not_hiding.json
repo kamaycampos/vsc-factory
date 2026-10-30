@@ -22,7 +22,18 @@
    "short_ok": "A whole question and answer: what is the truth about Area 51 - he was there, and extraterrestrial technology and extraterrestrials exist. The next sentence begins the brotherhood's purpose, which FEAR-KEEPS-YOU-INACTIVE carries.",
    "start_at": 0.0,
    "end_at": 35.92,
-   "fixes": []
+   "fixes": [
+    [
+     12.09,
+     "and it is not. What do you think?",
+     "and it is not what you think."
+    ],
+    [
+     27.36,
+     "around the world. Where",
+     "around the world where"
+    ]
+   ]
   },
   {
    "name": "FEAR-KEEPS-YOU-INACTIVE",
@@ -209,7 +220,18 @@
    ],
    "start_at": 492.6,
    "end_at": 536.0,
-   "fixes": []
+   "fixes": [
+    [
+     11.98,
+     "energy, We had",
+     "energy. We had"
+    ],
+    [
+     34.93,
+     "people are hearing. We are already resisting.",
+     "people are hearing this and they're already resisting."
+    ]
+   ]
   },
   {
    "name": "I-DONT-BELIEVE-I-KNOW",
@@ -292,6 +314,11 @@
      68.76,
      "And the detail that he has? gives,",
      "And the detail that he gives,"
+    ],
+    [
+     57.99,
+     "I work there every day",
+     "I worked there every day"
     ]
    ]
   },
@@ -329,6 +356,11 @@
      31.79,
      "Every culture says. It the is same exact thing,",
      "Every culture says the same exact thing,"
+    ],
+    [
+     16.02,
+     "coming over to America, dozens,",
+     "coming over to America. Dozens,"
     ]
    ]
   },
@@ -414,6 +446,11 @@
      35.56,
      "effect In all of our worlds.",
      "effect in all of our worlds."
+    ],
+    [
+     39.63,
+     "kind of bring this under wraps.",
+     "kind of bring this, you know, under wraps."
     ]
    ]
   },
