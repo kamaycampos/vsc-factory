@@ -58,8 +58,8 @@
    "open": "So when I say this, I know that the majority",
    "close": "to the influence of those in authority who control you.",
    "hook": [
-    "99.9% WILL RESIST THIS",
-    "OPEN UP INSTEAD"
+    "99.9% WILL RESIST",
+    "THE TRUTH ABOUT ALIENS"
    ],
    "fixes": [
     [
@@ -90,13 +90,13 @@
    "name": "YOU-ARE-A-SPIRITUAL-ESSENCE",
    "region": [
     1081.0,
-    1137.0
+    1165.0
    ],
    "open": "The answer is yes",
-   "close": "it expands the reality of what is.",
+   "close": "and that's going to create anxiety.",
    "hook": [
-    "ALIENS DON'T CHANGE",
-    "WHO YOU REALLY ARE"
+    "WOULD ALIENS BREAK",
+    "YOUR RELIGION?"
    ],
    "fixes": [
     [
@@ -116,7 +116,7 @@
     ]
    ],
    "start_at": 1082.4,
-   "end_at": 1135.65
+   "end_at": 1163.92
   },
   {
    "name": "AN-ALIEN-ON-TV",
