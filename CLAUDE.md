@@ -19,9 +19,20 @@ limit (see "Token budget").
   of the Classified Files), 1623 s, 2160p. The first plan came out with ONE clip
   (ANCIENT-TEXTS-DESCRIBE-SPACECRAFT, held in `_needs_work`: opens mid-thought, ends mid-sentence)
   because a music bed under the whole episode left the pause map with 6 cut points (see "Do not
-  reintroduce", 29 Oct). Fixed in `cloud/pauses.py` v3; the plan was reset to a stub so prep
-  re-measures the map and autoplan chooses the full batch. Next: clips land in ~/Desktop/VSC/Clips;
-  Kamay watches and uploads. The old ANCIENT cut is in `.handled.txt` and the Trash.
+  reintroduce", 29 Oct). Fixed in `cloud/pauses.py` v3 (338de25); autoplan replanned 13 clips
+  (d80079b), capread fixed captions (f9bfcfb), vsc run 40982239094 GREEN. Edge listening heard every
+  start and end on the planned word through the bed, except at 21:58, where whisper's word stream lost
+  the interviewer's "What's the one truth about reality and...". **The batch is NOT ready for GIN**:
+  only FEAR-KEEPS-YOU-INACTIVE and RELEASE-THE-NEED-TO-KNOW clear every check. FAIL: NO-GOD-NO-SIN
+  (ends inside that question), DONT-MAKE-A-PIG-SING (opens mid-question), AN-ALIEN-ON-TV (cut right,
+  captions stop at "start" before "rioting in the streets"), YOU-WILL-RESIST-THIS ("nine point nine";
+  close stops before "a sense of possibility"). Content LOOKs from capread on most others: the planner
+  tiled the episode back to back (AREA-51 -> FEAR, HUMAN-DNA -> EARTH, MOSES -> AN-ALIEN -> NO-GOD -> PIG)
+  instead of choosing whole teachings ("no lesson", "ends before the landing"). Next: a repair pass on
+  those clips (probe the times at 21:58), then Kamay watches and uploads. The old ANCIENT cut is in
+  `.handled.txt` and the Trash.
+- autoplan's job installs only `anthropic`; `cloud/speakers.py` needs numpy, so the Kevin-focus check
+  has not run in autoplan ("no speaker map (ModuleNotFoundError)", also on 40931607728).
 - `pause-test` workflow (manual): pause map + encrypted 10 ms level track of any cached source, to
   replay a change to the cut rule on the Mac without fetching gigabytes (the release downloads to
   this Mac at ~350 KB/s).
