@@ -12,14 +12,37 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 29 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 30 Oct 2026 - replace this section at every handoff)
 
-- **READY FOR GIN: they_re_not_hiding** (30 Oct) - GIN's Frame.io "They're Not Hiding Aliens.
+### NEXT SESSION STARTS HERE: grow they_re_not_hiding from 9 to 12-18 clips (Kamay, 30 Oct)
+Kamay: "8 clips are to less". PLANNING.md step 3: a 25-30 min episode is usually 12-18 clips ("the
+most amount of high quality clips, never less"); why_your_prayers_fail (27 min) shipped 14. The batch
+shrank to 9 because a brief allowed dropping fragments instead of re-cutting them - never again.
+1. **Keep the 9 below exactly as they are** (two carry Kamay's `look_ok`). Do not upload; Kamay holds
+   the upload until the batch is full.
+2. **Fix `pauses.bed_cuts` first** - the weak spot below (bed swells 3-7 dB over its 16 s floor while
+   Kevin is silent). Use a more local floor; prove `your_purpose_is_a`'s map is unchanged by replaying
+   its level track (`pause-test` workflow). Details in commit 751d504's message.
+3. **Cut the uncut stretches: 0-46 s, 110-412 s, 493-1081 s** (about 15 minutes with no clip). Topics
+   there that were dropped as fragments: Area 51 / what he saw, CIA tells Congress nothing, CRISPR /
+   human DNA edit, Earth is a colony / gold, Moses and the alien, seeing past and future, government
+   in the dark, every culture says it, hundreds of officials. Each as a WHOLE teaching: open and close
+   on measured cut points, 40-118 s, Kevin >= 60 % of the speech. NEW names only (never one in
+   `cloud/dropped.json` or `cloud/delivered.json`). A topic with no clean whole teaching is listed
+   with the reason, never padded.
+4. ONE push to `plans/` (a push cancels the running build). Then: green run, capread verdicts, new
+   clips in ~/VSC/Clips (not `_needs_work`). Content LOOKs go to Kamay with a recommendation.
+5. Replace this section; add to "Do not reintroduce": never shrink a batch by dropping - re-cut as
+   whole teachings to reach PLANNING.md's count. Hand off before ~150K tokens (see "Token budget").
+Done = 12-18 clips, list with lengths and verdicts, all in ~/VSC/Clips. Nothing to Frame.io.
+
+- **they_re_not_hiding, 9 clips clean so far** (30 Oct) - GIN's Frame.io "They're Not Hiding Aliens.
   They're Hiding This." (item 20 of 25; Kamay's Episode 20 of the Classified Files), 1623 s, 2160p.
   **9 clips in ~/Desktop/VSC/Clips, every one clean on edges, kt_qc and capread**: FEAR-KEEPS-YOU-INACTIVE
-  60 s, OPEN-UP-TO-POSSIBILITY 77, YOU-ARE-A-SPIRITUAL-ESSENCE 82, AN-ALIEN-ON-TV 79, NO-GOD-NO-SIN 50,
-  DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60, SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-NEED-TO-KNOW 61.
-  Next: Kamay uploads them to Frame.io, then the usual delivered.json / plans/done / retire.
+  60 s [46-110], OPEN-UP-TO-POSSIBILITY 77 [412-493], YOU-ARE-A-SPIRITUAL-ESSENCE 82 [1081-1165],
+  AN-ALIEN-ON-TV 79, NO-GOD-NO-SIN 50, DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60,
+  SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-NEED-TO-KNOW 61 (1184-1590).
+  After the batch is full: Kamay uploads to Frame.io, then the usual delivered.json / plans/done / retire.
   How it got here: the first plan had ONE clip (music bed, see "Do not reintroduce" 29 Oct; fixed in
   pauses.py v3, 338de25); autoplan's 13 tiled the episode into claims; re-cut by hand as whole
   teachings with every edge on a measured silence (751d504, c2f4e1d). Kamay kept SPIRIT and OPEN-UP
