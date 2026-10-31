@@ -115,7 +115,11 @@ runs, and how to do any of them by hand.)
 **Before any push that adds or changes a `start_at` / `end_at`:** run the `edges` workflow with
 `plancheck <key>` (or `plancheck <key> CLIP ...`). It hears every cut on the SOURCE exactly as edge
 listening will hear the file; push only when every line says OK. A FAIL prints the words heard - move
-the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first. ~5 min, and it replaces a whole build round.
+the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first.
+plancheck catches a WRONG word at a cut (its whole job), not a last word 0.1 s from the cut: EVERY-CULTURE's
+old end (789.47) was heard whole on the source, even with the file's exact tail window, and lost in the
+file. A silence-margin flag was tried (31 Oct) and REMOVED: 10 of 20 flagged, DNA's 0.6 s of silence
+measured as 0.01 s. Leave >= 0.15 s between his last word and `end_at`, read on the level track. ~5 min, and it replaces a whole build round.
 
 ## The rules (from GIN's reviewers, Kamay and Yaren - all hard)
 
