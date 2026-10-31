@@ -20,6 +20,7 @@ REPO = os.environ.get("GITHUB_REPOSITORY", "kamaycampos/vsc-factory")
 WH = os.path.expanduser("~/Kamay/whisper.cpp/build/bin/whisper-cli")
 MD = os.path.expanduser("~/Kamay/whisper.cpp/models/ggml-small.en.bin")
 EDGE = 3.0
+HOLD = 0.55     # vsc_render._hold: the silent held frame every clip ends on
 norm = lambda t: re.sub(r"[^a-z0-9']", "", t.lower())
 
 
@@ -213,9 +214,13 @@ def plancheck(key, names=()):
         a, b = float(c["start_at"]), float(c["end_at"])
         sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{a:.3f}", "-t", f"{min(EDGE, b - a):.3f}", "-i", src,
            "-ar", "16000", "-ac", "1", "/tmp/pc_h.wav")
-        t0 = max(a, b - EDGE - 0.6)
+        # the FILE ends on a held last frame with HOLD s of silence (vsc_render._hold), and
+        # edge listening takes its last EDGE + 0.6 s: so EDGE + 0.6 - HOLD s of speech, then
+        # silence. Heard with 3.6 s of speech instead, EVERY-CULTURE's old cut kept "thing"
+        # that the file lost - whisper judges a borderline last word by its context.
+        t0 = max(a, b - (EDGE + 0.6 - HOLD))
         sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t0:.3f}", "-t", f"{b - t0:.3f}", "-i", src,
-           "-ar", "16000", "-ac", "1", "/tmp/pc_t.wav")
+           "-af", f"apad=pad_dur={HOLD}", "-ar", "16000", "-ac", "1", "/tmp/pc_t.wav")
         h = [x for x in (heard("/tmp/pc_h.wav", "pch") or []) if norm(x[2])]
         t = [x for x in (heard("/tmp/pc_t.wav", "pct") or []) if norm(x[2])]
         want_first = next((w for w in (norm(x) for x in c["open"].split()) if w), "")
