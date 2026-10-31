@@ -250,13 +250,18 @@ def main(only=None):
             a, b = got
             if name in END_OVERRIDE:
                 b = END_OVERRIDE[name]
-            # an edge measured in the source (plan start_at / end_at) must lie INSIDE the
-            # window the captions are transcribed over, or its words get no caption
+            # an edge measured in the source (plan start_at / end_at) IS the window the
+            # captions are transcribed over: never narrower (its words would get no caption)
+            # and never wider. 31 Oct 2026, HUNDREDS-OF-CREDIBLE-WITNESSES: the window began
+            # 0.18 s before start_at (vsc_pick.LEAD), the caption pass heard the tail of
+            # Kevin's "So," that the cut leaves out, wrote "So, Alessandro," on screen, and
+            # edge listening (which hears only the file) failed the clip twice. A start_at /
+            # end_at sits in measured silence, so the pass needs no lead-in.
             _pc = plan_cut.get(name, {})
             if _pc.get("start_at") is not None:
-                a = round(min(a, _pc["start_at"] - 0.05), 3)
+                a = round(_pc["start_at"] - 0.02, 3)
             if _pc.get("end_at") is not None:
-                b = round(max(b, _pc["end_at"] + 0.05), 3)
+                b = round(_pc["end_at"] + 0.02, 3)
             # WHERE HE FINISHES THE CLOSING WORD, as the locator measured it. 1 Oct 2026:
             # YOUR-BIGGEST-DISASTER was located 0.00-27.90 and MORE-PROBLEMS-THAN-YOU
             # 94.70-133.59 - both right - and both shipped short ("It doesn't end",

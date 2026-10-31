@@ -519,9 +519,11 @@ def main(only=None):
         # is a pause to start in. Either failing is a FAIL for a person to watch.
         import vsc_v2caps
         open_phrase = [f2 for p2, cl in CUTS.items() for n2, r2, f2, c2, h in cl if n2 == name]
-        want = vsc_v2caps.norm(open_phrase[0].split()[0]) if open_phrase else ""
-        got = vsc_v2caps.norm(words[0]["text"].split()[0]) if words else ""
-        same = lambda g: g == want or (min(len(g), len(want)) >= 4 and
+        # apostrophes do not count: SIGHTINGS-SOARED-AFTER-THE-BOMB (30 Oct) opened cleanly on
+        # "It's" and FAILED because its plan said "its" - a spelling, not a wrong start
+        want = vsc_v2caps.norm(open_phrase[0].split()[0]).replace("'", "") if open_phrase else ""
+        got = vsc_v2caps.norm(words[0]["text"].split()[0]).replace("'", "") if words else ""
+        same = lambda g: g.replace("'", "") == want or (min(len(g), len(want)) >= 4 and
                                        difflib.SequenceMatcher(a=g, b=want).ratio() >= 0.8)
         first_ok = bool(want) and same(got)
         if want and not first_ok:

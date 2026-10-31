@@ -11,6 +11,7 @@ at both ends, and its first and last heard words are set beside the plan's.
 
     python cloud/edges.py delivered          # the newest file of every delivered clip
     python cloud/edges.py NAME_51s.mp4 ...   # these release files
+    python cloud/edges.py plancheck <key>    # every planned cut, heard on the SOURCE first
 """
 import glob, json, os, re, subprocess, sys
 
@@ -104,6 +105,10 @@ def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
     toks = [t for t in (norm(x) for c in (caps or []) for x in c[2].split()) if t]
     cap_first = toks[0] if toks else None
     cap_last = toks[-1] if toks else None
+    # ...and on the listening side too: HUNDREDS-OF-CREDIBLE-WITNESSES (30 Oct) was heard
+    # "- Alessandro", and the "-" was taken as its first word
+    h = [x for x in (h or []) if norm(x[2])] or h
+    t = [x for x in (t or []) if norm(x[2])] or t
     got_first = norm(h[0][2]) if h else None
     got_last = norm(t[-1][2]) if t else None
     c = plan_clip or {}
@@ -174,8 +179,64 @@ def probe(key, spans):
             print("  dB/20ms: " + " ".join(f"{t0 + k * 0.02:.2f}:{d:.0f}" for k, d in enumerate(db)), flush=True)
 
 
+def plancheck(key, names=()):
+    """HEAR EVERY PLANNED CUT ON THE SOURCE, BEFORE ANYTHING IS RENDERED.
+
+        python cloud/edges.py plancheck <key> [CLIP ...]     (edges workflow: "plancheck <key>")
+
+    31 Oct 2026, they_re_not_hiding: three of nine hand cuts FAILED edge listening after a
+    full build round - EVERY-CULTURE-SAW-THEM ended as "...the same." with "thing" cut, and
+    two more for reasons the source could have shown. Edge listening hears the first EDGE s
+    and the last EDGE + 0.6 s of the FILE; this cuts exactly those stretches out of the
+    source at the plan's start_at / end_at and hears them the same way, so a cut that will
+    fail is known in minutes, not after a build. First word heard vs the plan's open (whole,
+    names spelt whisper's way allowed), last word heard vs the plan's close (exact).
+    Exit 1 when any cut fails - fix the times from the words it prints, then push."""
+    sys.path.insert(0, os.path.expanduser("~/Kamay"))
+    sys.path.insert(0, HERE)
+    from cloud.source import fetch, plans
+    plan = [p for p in plans() if p["key"] == key][0]
+    src = fetch(plan)
+    out, bad = [], 0
+    for c in plan["clips"]:
+        if names and c["name"] not in names:
+            continue
+        if c.get("start_at") is None or c.get("end_at") is None:
+            print(f"  --  {c['name']}: no start_at / end_at - the renderer finds the cut, nothing to hear")
+            continue
+        a, b = float(c["start_at"]), float(c["end_at"])
+        sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{a:.3f}", "-t", f"{min(EDGE, b - a):.3f}", "-i", src,
+           "-ar", "16000", "-ac", "1", "/tmp/pc_h.wav")
+        t0 = max(a, b - EDGE - 0.6)
+        sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t0:.3f}", "-t", f"{b - t0:.3f}", "-i", src,
+           "-ar", "16000", "-ac", "1", "/tmp/pc_t.wav")
+        h = [x for x in (heard("/tmp/pc_h.wav", "pch") or []) if norm(x[2])]
+        t = [x for x in (heard("/tmp/pc_t.wav", "pct") or []) if norm(x[2])]
+        want_first = next((w for w in (norm(x) for x in c["open"].split()) if w), "")
+        want_last = next((w for w in (norm(x) for x in reversed(c["close"].split())) if w), "")
+        got_first = norm(h[0][2]) if h else ""
+        got_last = norm(t[-1][2]) if t else ""
+        ok_first = same_start(got_first.replace("'", ""), want_first.replace("'", ""))
+        ok_last = got_last.replace("'", "") == want_last.replace("'", "")
+        bad += not (ok_first and ok_last)
+        heard_h = " ".join(x[2] for x in h[:5])
+        heard_t = " ".join(x[2] for x in t[-5:])
+        print(f"  {'OK  ' if ok_first and ok_last else 'FAIL'} {c['name']}: "
+              f"opens [{heard_h}]{'' if ok_first else f' - plan opens on {want_first!r}'} | "
+              f"ends [{heard_t}]{'' if ok_last else f' - plan closes on {want_last!r}'}", flush=True)
+        out.append({"clip": c["name"], "start_at": a, "end_at": b, "first_ok": ok_first, "last_ok": ok_last,
+                    "first_heard": heard_h, "last_heard": heard_t})
+    os.makedirs("/tmp/edges", exist_ok=True)
+    json.dump(out, open("/tmp/edges/edges.json", "w"), indent=1)
+    print(f"PLANCHECK {key}: {len(out) - bad}/{len(out)} cuts heard as planned")
+    if bad:
+        sys.exit(1)
+
+
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["probe"]:
+    if sys.argv[1:2] == ["plancheck"]:
+        plancheck(sys.argv[2], sys.argv[3:])
+    elif sys.argv[1:2] == ["probe"]:
         probe(sys.argv[2], sys.argv[3:])
     else:
         main(sys.argv[1:] or ["delivered"])
