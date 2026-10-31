@@ -112,6 +112,11 @@ runs, and how to do any of them by hand.)
    Push once. Unchanged clips are skipped by content hash.
 5. Watch the **first 3 seconds and the last 2** of every clip. Then it goes to Kamay.
 
+**Before any push that adds or changes a `start_at` / `end_at`:** run the `edges` workflow with
+`plancheck <key>` (or `plancheck <key> CLIP ...`). It hears every cut on the SOURCE exactly as edge
+listening will hear the file; push only when every line says OK. A FAIL prints the words heard - move
+the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first. ~5 min, and it replaces a whole build round.
+
 ## The rules (from GIN's reviewers, Kamay and Yaren - all hard)
 
 - **Open on the start of a complete thought.** Never mid-sentence.
@@ -279,6 +284,19 @@ runs, and how to do any of them by hand.)
 - **Leave nothing out unless it is surely not fine** (Kamay, 30 Oct): a stretch that holds together
   (a question and its answer, an aside with its point) is a clip, even short (`short_ok`). Only a
   stretch that cannot stand (an unanswered question, a fragment) stays out, named with the reason.
+- **Captions are transcribed over the exact cut** (31 Oct, `vsc_week`). With a measured `start_at` the
+  caption window began 0.18 s earlier (`vsc_pick.LEAD`): the pass heard the tail of a word the cut leaves
+  out (HUNDREDS: "So, Alessandro,") and edge listening failed the clip twice. Never widen it again.
+- **An edge FAIL is not always a bad cut** - read the heard words first: an invented caption word
+  (above), a plan spelling ("its" vs "It's", now ignored), whisper's spelling of a name ("Alessandro"
+  for Elizondo - `edges.same_start` accepts the same consonants), a "-" heard before a soft word (now
+  skipped). Only a word really cut, or speech after the close, is fixed by moving the time.
+- **Where the close runs into the interviewer, take the earlier sentence end with real silence**
+  (EVERY-CULTURE, 31 Oct): a tight cut against a faint voice failed after a full round; the line
+  was already in the clip. When the probe is ambiguous, choose the silence that is not.
+- **Don't push into a capread run unless you mean to.** capread commits fixes to `plans/` and
+  starts its own confirm run; a push to `plans/` cancels it (newer run wins). That's fine when the
+  push carries more changes (the new run rebuilds them all), but never push twice in a row.
 - **The interviewer's mic is 15-20 dB under Kevin's** in the Classified interviews: his questions
   are too faint to caption. Open on Kevin's first words; the hook states the question.
 - **pauses v4 `swell_cuts`** (30 Oct): where the bed swells over its 16 s floor, a gap is measured

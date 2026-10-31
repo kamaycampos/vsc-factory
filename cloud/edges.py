@@ -183,6 +183,7 @@ def plancheck(key, names=()):
     """HEAR EVERY PLANNED CUT ON THE SOURCE, BEFORE ANYTHING IS RENDERED.
 
         python cloud/edges.py plancheck <key> [CLIP ...]     (edges workflow: "plancheck <key>")
+        python cloud/edges.py plancheck <key> CLIP@612.4:690.1   (a trial cut, before it goes in the plan)
 
     31 Oct 2026, they_re_not_hiding: three of nine hand cuts FAILED edge listening after a
     full build round - EVERY-CULTURE-SAW-THEM ended as "...the same." with "thing" cut, and
@@ -197,10 +198,15 @@ def plancheck(key, names=()):
     from cloud.source import fetch, plans
     plan = [p for p in plans() if p["key"] == key][0]
     src = fetch(plan)
+    # CLIP@start:end hears a TRIAL cut instead of the plan's - try a time before writing it in
+    trial = {n.split("@")[0]: [float(x) for x in n.split("@")[1].split(":")] for n in names if "@" in n}
+    names = [n.split("@")[0] for n in names]
     out, bad = [], 0
     for c in plan["clips"]:
         if names and c["name"] not in names:
             continue
+        if c["name"] in trial:
+            c = dict(c, start_at=trial[c["name"]][0], end_at=trial[c["name"]][1])
         if c.get("start_at") is None or c.get("end_at") is None:
             print(f"  --  {c['name']}: no start_at / end_at - the renderer finds the cut, nothing to hear")
             continue
