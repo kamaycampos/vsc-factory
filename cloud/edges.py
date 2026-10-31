@@ -180,6 +180,31 @@ def probe(key, spans):
             print("  dB/20ms: " + " ".join(f"{t0 + k * 0.02:.2f}:{d:.0f}" for k, d in enumerate(db)), flush=True)
 
 
+MARGIN = 0.15     # s of silence a cut needs from the voice (GIN: 0.15 s before the first word)
+
+
+def margins(head_wav, tail_wav, speech):
+    """(s of silence before the first voice in head_wav, s after the last voice in the first
+    `speech` s of tail_wav). Voice = within 15 dB of the window's loud end, 20 ms frames -
+    a faint interviewer counts too, which is the point."""
+    import numpy as np
+
+    def frames(w):
+        raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", w, "-f", "s16le", "-"],
+                             capture_output=True).stdout
+        x = np.frombuffer(raw, dtype=np.int16).astype(float)
+        n = len(x) // 320
+        return 20 * np.log10(np.sqrt((x[:n * 320].reshape(n, 320) ** 2).mean(axis=1)) + 1e-9)
+    try:
+        h, t = frames(head_wav), frames(tail_wav)[:int(speech / 0.02)]
+        hv = np.nonzero(h >= np.percentile(h, 90) - 15)[0]
+        tv = np.nonzero(t >= np.percentile(t, 90) - 15)[0]
+        return (round(float(hv[0]) * 0.02, 2) if len(hv) else None,
+                round(speech - (float(tv[-1]) + 1) * 0.02, 2) if len(tv) else None)
+    except Exception:
+        return None, None
+
+
 def plancheck(key, names=()):
     """HEAR EVERY PLANNED CUT ON THE SOURCE, BEFORE ANYTHING IS RENDERED.
 
@@ -221,6 +246,11 @@ def plancheck(key, names=()):
         t0 = max(a, b - (EDGE + 0.6 - HOLD))
         sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t0:.3f}", "-t", f"{b - t0:.3f}", "-i", src,
            "-af", f"apad=pad_dur={HOLD}", "-ar", "16000", "-ac", "1", "/tmp/pc_t.wav")
+        # THE MARGIN OF SILENCE at each cut. EVERY-CULTURE's old end sat 0.12 s after Kevin's
+        # "thing": heard whole on the source, every time, but lost in the rendered file. A word
+        # that close to a cut can go either way, so under MARGIN s is called TIGHT.
+        lead, tail = margins("/tmp/pc_h.wav", "/tmp/pc_t.wav", b - t0)
+        tight = [x for x, v in (("lead", lead), ("tail", tail)) if v is not None and v < MARGIN]
         h = [x for x in (heard("/tmp/pc_h.wav", "pch") or []) if norm(x[2])]
         t = [x for x in (heard("/tmp/pc_t.wav", "pct") or []) if norm(x[2])]
         want_first = next((w for w in (norm(x) for x in c["open"].split()) if w), "")
@@ -232,14 +262,21 @@ def plancheck(key, names=()):
         bad += not (ok_first and ok_last)
         heard_h = " ".join(x[2] for x in h[:5])
         heard_t = " ".join(x[2] for x in t[-5:])
-        print(f"  {'OK  ' if ok_first and ok_last else 'FAIL'} {c['name']}: "
+        state = "FAIL" if not (ok_first and ok_last) else ("TIGHT" if tight else "OK  ")
+        print(f"  {state} {c['name']}: "
               f"opens [{heard_h}]{'' if ok_first else f' - plan opens on {want_first!r}'} | "
-              f"ends [{heard_t}]{'' if ok_last else f' - plan closes on {want_last!r}'}", flush=True)
+              f"ends [{heard_t}]{'' if ok_last else f' - plan closes on {want_last!r}'}"
+              + (f" | silence: {lead:.2f} s before, {tail:.2f} s after"
+                 if lead is not None and tail is not None else ""), flush=True)
         out.append({"clip": c["name"], "start_at": a, "end_at": b, "first_ok": ok_first, "last_ok": ok_last,
-                    "first_heard": heard_h, "last_heard": heard_t})
+                    "first_heard": heard_h, "last_heard": heard_t, "lead": lead, "tail": tail,
+                    "tight": tight})
     os.makedirs("/tmp/edges", exist_ok=True)
     json.dump(out, open("/tmp/edges/edges.json", "w"), indent=1)
-    print(f"PLANCHECK {key}: {len(out) - bad}/{len(out)} cuts heard as planned")
+    nt = sum(1 for o in out if o["tight"] and o["first_ok"] and o["last_ok"])
+    print(f"PLANCHECK {key}: {len(out) - bad}/{len(out)} cuts heard as planned"
+          + (f", {nt} TIGHT (under {MARGIN:.2f} s of silence at a cut - move it if a cleaner "
+             "silence is there; GIN's rule needs 0.15 s before the first word)" if nt else ""))
     if bad:
         sys.exit(1)
 

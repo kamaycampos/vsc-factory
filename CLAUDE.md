@@ -115,7 +115,10 @@ runs, and how to do any of them by hand.)
 **Before any push that adds or changes a `start_at` / `end_at`:** run the `edges` workflow with
 `plancheck <key>` (or `plancheck <key> CLIP ...`). It hears every cut on the SOURCE exactly as edge
 listening will hear the file; push only when every line says OK. A FAIL prints the words heard - move
-the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first. ~5 min, and it replaces a whole build round.
+the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first.
+TIGHT = under 0.15 s of silence between the voice (a faint interviewer counts) and the cut: a last word
+that close is heard whole on the source and can still be lost in the rendered file (EVERY-CULTURE's
+789.47, 0.12 s) - move it to a cleaner silence when there is one. ~5 min, and it replaces a whole build round.
 
 ## The rules (from GIN's reviewers, Kamay and Yaren - all hard)
 
