@@ -33,7 +33,8 @@
      "around the world. Where",
      "around the world where"
     ]
-   ]
+   ],
+   "look_ok": "Kamay, 31 Oct: keep. The episode's opening question and its answer (he was at Area 51; the technology and the beings exist); the brotherhood's purpose is FEAR-KEEPS-YOU-INACTIVE."
   },
   {
    "name": "FEAR-KEEPS-YOU-INACTIVE",
@@ -80,25 +81,25 @@
   {
    "name": "WE-WOULD-BE-GODS",
    "region": [
-    188.0,
-    253.0
+    186.0,
+    242.5
    ],
-   "open": "It talks about the gods coming from other planets.",
-   "close": "connected with beings from other planets.",
+   "open": "It's in the Mahabharata. It talks about the gods",
+   "close": "going down to us as gods.",
    "hook": [
     "A PHONE 100 YEARS AGO",
     "WOULD MAKE YOU A GOD"
    ],
-   "start_at": 188.26,
-   "end_at": 252.3,
+   "start_at": 186.5,
+   "end_at": 242.0,
    "fixes": [
     [
-     28.7,
+     30.46,
      "It is like a nuclear",
      "Sounds like a nuclear"
     ],
     [
-     40.55,
+     42.31,
      "not of this way. In world, the if we showed",
      "not of this world. If we showed"
     ]
@@ -231,7 +232,8 @@
      "people are hearing. We are already resisting.",
      "people are hearing this and they're already resisting."
     ]
-   ]
+   ],
+   "look_ok": "Kamay, 31 Oct: keep (leave nothing out unless it is surely not fine). Kevin naming the resistance as it happens is the point."
   },
   {
    "name": "I-DONT-BELIEVE-I-KNOW",
@@ -282,7 +284,7 @@
    "fixes": [
     [
      0.0,
-     "Alessandro,",
+     "So, Alessandro,",
      "Elizondo,"
     ],
     [
@@ -319,6 +321,11 @@
      57.99,
      "I work there every day",
      "I worked there every day"
+    ],
+    [
+     71.62,
+     "which none of which",
+     "none of which"
     ]
    ]
   },
@@ -362,7 +369,8 @@
      "coming over to America, dozens,",
      "coming over to America. Dozens,"
     ]
-   ]
+   ],
+   "look_ok": "Kamay, 31 Oct: keep as cut. Extending to 'Every culture says the same thing.' runs into the interviewer's faint 'Kevin, what...' (789.6); the line is already said at 31 s."
   },
   {
    "name": "DNA-ALTERED-BY-DESIGN",
@@ -415,7 +423,8 @@
      "and other. And purposes other",
      "and other purposes"
     ]
-   ]
+   ],
+   "look_ok": "Kamay, 31 Oct: keep Kevin's words as spoken ('colonize Earth' - he means the lands countries colonized); his claim, not ours to rewrite."
   },
   {
    "name": "SIGHTINGS-SOARED-AFTER-THE-BOMB",
@@ -452,7 +461,8 @@
      "kind of bring this under wraps.",
      "kind of bring this, you know, under wraps."
     ]
-   ]
+   ],
+   "look_ok": "Kamay, 31 Oct: keep. 'It's natural resources, it's power and control' answers why they came; the hook frames the bomb."
   },
   {
    "name": "YOU-ARE-A-SPIRITUAL-ESSENCE",

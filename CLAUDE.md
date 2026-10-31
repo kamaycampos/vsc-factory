@@ -14,7 +14,12 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 30 Oct 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 20 clips (30 Oct)
+### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 20 clips (31 Oct)
+31 Oct status before the push below: 13 clean in Clips, 7 held. Kamay: "Yes, do all of it" - WE-WOULD-BE-GODS
+re-cut 186.5-242.0 ("It's in the Mahabharata..." to "...as gods."), HUNDREDS caption "So, Alessandro," ->
+"Elizondo," (the caption pass invents the "So" the clip no longer holds) and "which none of which" -> "none of
+which"; look_ok on EVERY-CULTURE, I-WAS-INSIDE-AREA-51, SIGHTINGS, THEY-CAME-FOR-GOLD, YOURE-RESISTING (his
+rule: keep unless surely not fine). Expect 20/20 in Clips after this run and capread's confirm run.
 The batch grew from 9 to 20 (PLANNING.md: 12-18 for 27 min). Kamay, 30 Oct: "don't leave anything out,
 only take out things we know 100% are not going to be fine" - a standing order for every batch.
 Run 41095849254 built 9 new clips; a second push added I-WAS-INSIDE-AREA-51 (36 s, short_ok, 0-35.9)
