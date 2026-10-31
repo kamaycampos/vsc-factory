@@ -22,6 +22,19 @@ def published():
             for a in json.loads(r.stdout).get("assets", []) if a["name"].endswith(".mp4")}
 
 
+def held():
+    """Clips plancheck held at their CURRENT plan entry (cloud/edges.py after_autoplan)."""
+    sys.path.insert(0, HERE)
+    from cloud.shard import fingerprint, held as on_release
+    hold = on_release()
+    out = set()
+    for f in glob.glob(os.path.join(HERE, "plans", "*.json")):
+        for c in json.load(open(f))["clips"]:
+            if (hold.get(c["name"]) or {}).get("fingerprint") == fingerprint(c):
+                out.add(c["name"])
+    return out
+
+
 def main():
     have, want, waiting = published(), [], []
     for f in sorted(glob.glob(os.path.join(HERE, "plans", "*.json"))):
@@ -30,9 +43,10 @@ def main():
         if not p["clips"]:
             waiting.append(p["key"])
     missing = [n for n in want if n not in have]
+    hold = held()
     print(f"{len(want) - len(missing)}/{len(want)} clips published")
     for n in want:
-        print(f"  {'ok  ' if n in have else 'MISSING'} {n}")
+        print(f"  {'ok  ' if n in have else 'HELD   ' if n in hold else 'MISSING'} {n}")
     # 7 Oct, run 48: "0/0 clips published ... BATCH COMPLETE" - a plan with no clips
     # yet is a batch nobody has made, not a finished one.
     for k in waiting:
@@ -40,10 +54,18 @@ def main():
     if waiting and not missing:
         sys.exit(f"\nBATCH NOT MADE - {', '.join(waiting)} still has no clips. "
                  "See the autoplan job of this run for why.")
+    held_now = [n for n in missing if n in hold]
+    missing = [n for n in missing if n not in hold]
+    if held_now and not missing:
+        sys.exit(f"\nHELD BY PLANCHECK - {', '.join(held_now)}: a wrong word was heard at the cut on "
+                 "the source, so they were not built. Fix start_at / end_at from a probe and push "
+                 "(the autoplan run's summary page has the words heard).")
     if missing:
         sys.exit(f"\nBATCH INCOMPLETE after three attempts - {len(missing)} clip(s) never "
                  f"reached the release: {', '.join(missing)}\n"
-                 "Run the workflow again; it builds only what is missing.")
+                 "Run the workflow again; it builds only what is missing."
+                 + (f"\nAlso HELD BY PLANCHECK (not built until start_at / end_at change): {', '.join(held_now)}"
+                    if held_now else ""))
     print("\nEvery clip in the plans is published. BATCH COMPLETE")
 
 

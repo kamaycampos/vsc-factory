@@ -112,7 +112,8 @@ runs, and how to do any of them by hand.)
    Push once. Unchanged clips are skipped by content hash.
 5. Watch the **first 3 seconds and the last 2** of every clip. Then it goes to Kamay.
 
-**Before any push that adds or changes a `start_at` / `end_at`:** run the `edges` workflow with
+**Autoplanned cuts are heard by themselves** (Autopilot step 4). **Before any HAND push that adds or
+changes a `start_at` / `end_at`:** run the `edges` workflow with
 `plancheck <key>` (or `plancheck <key> CLIP ...`). It hears every cut on the SOURCE exactly as edge
 listening will hear the file; push only when every line says OK. A FAIL prints the words heard - move
 the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first.
@@ -369,7 +370,13 @@ too short was made deep inside that context.
    transcript cached). The chosen clips are listed on the run's summary page. If no batch
    passes, the stub stays a stub and the run is RED, never green. Only `plans/` is committed; a fresh
    run builds it. A failed autoplan never blocks the batches already planned.
-4. **build -> collect -> verify** as always; the clips land in the `clips` release.
+4. **plancheck** (31 Oct): the run autoplan starts (`-f plancheck=<keys>`) hears every planned cut
+   on the source first (`edges.py after-autoplan`, a job before shard). A cut heard wrong is HELD:
+   `plancheck.json` in the clips release keeps clip -> plan fingerprint, shard does not build it
+   unchanged, verify ends RED naming it "HELD", the run page shows the words heard. Fix its
+   `start_at` / `end_at` from a probe and push (new fingerprint = built), or `only` builds it as it
+   is. If the source or whisper fails there, nothing is held - edge listening still judges the files.
+5. **build -> collect -> verify** as always; the clips land in the `clips` release.
 
 One-time setup: repository secret `ANTHROPIC_API_KEY` (console.anthropic.com, pay per use,
 roughly $0.20-0.60 a batch). Optional variable `VSC_PLANNER_MODEL`. No key = the stub

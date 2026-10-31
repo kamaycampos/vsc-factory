@@ -15,6 +15,10 @@ on:
         description: "Build only these clip names (space separated). Empty = everything pending."
         required: false
         default: ""
+      plancheck:
+        description: "Plan keys whose cuts are heard on the source before shard (autoplan sets it)."
+        required: false
+        default: ""
   push:
     branches: [main]
     paths: ["plans/**"]
@@ -95,7 +99,7 @@ jobs:
           git add plans/
           git commit -q -m "autoplan: clips chosen for ${{ steps.a.outputs.keys }}"
           for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
-          gh workflow run vsc.yml --ref main
+          gh workflow run vsc.yml --ref main -f plancheck="${{ steps.a.outputs.keys }}"
       # RED, NOT GREEN, WHILE A BATCH WAITS (run 48, 7 Oct: autoplan could not find the
       # transcript, planned nothing, and every job went green with zero clips). Runs after
       # the save, so a batch that WAS planned is never lost to one that was not; the other
@@ -106,8 +110,29 @@ jobs:
           echo "::error::No clips were chosen for: ${{ steps.a.outputs.waiting }} - the reason is in the step above."
           exit 1
 
-  shard:
+  # PLANCHECK AFTER AUTOPLAN (31 Oct 2026). The run autoplan starts names its keys; every
+  # planned cut is heard on the source (cloud/edges.py, as the `edges` workflow's
+  # "plancheck <key>") before anything renders. A cut heard wrong is HELD in the clips
+  # release's plancheck.json and shard does not build it until its start_at / end_at
+  # change - minutes instead of a build round. A failure HERE holds nothing.
+  plancheck:
     needs: [prep, autoplan]
+    if: ${{ !cancelled() && needs.prep.result == 'success' && inputs.plancheck != '' && needs.autoplan.outputs.planned != '1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
+      - run: bash setup.sh
+      - run: python cloud/edges.py after-autoplan $KEYS
+        env:
+          KEYS: ${{ inputs.plancheck }}
+
+  shard:
+    needs: [prep, autoplan, plancheck]
     # A failed autoplan never blocks the batches already planned; a successful one hands
     # over to the fresh run it started (which cancels this one - newer run wins).
     if: ${{ !cancelled() && needs.prep.result == 'success' && needs.autoplan.outputs.planned != '1' }}

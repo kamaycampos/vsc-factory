@@ -12,6 +12,7 @@ at both ends, and its first and last heard words are set beside the plan's.
     python cloud/edges.py delivered          # the newest file of every delivered clip
     python cloud/edges.py NAME_51s.mp4 ...   # these release files
     python cloud/edges.py plancheck <key>    # every planned cut, heard on the SOURCE first
+    python cloud/edges.py after-autoplan <key> ...   # the same, by vsc.yml; holds the FAILs
 """
 import glob, json, os, re, subprocess, sys
 
@@ -180,7 +181,7 @@ def probe(key, spans):
             print("  dB/20ms: " + " ".join(f"{t0 + k * 0.02:.2f}:{d:.0f}" for k, d in enumerate(db)), flush=True)
 
 
-def plancheck(key, names=()):
+def hear_plan(key, names=()):
     """HEAR EVERY PLANNED CUT ON THE SOURCE, BEFORE ANYTHING IS RENDERED.
 
         python cloud/edges.py plancheck <key> [CLIP ...]     (edges workflow: "plancheck <key>")
@@ -197,6 +198,7 @@ def plancheck(key, names=()):
     sys.path.insert(0, os.path.expanduser("~/Kamay"))
     sys.path.insert(0, HERE)
     from cloud.source import fetch, plans
+    from cloud.shard import fingerprint
     plan = [p for p in plans() if p["key"] == key][0]
     src = fetch(plan)
     # CLIP@start:end hears a TRIAL cut instead of the plan's - try a time before writing it in
@@ -236,16 +238,85 @@ def plancheck(key, names=()):
               f"opens [{heard_h}]{'' if ok_first else f' - plan opens on {want_first!r}'} | "
               f"ends [{heard_t}]{'' if ok_last else f' - plan closes on {want_last!r}'}", flush=True)
         out.append({"clip": c["name"], "start_at": a, "end_at": b, "first_ok": ok_first, "last_ok": ok_last,
-                    "first_heard": heard_h, "last_heard": heard_t})
+                    "first_heard": heard_h, "last_heard": heard_t,
+                    "want_first": want_first, "want_last": want_last,
+                    "fingerprint": None if c["name"] in trial else fingerprint(c)})
+    print(f"PLANCHECK {key}: {len(out) - bad}/{len(out)} cuts heard as planned")
+    return out
+
+
+def plancheck(key, names=()):
+    out = hear_plan(key, names)
     os.makedirs("/tmp/edges", exist_ok=True)
     json.dump(out, open("/tmp/edges/edges.json", "w"), indent=1)
-    print(f"PLANCHECK {key}: {len(out) - bad}/{len(out)} cuts heard as planned")
-    if bad:
+    if [r for r in out if not (r["first_ok"] and r["last_ok"])]:
         sys.exit(1)
 
 
+def after_autoplan(keys):
+    """PLANCHECK RUNS BY ITSELF AFTER AUTOPLAN (31 Oct 2026). autoplan writes every clip's
+    start_at / end_at from prep's pause map, and prep's clock runs 0.4-1.0 s off in places
+    (CLAUDE.md), so a planned cut can sit inside a word - known in minutes here, or after a
+    whole build round from edge listening. The vsc run autoplan starts names its keys; this
+    hears them before shard.
+
+    A cut heard wrong is HELD, not dropped: plancheck.json in the clips release maps clip ->
+    the plan fingerprint it was heard on, and shard.py does not build that entry unchanged
+    (like unlocated.json). New start_at / end_at = a new fingerprint = built; the workflow's
+    `only` builds it as it is. Never blocks the build itself: a source or whisper that
+    fails here holds nothing."""
+    held = {}
+    d = sh("gh", "release", "download", "clips", "-R", REPO, "-p", "plancheck.json", "-D", "/tmp/pc", "--clobber")
+    if d.returncode == 0:
+        try:
+            held = json.load(open("/tmp/pc/plancheck.json"))
+        except Exception:
+            held = {}
+    rows, lines = [], []
+    for key in keys:
+        try:
+            out = hear_plan(key)
+        except Exception as e:
+            print(f"::warning::plancheck could not hear {key} ({type(e).__name__}: {str(e)[:200]}) - "
+                  "its clips build unheard; edge listening still judges the files")
+            lines.append(f"**plancheck {key}: not heard** ({type(e).__name__}) - built unheard")
+            continue
+        rows += out
+        lines += [f"### plancheck {key}: {sum(r['first_ok'] and r['last_ok'] for r in out)}/{len(out)} cuts "
+                  "heard as planned", "", "| clip | opens on | ends on | |", "|---|---|---|---|"]
+        for r in out:
+            ok = r["first_ok"] and r["last_ok"]
+            lines.append(f"| {r['clip']} | {r['first_heard']} | {r['last_heard']} | "
+                         + ("OK" if ok else "**HELD** - plan "
+                            + (f"opens on '{r['want_first']}'" if not r["first_ok"] else "")
+                            + (" / " if not (r["first_ok"] or r["last_ok"]) else "")
+                            + (f"closes on '{r['want_last']}'" if not r["last_ok"] else "")) + " |")
+        lines.append("")
+    for r in rows:
+        if r["first_ok"] and r["last_ok"]:
+            held.pop(r["clip"], None)
+        else:
+            held[r["clip"]] = {"fingerprint": r["fingerprint"], "first_heard": r["first_heard"],
+                               "last_heard": r["last_heard"]}
+    os.makedirs("/tmp/pc", exist_ok=True)
+    json.dump(held, open("/tmp/pc/plancheck.json", "w"), indent=1, sort_keys=True)
+    u = sh("gh", "release", "upload", "clips", "/tmp/pc/plancheck.json", "--clobber", "-R", REPO)
+    if u.returncode:
+        print(f"::warning::plancheck.json not published ({u.stderr.strip()[:200]}) - nothing is held")
+    bad = sorted(r["clip"] for r in rows if not (r["first_ok"] and r["last_ok"]))
+    if bad:
+        print(f"::warning::HELD by plancheck, not built until start_at / end_at change: {', '.join(bad)}")
+        lines.append("Held clips are not built until their `start_at` / `end_at` change: take the times "
+                     "from `edges.py probe` (CLAUDE.md), `plancheck <key> CLIP@start:end` to try one, then push. "
+                     "The workflow's `only` builds a held clip as it is.")
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("\n".join(lines) + "\n\n")
+
+
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["plancheck"]:
+    if sys.argv[1:2] == ["after-autoplan"]:
+        after_autoplan(sys.argv[2:])
+    elif sys.argv[1:2] == ["plancheck"]:
         plancheck(sys.argv[2], sys.argv[3:])
     elif sys.argv[1:2] == ["probe"]:
         probe(sys.argv[2], sys.argv[3:])

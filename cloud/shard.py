@@ -42,14 +42,24 @@ def locator_code():
     return h.hexdigest()[:12]
 
 
-def unlocated():
+def release_json(name):
     d = subprocess.run(["gh", "release", "download", "clips", "-R", REPO, "-p",
-                        "unlocated.json", "-D", "/tmp/ul", "--clobber"],
+                        name, "-D", "/tmp/ul", "--clobber"],
                        capture_output=True, text=True)
     try:
-        return json.load(open("/tmp/ul/unlocated.json")) if d.returncode == 0 else {}
+        return json.load(open(f"/tmp/ul/{name}")) if d.returncode == 0 else {}
     except Exception:
         return {}
+
+
+def unlocated():
+    return release_json("unlocated.json")
+
+
+def held():
+    """Cuts plancheck heard wrong after autoplan (cloud/edges.py after_autoplan):
+    clip -> {"fingerprint": the plan entry it was heard on, ...}."""
+    return release_json("plancheck.json")
 
 
 def already_built():
@@ -85,6 +95,9 @@ def main():
     # were re-run in both, ~30 runner minutes, to the same "missing closing". The run still
     # ends RED naming them (verify); a new plan entry or locator code tries again.
     nope, code = unlocated(), locator_code()
+    # A CUT HEARD WRONG ON THE SOURCE IS NOT BUILT UNCHANGED (31 Oct 2026): plancheck
+    # runs after autoplan and holds them; new start_at / end_at, or `only`, builds one.
+    hold = held()
     # DELIVERED CLIPS ARE FINISHED. 3 Oct 2026: four of the 23 delivered to GIN carried a
     # FAIL "listen" verdict, so collect never recorded their fingerprint, and Monday's
     # scheduled build would have rebuilt them under new shared framing - a different
@@ -105,6 +118,9 @@ def main():
                 todo.append(c["name"]); continue
             if c["name"] in locked:
                 continue
+            if (hold.get(c["name"]) or {}).get("fingerprint") == fingerprint(c):
+                print(f"{c['name']}: plancheck heard a wrong word at its cut - held until "
+                      "start_at / end_at change", file=sys.stderr); continue
             if c["name"] not in done:
                 if nope.get(c["name"]) == f"{fingerprint(c)}:{code}":
                     print(f"{c['name']}: its cut could not be found with this plan and "
