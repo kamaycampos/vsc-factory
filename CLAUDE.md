@@ -15,8 +15,8 @@ limit (see "Token budget").
 ## Where things stand (handoff, 1 Nov 2026 - replace this section at every handoff)
 
 ### NEXT SESSION STARTS HERE: close they_re_not_hiding once Kamay says the last 3 are uploaded
-- **they_re_not_hiding, 20 clips: all built, checked and in ~/VSC/Clips.** 17 uploaded by Kamay on
-  1 Nov and listed in `cloud/delivered.json`. The last 3 wait for his upload: NO-GOD-NO-SIN (re-cut
+- **they_re_not_hiding, 20 clips: all built, checked and in ~/VSC/Clips.** Kamay uploaded 18 on
+  31 Oct; 17 are in `cloud/delivered.json` (NO-GOD-NO-SIN came off it to be re-cut). The last 3 wait for his upload: NO-GOD-NO-SIN (re-cut
   to open on "The big fear", replaces the copy he uploaded), AN-ALIEN-ON-TV (ends on "no God."),
   HUNDREDS-OF-CREDIBLE-WITNESSES ("Alessandro" as Kevin says it). All three PASS (run 41351670023).
   When he says they are up: add the 3 to delivered.json, plan to `plans/done/` (`[skip ci]`),
