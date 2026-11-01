@@ -309,6 +309,60 @@ def tidy(words):
     return [tuple(x) for x in w]
 
 
+def pin_measured(name, fixes):
+    """PUT BACK THE TIMES A CORRECTION MEASURED, after vsc_v2_time.retime has run.
+
+    1 Nov 2026, AN-ALIEN-ON-TV: from "These reports" to "no God." Kevin speaks 14 s
+    with no pause, so retime's anchoring had nothing to pin to and left the captions
+    0.6-1.9 s late (word on screen 8 of 11). A fix with a 4th field carries every
+    word's start, heard on the FILE (whisper -ml 1 over that stretch) - and retime
+    re-timed those words over again. Those words keep the measured times now; the
+    words beside them are pushed clear so nothing is drawn twice. Returns the count."""
+    import vsc_v2_time
+    P = os.path.join(OUT, name + ".json")
+    pinned = [f for f in fixes if len(f) > 3]
+    if not pinned or not os.path.exists(P):
+        return 0
+    d = json.load(open(P))
+    words = [tuple(w) for w in d["words"]]
+    done = 0
+    for _near, _wrong, right, at in pinned:
+        rw = [norm(x) for x in right.split()]
+        best = None
+        for i in range(len(words) - len(rw) + 1):
+            if [norm(words[i + k][2]) for k in range(len(rw))] == rw:
+                dd = abs(words[i][0] - at[0])
+                if best is None or dd < best[0]:
+                    best = (dd, i)
+        if best is None or best[0] > 4.0:
+            print(f"    !! MEASURED TIMES NOT PINNED: '{right[:60]}' not in the captions near {at[0]}s",
+                  flush=True)
+            continue
+        i, j = best[1], best[1] + len(rw)
+        for k in range(len(rw)):
+            e = at[k + 1] if k + 1 < len(at) else max(words[i + k][1], at[k] + 0.25)
+            words[i + k] = (round(at[k], 3), round(e, 3), words[i + k][2])
+        for k in range(i - 1, -1, -1):          # before the span: end where it starts
+            nxt = words[k + 1][0]
+            if words[k][1] <= nxt:
+                break
+            words[k] = (round(min(words[k][0], nxt - 0.06), 3), round(nxt, 3), words[k][2])
+        for k in range(j, len(words)):          # after it: start once it has ended
+            prv = words[k - 1][1]
+            if words[k][0] >= prv:
+                break
+            words[k] = (round(prv, 3), round(max(words[k][1], prv + 0.06), 3), words[k][2])
+        done += 1
+    if done:
+        bursts = vsc_v2_time.split_early(kt_render.phrases_from_words(words), words)
+        bursts = [(s0, (bursts[k + 1][0] if k + 1 < len(bursts) else e0), t0)
+                  for k, (s0, e0, t0) in enumerate(bursts)]
+        d["words"], d["bursts"] = words, bursts
+        json.dump(d, open(P, "w"), indent=0)
+        print(f"      measured times pinned for {done} correction(s)", flush=True)
+    return done
+
+
 def build(name, a, b, src, close_phrase, fixes=()):
     words = accurate_words(src, a, b, f"VSC2/{name}")
     # quote marks come from EITHER pass and hide sentence ends from the line breaker

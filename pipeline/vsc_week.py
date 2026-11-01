@@ -294,6 +294,7 @@ def main(only=None):
             print(f"      {len(clip_fixes)} caption correction(s) for this clip", flush=True)
             vsc_v2caps.build(name, a, b, src, last, clip_fixes)
             vsc_v2_time.retime(name, src, a, b)
+            vsc_v2caps.pin_measured(name, clip_fixes)   # a fix's measured times win (1 Nov)
             vsc_v2_render.HOOKS[name] = hook
             vsc_v2_render.OUT = OUT
             vsc_v2_render.main([name])
