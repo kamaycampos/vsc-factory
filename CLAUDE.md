@@ -12,67 +12,32 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 30 Oct 2026 - replace this section at every handoff)
+## Where things stand (handoff, 1 Nov 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: read the verdicts for they_re_not_hiding's 20 clips (31 Oct)
-31 Oct status before the push below: 13 clean in Clips, 7 held. Kamay: "Yes, do all of it" - WE-WOULD-BE-GODS
-re-cut 186.5-242.0 ("It's in the Mahabharata..." to "...as gods."), HUNDREDS caption "So, Alessandro," ->
-"Elizondo," (the caption pass invents the "So" the clip no longer holds) and "which none of which" -> "none of
-which"; look_ok on EVERY-CULTURE, I-WAS-INSIDE-AREA-51, SIGHTINGS, THEY-CAME-FOR-GOLD, YOURE-RESISTING (his
-rule: keep unless surely not fine). Expect 20/20 in Clips after this run and capread's confirm run.
-The batch grew from 9 to 20 (PLANNING.md: 12-18 for 27 min). Kamay, 30 Oct: "don't leave anything out,
-only take out things we know 100% are not going to be fine" - a standing order for every batch.
-Run 41095849254 built 9 new clips; a second push added I-WAS-INSIDE-AREA-51 (36 s, short_ok, 0-35.9)
-and YOURE-RESISTING-RIGHT-NOW (43 s, 492.6-536.0), edges probed (run 41098314970). ONE push (this commit) started vsc.yml;
-each run builds only clips not yet built (the 9 old ones are byte-identical in the plan, so their hashes match).
-1. When the run is green: the verdict table in the `clips` release, then capread's verdicts. A FAIL
-   on an edge: take the times from a probe (`edges.py probe`), never from prep's word times
-   (see "Do not reintroduce", 30 Oct: whisper runs 0.4-0.9 s off around here).
-2. Check the 9 new clips landed in ~/VSC/Clips (not `_needs_work`). Content LOOKs go to Kamay with a
-   recommendation. Do not upload; Kamay uploads when he says the batch is right.
-3. Then the usual: delivered.json, plan to `plans/done/` ([skip ci]), `retire`.
-
-- **they_re_not_hiding, 18 clips** - GIN's Frame.io "They're Not Hiding Aliens. They're Hiding
-  This." (item 20 of 25), 1623 s, 2160p. The 9 already clean in ~/Desktop/VSC/Clips: FEAR-KEEPS-YOU-
-  INACTIVE 60, OPEN-UP-TO-POSSIBILITY 77, YOU-ARE-A-SPIRITUAL-ESSENCE 82, AN-ALIEN-ON-TV 79, NO-GOD-
-  NO-SIN 50, DONT-MAKE-A-PIG-SING 71, YOUR-LIFE-IS-ETERNAL 60, SEE-THE-BIGGER-PICTURE 68, RELEASE-THE-
-  NEED-TO-KNOW 61. NEW (built by this run): WE-WOULD-BE-GODS 64 [188-252], THEY-LEAK-IT-ON-PURPOSE 57,
-  THE-CIA-TELLS-CONGRESS-NOTHING 62 [320-382], I-DONT-BELIEVE-I-KNOW 78 [536-615], HUNDREDS-OF-
-  CREDIBLE-WITNESSES 86 [637-722], EVERY-CULTURE-SAW-THEM 67, DNA-ALTERED-BY-DESIGN 78 [851-929],
-  THEY-CAME-FOR-GOLD 66 [952-1017], SIGHTINGS-SOARED-AFTER-THE-BOMB 44 [1019-1063].
-  Every new edge: the 10 ms level track + two `edges.py probe` runs (41094292094 and the one after).
-  First build (41095849254): GODS, LEAK, CIA, GOLD PASS; I-DONT-BELIEVE and DNA LOOK (word sync on
-  screen, capread's call); three FAILs fixed in d81ce9d's follow-up push: SIGHTINGS (plan said "its",
-  captions "It's"), HUNDREDS (Kevin's soft "So," 636.90-637.10 before a 0.3 s pause - whisper heard
-  it as "-"; now starts 637.22 on "Elizondo", and edges.same_start accepts a name whisper spells
-  its own way, "Alessandro"), EVERY-CULTURE ("thing" ran into the interviewer's faint "Kevin,
-  what"; now ends on "...that the gods travel in." 786.95, 1.3 s of silence after it).
-  Content to put to Kamay: THEY-CAME-FOR-GOLD carries Kevin's claim that human races come from
-  different extraterrestrial races (970-985 s) - his words, but affiliates will post it.
-  Kamay keeps THEY-CAME-FOR-GOLD as it is ("it will be fine"). Left uncut, surely not a clip:
-  382-413 only (the interviewer asks what he saw at Area 51; Kevin never answers - 23 s that runs
-  into OPEN-UP).
-- Code fixed this session (30 Oct): pauses v4 `swell_cuts` (the bed-swell weak spot, both missed
-  gaps found, every v3 cut kept on both episodes - prep re-measures maps older than v4); autoplan
-  will not settle under `target()` clips and names the uncut stretches ("BATCH:" problem, UNDER
-  TARGET on the run page); autoplan searches a long last word for its gap (whisper's 10-s
-  "experience." would have put the interviewer's question inside a clip). PLANNING.md: never
-  shrink; never open on the interviewer's faint question.
-- `pause-test` workflow (manual): pause map + encrypted 10 ms level track of any cached source, to
-  replay a change to the cut rule on the Mac without fetching gigabytes. Its artifact lives 2 days.
-- **your_purpose_is_a: DELIVERED** (29 Oct). Its encrypted source is KEPT in `sources` until GIN
-  approves the 9 (same as hollywood), then `retire` again.
-- **Housekeeping pushes that touch `plans/` (moving a plan to done/) go with `[skip ci]`** in the
-  commit message, or they cancel the build that is running.
-- **A clip Kamay deletes from Clips comes BACK on the next 15-min pull** while it is still in the
-  `clips` release and not in `~/VSC/.handled.txt`. When he deletes uploaded clips, add their file
-  names to `.handled.txt` at once, then retire.
+### NEXT SESSION STARTS HERE: close they_re_not_hiding once Kamay says the last 3 are uploaded
+- **they_re_not_hiding, 20 clips: all built, checked and in ~/VSC/Clips.** 17 uploaded by Kamay on
+  1 Nov and listed in `cloud/delivered.json`. The last 3 wait for his upload: NO-GOD-NO-SIN (re-cut
+  to open on "The big fear", replaces the copy he uploaded), AN-ALIEN-ON-TV (ends on "no God."),
+  HUNDREDS-OF-CREDIBLE-WITNESSES ("Alessandro" as Kevin says it). All three PASS (run 41351670023).
+  When he says they are up: add the 3 to delivered.json, plan to `plans/done/` (`[skip ci]`),
+  file names to `~/VSC/.handled.txt`, `retire`. WE-WOULD-BE-GODS sits in `_needs_work` only because
+  its uploaded build had a lowercase first word (fixed in the factory since); it is delivered.
+- **Factory fixes from this batch (1 Nov, b80b056)** - see "Do not reintroduce": setup cannot hang,
+  exact caption fixes first, measured times beat retime, first word capitalised, `open` must match a
+  first-word fix, crushed captions FAIL, plancheck hears every new or moved cut before every build
+  (first live run: 3/3 OK in 2 min). Not yet seen on a NEW episode - the next batch is its test.
+- Known and not fixed: retime (shared `vsc_v2_time`, kt-machine) runs captions late where Kevin
+  speaks long stretches without a pause; the word-on-screen check catches the middle of a clip,
+  `edges.crushed` the worst ends. Fix by hand with a measured-times fix (`whisper -ml 1` on the file,
+  checked on the level track). prep's clock drift (20 Oct) is still unexplained.
 - This Mac has no `gh` binary; the GitHub API works with the gh token in the keychain
   (`security find-generic-password -s gh:github.com -w`, strip `go-keyring-base64:`, base64 -d).
-- **Identify a GIN assignment by its TITLE on Frame.io** (the catalogue had it word for word), then
-  start vsc-new WITHOUT a rumble URL or with one from the catalogue.
-- hollywood_insider_reveals_secret: delivered; its encrypted source is KEPT in `sources` until GIN
-  approves the 8, then `retire` with only that key. why_your_prayers_fail: delivered, fully retired.
+- **Housekeeping pushes that touch `plans/` go with `[skip ci]`**, or they cancel the running build.
+- **A clip Kamay deletes from Clips comes BACK on the next 15-min pull** while it is still in the
+  `clips` release and not in `~/VSC/.handled.txt`.
+- **Identify a GIN assignment by its TITLE on Frame.io**, then start vsc-new.
+- hollywood_insider_reveals_secret and your_purpose_is_a: delivered; their encrypted sources are
+  KEPT in `sources` until GIN approves them, then `retire` with only that key.
 - GIN wants a perfect batch before giving more than one assignment at a time.
 
 ## Making a batch (the whole loop)
