@@ -24,6 +24,7 @@ jobs:
       - uses: actions/cache@v4
         with: { path: ~/wcache, key: whisper-2ca53bb-small-en-v2-portable }
       - run: bash setup.sh
+        timeout-minutes: 20   # a stalled download fails in minutes, not at the job's limit
       - run: python cloud/edges.py ${{ inputs.files }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

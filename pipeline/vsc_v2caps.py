@@ -193,13 +193,20 @@ def fix_text(words, fixes):
                 return False
             return difflib.SequenceMatcher(a=a, b=b).ratio() >= 0.8
 
+        # AN EXACT MATCH BEATS A NEAR ONE (1 Nov 2026). AN-ALIEN-ON-TV's "going to stop
+        # crying" was meant for the line Kevin says it on; a line 1.5 s on read "going to
+        # stop going" (3 of 4) and sat nearer `near` - which is a time on the FINISHED
+        # captions, after retime moved them - so the fix rewrote the wrong line and left
+        # "to church," on its own. Rank: every word the same, then fewest misses, then time.
         for i in range(len(words) - len(wt) + 1):
             got = [norm(words[i + k][2]) for k in range(len(wt))]
             same = sum(1 for a, b in zip(got, wt) if close_enough(a, b))
             if same == len(wt) or (len(wt) >= 4 and same >= len(wt) - 1):
+                exact = sum(1 for a, b in zip(got, wt) if a == b)
                 d = abs(words[i][0] - near)
-                if best is None or d < best[0]:
-                    best = (d, i)
+                rank = (same < len(wt), len(wt) - exact, d)
+                if d <= 12.0 and (best is None or rank < best[2]):
+                    best = (d, i, rank)
         if best is None or best[0] > 12.0:
             print(f"    !! CORRECTION NOT APPLIED: '{wrong[:60]}' not found near {near}s "
                   f"- the caption will keep the transcribed wording", flush=True)
@@ -354,13 +361,19 @@ def pin_measured(name, fixes):
             words[k] = (round(prv, 3), round(max(words[k][1], prv + 0.06), 3), words[k][2])
         done += 1
     if done:
-        bursts = vsc_v2_time.split_early(kt_render.phrases_from_words(words), words)
-        bursts = [(s0, (bursts[k + 1][0] if k + 1 < len(bursts) else e0), t0)
-                  for k, (s0, e0, t0) in enumerate(bursts)]
-        d["words"], d["bursts"] = words, bursts
-        json.dump(d, open(P, "w"), indent=0)
+        _save(P, d, words)
         print(f"      measured times pinned for {done} correction(s)", flush=True)
     return done
+
+
+def _save(P, d, words):
+    """Words -> captions exactly as vsc_v2_time.retime builds them, then written."""
+    import vsc_v2_time
+    bursts = vsc_v2_time.split_early(kt_render.phrases_from_words(words), words)
+    bursts = [(s0, (bursts[k + 1][0] if k + 1 < len(bursts) else e0), t0)
+              for k, (s0, e0, t0) in enumerate(bursts)]
+    d["words"], d["bursts"] = words, bursts
+    json.dump(d, open(P, "w"), indent=0)
 
 
 def build(name, a, b, src, close_phrase, fixes=()):
@@ -371,6 +384,11 @@ def build(name, a, b, src, close_phrase, fixes=()):
     # found while whisper still had it as "There is just news."
     words = fix_text(tidy(words), fixes)   # a written correction has the last word (15 Oct)
     words, close_end = cut_after_close(words, close_phrase)
+    # A CLIP OPENS ON A SENTENCE, SO ITS FIRST WORD IS CAPITALISED (1 Nov 2026). The pass
+    # transcribes over the exact cut and whisper, hearing no start, wrote "it's in the
+    # Mahabharata" - kt_qc held WE-WOULD-BE-GODS as "opens mid-sentence" after Kamay kept it.
+    if words and words[0][2][:1].islower():
+        words[0] = (words[0][0], words[0][1], words[0][2][:1].upper() + words[0][2][1:])
     # A close the caption pass never heard is finished at render time, from the plan's
     # words at the locator's times (vsc_v2_render.finish_close) - one place, not two.
     bursts = kt_render.phrases_from_words(words)
@@ -410,6 +428,11 @@ def refinish(name, close_phrase, fixes):
     words = [(x, y, w.strip('"“”')) for x, y, w in words if w.strip('"“”')]
     words = fix_text(tidy(words), fixes)   # a written correction has the last word (15 Oct)
     words, close_end = cut_after_close(words, close_phrase)
+    # A CLIP OPENS ON A SENTENCE, SO ITS FIRST WORD IS CAPITALISED (1 Nov 2026). The pass
+    # transcribes over the exact cut and whisper, hearing no start, wrote "it's in the
+    # Mahabharata" - kt_qc held WE-WOULD-BE-GODS as "opens mid-sentence" after Kamay kept it.
+    if words and words[0][2][:1].islower():
+        words[0] = (words[0][0], words[0][1], words[0][2][:1].upper() + words[0][2][1:])
     bursts = kt_render.phrases_from_words(words)
     json.dump({"words": words, "bursts": bursts, "close_end": close_end}, open(P, "w"), indent=0)
     return words, bursts, close_end

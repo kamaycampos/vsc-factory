@@ -8,9 +8,25 @@ K="$HOME/Kamay"
 mkdir -p "$K/bin" "$K/whisper.cpp/build/bin" "$K/whisper.cpp/models" \
          "$HOME/Desktop/VSC/Source" "$HOME/Desktop/VSC/Clips" "$HOME/Desktop/VSC/.work"
 
-sudo apt-get -qq update >/dev/null
-sudo apt-get -qq install -y ffmpeg fonts-liberation cmake >/dev/null
-pip install -q opencv-python-headless numpy pillow
+# NOTHING HERE MAY WAIT FOREVER (1 Nov 2026). A build shard sat silent inside this
+# script for two hours until GitHub killed it at the job's 120-minute limit (run
+# 41250002550, HUNDREDS-OF-CREDIBLE-WITNESSES); its retry built the clip in 21 minutes.
+# Every network step has a time limit and three tries, and says which step it is on,
+# so a stall costs minutes and the log names it.
+net() {
+  local n
+  for n in 1 2 3; do
+    timeout 300 "$@" && return 0
+    echo "setup: try $n failed or timed out: $*" >&2
+    sleep 10
+  done
+  return 1
+}
+echo "setup: apt"
+net sudo apt-get -qq update >/dev/null
+net sudo apt-get -qq install -y ffmpeg fonts-liberation cmake >/dev/null
+echo "setup: pip"
+net pip install -q opencv-python-headless numpy pillow
 
 ln -sf /usr/bin/ffmpeg  "$K/bin/ffmpeg"
 ln -sf /usr/bin/ffprobe "$K/bin/ffprobe"
@@ -18,7 +34,7 @@ ln -sf "$(command -v gh)" "$K/bin/gh"
 cp assets/yunet.onnx "$K/bin/"
 # WHO IS TALKING (18 Oct 2026): the voiceprint encoder behind speaker maps and
 # speaker_turns' reframing. Lives in kt-machine (public); without it both stay off.
-curl -sfL "https://raw.githubusercontent.com/kamaycampos/kt-machine/main/factory/assets/voice_encoder.npz" \
+curl -sfL --max-time 120 --retry 3 "https://raw.githubusercontent.com/kamaycampos/kt-machine/main/factory/assets/voice_encoder.npz" \
   -o "$K/bin/voice_encoder.npz" || echo "::warning::voice encoder not fetched - no speaker maps"
 
 # THE FONTS GO WHERE THE SCRIPT LOOKS. vsc_render.py names the Mac's own path for
@@ -45,14 +61,24 @@ sudo cp /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf \
 # them. Project-specific files are copied AFTER, so this project always wins on its
 # own style, hooks and plans - the details that must not leak between brands.
 RAW="https://raw.githubusercontent.com/kamaycampos/kt-machine/main/shared"
-curl -sfL "$RAW/MANIFEST.json" -o /tmp/shared_manifest.json
+echo "setup: shared engine"
+net curl -sfL --max-time 60 "$RAW/MANIFEST.json" -o /tmp/shared_manifest.json
 python3 - <<'EOF'
-import json, os, urllib.request
+import json, os, time, urllib.request
 raw = "https://raw.githubusercontent.com/kamaycampos/kt-machine/main/shared"
 man = json.load(open("/tmp/shared_manifest.json"))["files"]
 K = os.path.expanduser("~/Kamay")
 for f in man:
-    urllib.request.urlretrieve(f"{raw}/{f}", os.path.join(K, f))
+    for n in range(3):
+        try:
+            data = urllib.request.urlopen(f"{raw}/{f}", timeout=60).read()
+            break
+        except Exception as e:
+            print(f"setup: {f} try {n + 1}: {e}")
+            time.sleep(10)
+    else:
+        raise SystemExit(f"setup: could not fetch shared/{f}")
+    open(os.path.join(K, f), "wb").write(data)
 print(f"shared engine pulled: {len(man)} modules from kt-machine")
 EOF
 cp pipeline/*.py "$K/"
@@ -64,7 +90,8 @@ ln -sfn "$PWD/plans" "$K/vsc_plans" 2>/dev/null || true
 W="$HOME/wcache"
 if [ ! -x "$W/whisper-cli" ]; then
   mkdir -p "$W"
-  git clone -q https://github.com/ggml-org/whisper.cpp /tmp/whisper.cpp
+  echo "setup: building whisper (cache miss)"
+  net bash -c 'rm -rf /tmp/whisper.cpp && git clone -q https://github.com/ggml-org/whisper.cpp /tmp/whisper.cpp'
   git -C /tmp/whisper.cpp checkout -q 2ca53bb45e38748d07b310eeb36245a7157ac882
   # BUILD IT PORTABLE, NOT FAST. 29 Sept 2026: the binary is built once and CACHED,
   # and GitHub hands out runners with different CPUs - so a build tuned to the machine
@@ -85,7 +112,8 @@ fi
 MODEL="$W/ggml-small.en.bin"
 if [ ! -s "$MODEL" ] || [ "$(stat -c%s "$MODEL" 2>/dev/null || stat -f%z "$MODEL")" -lt 400000000 ]; then
   rm -f "$MODEL"
-  curl -sL --retry 3 --retry-delay 5 -o "$MODEL" \
+  echo "setup: fetching the speech model"
+  curl -sL --max-time 900 --retry 3 --retry-delay 5 -o "$MODEL" \
     https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin
 fi
 SZ="$(stat -c%s "$MODEL" 2>/dev/null || stat -f%z "$MODEL")"

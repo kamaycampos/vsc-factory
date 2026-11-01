@@ -57,7 +57,7 @@ def unlocated():
 
 
 def held():
-    """Cuts plancheck heard wrong after autoplan (cloud/edges.py after_autoplan):
+    """Cuts plancheck heard wrong on the source (cloud/edges.py hear_cuts):
     clip -> {"fingerprint": the plan entry it was heard on, ...}."""
     return release_json("plancheck.json")
 
@@ -96,7 +96,7 @@ def main():
     # ends RED naming them (verify); a new plan entry or locator code tries again.
     nope, code = unlocated(), locator_code()
     # A CUT HEARD WRONG ON THE SOURCE IS NOT BUILT UNCHANGED (31 Oct 2026): plancheck
-    # runs after autoplan and holds them; new start_at / end_at, or `only`, builds one.
+    # runs before every build and holds them; new start_at / end_at, or `only`, builds one.
     hold = held()
     # DELIVERED CLIPS ARE FINISHED. 3 Oct 2026: four of the 23 delivered to GIN carried a
     # FAIL "listen" verdict, so collect never recorded their fingerprint, and Monday's

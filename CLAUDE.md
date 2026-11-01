@@ -112,8 +112,8 @@ runs, and how to do any of them by hand.)
    Push once. Unchanged clips are skipped by content hash.
 5. Watch the **first 3 seconds and the last 2** of every clip. Then it goes to Kamay.
 
-**Autoplanned cuts are heard by themselves** (Autopilot step 4). **Before any HAND push that adds or
-changes a `start_at` / `end_at`:** run the `edges` workflow with
+**Every new or moved cut is heard by itself before the build** (Autopilot step 4, 1 Nov), so a wrong
+cut costs minutes, not a round. To try a time BEFORE writing it in the plan, run the `edges` workflow with
 `plancheck <key>` (or `plancheck <key> CLIP ...`). It hears every cut on the SOURCE exactly as edge
 listening will hear the file; push only when every line says OK. A FAIL prints the words heard - move
 the time (level track / `probe`) and run it again; `plancheck <key> CLIP@start:end` hears a trial cut first.
@@ -329,6 +329,27 @@ measured as 0.01 s. Leave >= 0.15 s between his last word and `end_at`, read on 
   plan change or a change to vsc_pick/vsc_week tries again.
 - **A clip never ends on a clause that continues** ("temporary happiness, but it's fleeting" - the
   sentence went on into Christmas). Split a long teaching where a SENTENCE ends.
+- **Nothing in setup may wait forever** (1 Nov, run 41250002550): a build shard sat silent in
+  `setup.sh` for 2 h until the 120-min job limit; its retry built the clip in 21 min. Every network
+  step has a time limit, three tries and a `setup: <step>` line; the setup step is capped at 20 min.
+- **A caption fix's exact match beats a near one** (1 Nov, `vsc_v2caps.fix_text`). capread's
+  "going to stop crying" landed on the line 1.5 s on ("going to stop going", 3 of 4 words) because
+  `near` is a time on the FINISHED captions, after retime moved them. AN-ALIEN-ON-TV read "start
+  crying ... to church,". Rank: all words, then fewest misses, then distance.
+- **retime overwrote measured times; now they win** (1 Nov, `vsc_v2caps.pin_measured`, called after
+  `vsc_v2_time.retime`). Where Kevin speaks with no pause, retime has nothing to anchor to: AN-ALIEN-
+  ON-TV's last 14 s ran 0.6-1.9 s late (word on screen 8/11). A fix's 4th field (every word's start,
+  `whisper -ml 1` on the file) is the timing fix; same words + times is allowed (check_plan).
+- **Whisper's word times cannot judge caption timing** (1 Nov). Two short reads of one ending
+  disagreed by a second; HUNDREDS' "but" was heard at 81.98, the level track has it at 82.65 where
+  the caption is. A whisper-timed tail pass was built, made 2 of 6 clips WORSE, and was removed.
+  Judge timing by the level track, or by how long a caption is on screen: `edges.crushed` FAILs a
+  caption of 3+ words shown faster than 12 words/s (NO-GOD-NO-SIN's last line, 5 words in 0.38 s,
+  the only one of 636 - the next fastest was 10.8).
+- **A clip's first caption word is capitalised** (1 Nov): the pass transcribes over the exact cut and
+  wrote "it's in the Mahabharata"; kt_qc held WE-WOULD-BE-GODS as "opens mid-sentence".
+- **A fix that changes the first caption word must change `open` too** (1 Nov, check_plan): the gate
+  compared "Alessandro" on screen with the plan's "Elizondo" and held HUNDREDS.
 - Runners are pinned to `ubuntu-24.04` (GitHub moves `ubuntu-latest` to 26 on 19 Oct).
 - The `clips` release can hold two files for one clip name (e.g.
   `THE-450-MILLION-BREAKUP_56s` and `_58s`). Deliver only the one listed in `built.json`.
@@ -370,12 +391,12 @@ too short was made deep inside that context.
    transcript cached). The chosen clips are listed on the run's summary page. If no batch
    passes, the stub stays a stub and the run is RED, never green. Only `plans/` is committed; a fresh
    run builds it. A failed autoplan never blocks the batches already planned.
-4. **plancheck** (31 Oct): the run autoplan starts (`-f plancheck=<keys>`) hears every planned cut
-   on the source first (`edges.py after-autoplan`, a job before shard). A cut heard wrong is HELD:
-   `plancheck.json` in the clips release keeps clip -> plan fingerprint, shard does not build it
-   unchanged, verify ends RED naming it "HELD", the run page shows the words heard. Fix its
-   `start_at` / `end_at` from a probe and push (new fingerprint = built), or `only` builds it as it
-   is. If the source or whisper fails there, nothing is held - edge listening still judges the files.
+4. **plancheck, every run** (31 Oct after autoplan; 1 Nov every run): a job before shard hears every
+   cut not heard yet - autoplan's or a person's (`edges.py cuts`). A cut heard OK is remembered by its
+   times (`_ok` in `plancheck.json`, clips release) and never heard again; a run that moves no cut
+   pays seconds. A cut heard wrong is HELD: shard does not build it at that plan entry, verify ends
+   RED naming it "HELD", the run page shows the words heard. Fix `start_at` / `end_at` from a probe
+   and push (heard again), or `only` builds it as it is. A source or whisper failure holds nothing.
 5. **build -> collect -> verify** as always; the clips land in the `clips` release.
 
 One-time setup: repository secret `ANTHROPIC_API_KEY` (console.anthropic.com, pay per use,

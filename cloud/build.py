@@ -118,6 +118,13 @@ def main(key, names):
                 why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
                     ("" if e["first_ok"] else f"first word heard is not '{e['caption_first']}'; ")
                     + ("" if e["last_ok"] else f"last word heard is not '{e['caption_last']}'")]
+            # A CAPTION NOBODY CAN READ (1 Nov 2026, NO-GOD-NO-SIN: 5 words for 0.38 s)
+            if e.get("crushed"):
+                verdict = "fail"
+                why = list(why if isinstance(why, (list, tuple)) else [why] if why else []) + [
+                    "caption on screen too briefly to read (comes late): "
+                    + " | ".join(f'"{t}"' for t in e["crushed"])
+                    + " - time it with a fix's measured start times"]
         except Exception as ex:
             print(f"  !! edge listening failed for {name}: {ex}", flush=True)
         r = vsc_v2_onscreen.check(f[0])

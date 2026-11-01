@@ -37,6 +37,7 @@ jobs:
         if: ${{ startsWith(inputs.engine, 'turbo') }}
         with: { path: ~/wturbo, key: ggml-large-v3-turbo-v1 }
       - run: bash setup.sh
+        timeout-minutes: 20   # a stalled download fails in minutes, not at the job's limit
       - name: Turbo model
         if: ${{ startsWith(inputs.engine, 'turbo') }}
         run: |

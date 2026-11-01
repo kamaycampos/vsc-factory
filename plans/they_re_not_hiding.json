@@ -640,7 +640,8 @@
     ]
    ],
    "start_at": 1185.55,
-   "end_at": 1264.2
+   "end_at": 1264.2,
+   "look_ok": "Kamay, 31 Oct: the old end ran into 'The big' - he asked for it to stop where Kevin stops. 0.36 s of silence after 'no God.' (level track, 1264.02-1264.38); 'The big fear...' opens NO-GOD-NO-SIN, and running on would pass 88 s."
   },
   {
    "name": "NO-GOD-NO-SIN",
@@ -689,6 +690,22 @@
      40.77,
      "happens, All the governments",
      "happens, all the governments"
+    ],
+    [
+     49.54,
+     "that we're not going to have a mass calamity.",
+     "that we're not going to have a mass calamity.",
+     [
+      49.5,
+      49.66,
+      49.78,
+      49.88,
+      49.99,
+      50.06,
+      50.18,
+      50.24,
+      50.54
+     ]
     ]
    ],
    "start_at": 1264.25,

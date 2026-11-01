@@ -12,7 +12,7 @@ at both ends, and its first and last heard words are set beside the plan's.
     python cloud/edges.py delivered          # the newest file of every delivered clip
     python cloud/edges.py NAME_51s.mp4 ...   # these release files
     python cloud/edges.py plancheck <key>    # every planned cut, heard on the SOURCE first
-    python cloud/edges.py after-autoplan <key> ...   # the same, by vsc.yml; holds the FAILs
+    python cloud/edges.py cuts [--list]      # every cut not heard yet (vsc.yml, before shard)
 """
 import glob, json, os, re, subprocess, sys
 
@@ -89,6 +89,17 @@ def skeleton(w):
     return re.sub(r"(.)\1+", r"\1", re.sub(f"[{VOWELS}]", "", w))
 
 
+def crushed(caps, rate=12.0):
+    """Captions of 3+ words on screen faster than anyone says them (words per second).
+
+    1 Nov 2026: NO-GOD-NO-SIN's last caption "to have a mass calamity." was up for 0.38 s
+    - 13 words a second; Kevin said it over ~0.9 s and the caption came 0.7 s late (level
+    track). The fastest of the other 635 captions of 3+ words in they_re_not_hiding was
+    10.8. Whisper's word times cannot judge this (two reads of one ending disagreed by a
+    second); the time a caption is on screen can."""
+    return [t for a, b, t in (caps or []) if len(t.split()) >= 3 and len(t.split()) / max(0.01, b - a) > rate]
+
+
 def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
     """What whisper hears at the two ends of the file at p, against its own captions.
 
@@ -114,7 +125,8 @@ def check(p, caps=None, plan_clip=None, work="/tmp/edges"):
     got_first = norm(h[0][2]) if h else None
     got_last = norm(t[-1][2]) if t else None
     c = plan_clip or {}
-    return {"first_heard": h[:4] if h else h, "last_heard": t[-5:] if t else t,
+    return {"crushed": crushed(caps),
+            "first_heard": h[:4] if h else h, "last_heard": t[-5:] if t else t,
             "caption_first": cap_first, "caption_last": cap_last,
             "plan_first": norm((c.get("open") or " ").split()[0]),
             "plan_last": norm((c.get("close") or " ").split()[-1]),
@@ -253,29 +265,61 @@ def plancheck(key, names=()):
         sys.exit(1)
 
 
-def after_autoplan(keys):
-    """PLANCHECK RUNS BY ITSELF AFTER AUTOPLAN (31 Oct 2026). autoplan writes every clip's
-    start_at / end_at from prep's pause map, and prep's clock runs 0.4-1.0 s off in places
-    (CLAUDE.md), so a planned cut can sit inside a word - known in minutes here, or after a
-    whole build round from edge listening. The vsc run autoplan starts names its keys; this
-    hears them before shard.
-
-    A cut heard wrong is HELD, not dropped: plancheck.json in the clips release maps clip ->
-    the plan fingerprint it was heard on, and shard.py does not build that entry unchanged
-    (like unlocated.json). New start_at / end_at = a new fingerprint = built; the workflow's
-    `only` builds it as it is. Never blocks the build itself: a source or whisper that
-    fails here holds nothing."""
-    held = {}
+def _plancheck_json():
     d = sh("gh", "release", "download", "clips", "-R", REPO, "-p", "plancheck.json", "-D", "/tmp/pc", "--clobber")
-    if d.returncode == 0:
-        try:
-            held = json.load(open("/tmp/pc/plancheck.json"))
-        except Exception:
-            held = {}
+    try:
+        return json.load(open("/tmp/pc/plancheck.json")) if d.returncode == 0 else {}
+    except Exception:
+        return {}
+
+
+def unheard():
+    """{key: [clip, ...]} - every cut no plancheck has heard yet: a clip with start_at /
+    end_at, not delivered, whose times are not the ones last heard OK (plancheck.json
+    "_ok") and that is not already held at its current plan entry."""
+    sys.path.insert(0, HERE)
+    from cloud.shard import fingerprint
+    pc = _plancheck_json()
+    ok = pc.get("_ok", {})
+    try:
+        delivered = json.load(open(os.path.join(HERE, "cloud", "delivered.json")))
+    except Exception:
+        delivered = {}
+    todo = {}
+    for f in sorted(glob.glob(os.path.join(HERE, "plans", "*.json"))):
+        p = json.load(open(f))
+        for c in p.get("clips", []):
+            if c.get("start_at") is None or c.get("end_at") is None:
+                continue
+            if c["name"] in delivered.get(p["key"], []):
+                continue
+            if ok.get(c["name"]) == [c["start_at"], c["end_at"]]:
+                continue
+            if (pc.get(c["name"]) or {}).get("fingerprint") == fingerprint(c):
+                continue
+            todo.setdefault(p["key"], []).append(c["name"])
+    return todo
+
+
+def hear_cuts(todo):
+    """PLANCHECK BEFORE EVERY BUILD (31 Oct 2026 after autoplan; 1 Nov for every push).
+
+    Every cut not heard yet (unheard()) is heard on the source before shard - autoplan's
+    and a person's alike. they_re_not_hiding's two hand cuts inside "The big" (AN-ALIEN-
+    ON-TV's end, NO-GOD-NO-SIN's start) passed edge listening and reached Kamay; heard on
+    the source, both FAIL in minutes. A cut heard OK is remembered by its times ("_ok")
+    and never heard again, so a run that moves no cut pays nothing.
+
+    A cut heard wrong is HELD, not dropped: plancheck.json maps clip -> the plan
+    fingerprint it was heard on, and shard.py does not build that entry unchanged (like
+    unlocated.json). New start_at / end_at = heard again; the workflow's `only` builds it
+    as it is. Never blocks the build itself: a source or whisper that fails holds nothing."""
+    pc = _plancheck_json()
+    ok = pc.setdefault("_ok", {})
     rows, lines = [], []
-    for key in keys:
+    for key, names in todo.items():
         try:
-            out = hear_plan(key)
+            out = hear_plan(key, names)
         except Exception as e:
             print(f"::warning::plancheck could not hear {key} ({type(e).__name__}: {str(e)[:200]}) - "
                   "its clips build unheard; edge listening still judges the files")
@@ -285,21 +329,23 @@ def after_autoplan(keys):
         lines += [f"### plancheck {key}: {sum(r['first_ok'] and r['last_ok'] for r in out)}/{len(out)} cuts "
                   "heard as planned", "", "| clip | opens on | ends on | |", "|---|---|---|---|"]
         for r in out:
-            ok = r["first_ok"] and r["last_ok"]
+            good = r["first_ok"] and r["last_ok"]
             lines.append(f"| {r['clip']} | {r['first_heard']} | {r['last_heard']} | "
-                         + ("OK" if ok else "**HELD** - plan "
+                         + ("OK" if good else "**HELD** - plan "
                             + (f"opens on '{r['want_first']}'" if not r["first_ok"] else "")
                             + (" / " if not (r["first_ok"] or r["last_ok"]) else "")
                             + (f"closes on '{r['want_last']}'" if not r["last_ok"] else "")) + " |")
         lines.append("")
     for r in rows:
         if r["first_ok"] and r["last_ok"]:
-            held.pop(r["clip"], None)
+            pc.pop(r["clip"], None)
+            ok[r["clip"]] = [r["start_at"], r["end_at"]]
         else:
-            held[r["clip"]] = {"fingerprint": r["fingerprint"], "first_heard": r["first_heard"],
-                               "last_heard": r["last_heard"]}
+            ok.pop(r["clip"], None)
+            pc[r["clip"]] = {"fingerprint": r["fingerprint"], "first_heard": r["first_heard"],
+                             "last_heard": r["last_heard"]}
     os.makedirs("/tmp/pc", exist_ok=True)
-    json.dump(held, open("/tmp/pc/plancheck.json", "w"), indent=1, sort_keys=True)
+    json.dump(pc, open("/tmp/pc/plancheck.json", "w"), indent=1, sort_keys=True)
     u = sh("gh", "release", "upload", "clips", "/tmp/pc/plancheck.json", "--clobber", "-R", REPO)
     if u.returncode:
         print(f"::warning::plancheck.json not published ({u.stderr.strip()[:200]}) - nothing is held")
@@ -314,8 +360,14 @@ def after_autoplan(keys):
 
 
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["after-autoplan"]:
-        after_autoplan(sys.argv[2:])
+    if sys.argv[1:2] == ["cuts"]:
+        todo = unheard()
+        print("cuts not heard yet: " + (json.dumps(todo) if todo else "none"))
+        if sys.argv[2:3] == ["--list"]:
+            if os.environ.get("GITHUB_OUTPUT"):
+                open(os.environ["GITHUB_OUTPUT"], "a").write(f"todo={1 if todo else 0}\n")
+        elif todo:
+            hear_cuts(todo)
     elif sys.argv[1:2] == ["plancheck"]:
         plancheck(sys.argv[2], sys.argv[3:])
     elif sys.argv[1:2] == ["probe"]:

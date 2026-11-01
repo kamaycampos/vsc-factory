@@ -23,7 +23,7 @@ def published():
 
 
 def held():
-    """Clips plancheck held at their CURRENT plan entry (cloud/edges.py after_autoplan)."""
+    """Clips plancheck held at their CURRENT plan entry (cloud/edges.py hear_cuts)."""
     sys.path.insert(0, HERE)
     from cloud.shard import fingerprint, held as on_release
     hold = on_release()
