@@ -14,14 +14,14 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 1 Nov 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: close they_re_not_hiding once Kamay says the last 3 are uploaded
-- **they_re_not_hiding, 20 clips: all built, checked and in ~/VSC/Clips.** Kamay uploaded 18 on
-  31 Oct; 17 are in `cloud/delivered.json` (NO-GOD-NO-SIN came off it to be re-cut). The last 3 wait for his upload: NO-GOD-NO-SIN (re-cut
-  to open on "The big fear", replaces the copy he uploaded), AN-ALIEN-ON-TV (ends on "no God."),
-  HUNDREDS-OF-CREDIBLE-WITNESSES ("Alessandro" as Kevin says it). All three PASS (run 41351670023).
-  When he says they are up: add the 3 to delivered.json, plan to `plans/done/` (`[skip ci]`),
-  file names to `~/VSC/.handled.txt`, `retire`. WE-WOULD-BE-GODS sits in `_needs_work` only because
-  its uploaded build had a lowercase first word (fixed in the factory since); it is delivered.
+### NEXT SESSION STARTS HERE: no batch open - wait for GIN's next assignment
+- **they_re_not_hiding: DELIVERED** (2 Nov). All 20 on Frame.io and in `cloud/delivered.json`; plan
+  in `plans/done/`; clips and prep retired from the releases (run 41455343120). Its encrypted source
+  is KEPT in `sources` until GIN approves the 20 (as hollywood and your_purpose_is_a), then `retire`
+  again with only that key. ~/VSC/Clips is empty; the batch's local files are in the Trash.
+- Next assignment: Kamay sends "New VSC: <title>, <length>" -> start `vsc_new.yml` (Autopilot).
+  It is the first episode through this batch's factory fixes: watch the run's plancheck table and
+  the verdicts, and check the files yourself before saying a clip is ready.
 - **Factory fixes from this batch (1 Nov, b80b056)** - see "Do not reintroduce": setup cannot hang,
   exact caption fixes first, measured times beat retime, first word capitalised, `open` must match a
   first-word fix, crushed captions FAIL, plancheck hears every new or moved cut before every build
