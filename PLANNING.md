@@ -97,10 +97,33 @@ clips focusing only on John)." When the transcript tags lines `GUEST` (or `GUEST
   stretch of the guest's story is not a Kevin clip - choose where KEVIN teaches.
 
 ## Hooks (the first 3 seconds decide whether anyone watches)
-- Name something the viewer can picture AND care about: a number with stakes, a name, an
-  amount, a cost. `APPLE EXISTS BECAUSE / JOBS GOT FIRED`, `A BREAKUP TURNED INTO /
-  450 MILLION DOLLARS`, `SUCCESSFUL PEOPLE HAVE MORE / PROBLEMS THAN YOU DO`.
-- Never a riddle with nothing in it (`WHAT SHE DID NEXT`, `WHY IT TOOK HER 3 HOURS`).
-- Hook the strongest fact the clip actually pays - never promise what Kevin does not say.
-- A different angle for every clip.
+3 Nov 2026, Kamay: "the hooks are so bad low quality ... the hooks should be perfect and so shocking
+and emotional impacting and also truth and call for attention and curiosity." Half of the last batch
+were: `SEE THE BIGGER PICTURE / AND LOSE THE FEAR`, `YOU'RE RESISTING THIS / RIGHT NOW`, `IN THE
+PRESENT MOMENT / THERE IS NO PAIN` - advice and abstractions nobody stops for.
+
+**Write 5 hooks for every clip, score each on the 4 tests, keep the best. Never ship the first draft.**
+1. **STOP** - line 1 ALONE would stop a thumb: a concrete, startling thing the viewer can picture -
+   a number with stakes, a named person or institution, a forbidden fact, an accusation.
+   `THEY CAME TO EARTH / FOR ONE THING: GOLD` · `APPLE EXISTS BECAUSE / JOBS GOT FIRED`.
+2. **GAP** - it opens a question only THIS clip answers. The viewer must need the next 10 seconds.
+   `A BREAKUP TURNED INTO / 450 MILLION DOLLARS` (how?) · `YOUR DNA HAS SIGNS / OF BEING EDITED` (by whom?).
+3. **FEEL** - it hits one emotion hard: fear, anger at being lied to, shame, awe, longing, hope.
+   Name the emotion to yourself before you write; a hook that hits none is a summary.
+4. **TRUE** - Kevin says it in the clip, in these words or plainly. Shocking AND true; the clip pays
+   the promise or the hook is a lie that costs the account (GIN's reviewers check).
+
+**Never:**
+- Advice or a lesson as the hook (`SEE THE BIGGER PICTURE`, `TAKE ONE STEP`). The lesson is the
+  payoff; the hook is the reason to wait for it.
+- A riddle with nothing in it (`WHAT SHE DID NEXT`, `GENERAL PATTON LOVED IT. / BRADLEY DID HIS
+  DUTY.`) - a name with no stakes is not curiosity.
+- A line break inside a phrase. Each line must read as a whole thought: `ALIENS OR NOT, YOUR /
+  TOMORROW WON'T CHANGE` and `ONE BOMB MADE UFO / SIGHTINGS SKYROCKET` are broken; `AFTER THE ATOM BOMB,
+  / UFO SIGHTINGS EXPLODED` is not. Line 1 never ends on THE, A, YOUR, OF, TO, EVERY,
+  AND... (check_plan refuses it).
+- The same opening shape twice in a batch. Vary: a number, a name, an accusation, a reversal,
+  "you" in danger, a quote.
+
+Hook the strongest fact the clip actually pays. A different angle for every clip.
 

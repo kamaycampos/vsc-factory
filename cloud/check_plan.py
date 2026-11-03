@@ -51,6 +51,12 @@ STAKES = re.compile(
     r"\b(one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand)\b)", re.I)
 
 
+WEAK_END = {"the", "a", "an", "your", "my", "his", "her", "our", "their", "its", "this", "that",
+            "these", "those", "of", "to", "in", "on", "at", "for", "with", "from", "by", "into",
+            "and", "or", "but", "so", "as", "than", "every", "each", "no", "any", "some", "is",
+            "are", "was", "were", "be", "not", "very", "most", "more"}
+
+
 def norm(s):
     return re.sub(r"\s+", " ", str(s)).strip().lower()
 
@@ -104,6 +110,12 @@ def check(path, delivered):
             w = sum(len(str(x).split()) for x in h)
             if w > HOOK_WORDS:
                 errs.append(f"{n}: hook is {w} words - max {HOOK_WORDS}")
+            # A LINE BREAK INSIDE A PHRASE (3 Nov 2026, Kamay: "the hooks are so bad"). The card
+            # shows line 1 alone for a beat; "ALIENS OR NOT, YOUR / TOMORROW WON'T CHANGE" reads
+            # as half a sentence. Line 1 must end where a phrase can end.
+            last = re.sub(r"[^a-z']", "", str(h[0]).split()[-1].lower()) if str(h[0]).split() else ""
+            if last in WEAK_END:
+                errs.append(f"{n}: hook line 1 ends on '{last.upper()}' - break where a phrase ends")
             if not STAKES.search(" ".join(h)):
                 warns.append(f"{n}: hook '{' / '.join(h)}' names nothing the viewer gets, "
                              "fears or recognises - is there a number, a name or a cost to lead with?")
