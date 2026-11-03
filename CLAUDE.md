@@ -26,10 +26,13 @@ limit (see "Token budget").
   exact caption fixes first, measured times beat retime, first word capitalised, `open` must match a
   first-word fix, crushed captions FAIL, plancheck hears every new or moved cut before every build
   (first live run: 3/3 OK in 2 min). Not yet seen on a NEW episode - the next batch is its test.
-- Known and not fixed: retime (shared `vsc_v2_time`, kt-machine) runs captions late where Kevin
-  speaks long stretches without a pause; the word-on-screen check catches the middle of a clip,
-  `edges.crushed` the worst ends. Fix by hand with a measured-times fix (`whisper -ml 1` on the file,
-  checked on the level track). prep's clock drift (20 Oct) is still unexplained.
+- FIXED 3 Nov (kt-machine `e431795e`): retime's "late where Kevin speaks without a pause" was really
+  REPETITION. In AN-ALIEN-ON-TV's "people aren't going to jump / start crying / stop going to church"
+  the 1.4 s read scored the same at every repetition and the first won, so each line was pinned one
+  line early in the word list: up to 1.89 s late. Ties now go to the whole read, then a clear nearest
+  word, else no anchor (`break_ties`, retime only). Measured on the real audio against the 54 hand
+  times: +0.24..+1.89 s -> -0.36..+0.25 s; EVERY-CULTURE and NO-GOD unchanged. Measured-times fixes
+  still win (`pin_measured`) if a case is ever missed. prep's clock drift (20 Oct) is still unexplained.
 - This Mac has no `gh` binary; the GitHub API works with the gh token in the keychain
   (`security find-generic-password -s gh:github.com -w`, strip `go-keyring-base64:`, base64 -d).
 - **Housekeeping pushes that touch `plans/` go with `[skip ci]`**, or they cancel the running build.
