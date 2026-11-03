@@ -53,8 +53,7 @@ STAKES = re.compile(
 
 WEAK_END = {"the", "a", "an", "your", "my", "his", "her", "our", "their", "its", "this", "that",
             "these", "those", "of", "to", "in", "on", "at", "for", "with", "from", "by", "into",
-            "and", "or", "but", "so", "as", "than", "every", "each", "no", "any", "some", "is",
-            "are", "was", "were", "be", "not", "very", "most", "more"}
+            "and", "or", "but", "so", "as", "than", "every", "each", "no", "any", "some"}
 
 
 def norm(s):
@@ -114,7 +113,7 @@ def check(path, delivered):
             # shows line 1 alone for a beat; "ALIENS OR NOT, YOUR / TOMORROW WON'T CHANGE" reads
             # as half a sentence. Line 1 must end where a phrase can end.
             last = re.sub(r"[^a-z']", "", str(h[0]).split()[-1].lower()) if str(h[0]).split() else ""
-            if last in WEAK_END:
+            if last in WEAK_END and not str(h[0]).rstrip().endswith((".", "!", "?", ":", ",")):
                 errs.append(f"{n}: hook line 1 ends on '{last.upper()}' - break where a phrase ends")
             if not STAKES.search(" ".join(h)):
                 warns.append(f"{n}: hook '{' / '.join(h)}' names nothing the viewer gets, "
