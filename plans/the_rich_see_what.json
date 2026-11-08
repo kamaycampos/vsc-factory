@@ -1,0 +1,14 @@
+{
+ "key": "the_rich_see_what",
+ "prefix": "The Rich See",
+ "title": "The Rich See What You Dont",
+ "source": "the_rich_see_what.mp4.enc",
+ "duration": 393,
+ "autoplan": true,
+ "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
+ "clips": [],
+ "rumble": "https://rumble.com/v7g635m-you-keep-missing-the-biggest-opportunities.html",
+ "height": 2160,
+ "rumble_title": "You Keep Missing The Biggest Opportunities",
+ "rumble_hls": "https://rumble.com/hls-vod/n9I3o80LL1g/playlist.m3u8"
+}
