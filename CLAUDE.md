@@ -35,6 +35,14 @@ limit (see "Token budget").
   flying in a plane" / ends "...gloss it over.", UNIVERSE opens "Somebody who is successful...". Fix
   times were shifted with each new start_at. check_plan's first-word rule no longer fires on a fix that
   starts later in the opening line (it held the capread confirm run and Monday's cron at prep).
+- Round 2 result (run 42679445490, 9 Nov 19:27 UTC): 16/16 published, plancheck all OK, capread fixes
+  confirmed. Clean (pass, no LOOK): THEY-EAT, OPPORTUNITY, YOU-SELF-SABOTAGE, WHEN-THEN, LOSER, GRAVITY,
+  MANIFESTING, I-RAN-HIS-ADS. FAIL: ONE-NOTCH (caption "my plane with my" scrambled, stray stop
+  "Chicago. what"), UNIVERSE and ILL-FIGURE (a caption comes late: needs a fix with measured start
+  times). LOOK: SECRET 10/12 and DENNYS 9/12 word-on-screen; capread notes on I-SEE-A-FOREST (opens on
+  "give me an example", context in SECRET), HOW-YOU-COUNT (wants "...always restricted." - no pause
+  there per probe, 345.05-345.14 is 0.09 s), CANT-AFFORD (first caption at 0.00 - check __head.json).
+  NEXT: round 3 for those 8. The Mac had not pulled round 2 yet (last pull 13:00 local).
 - Older (still true):
 - **they_re_not_hiding: DELIVERED** (2 Nov). All 20 on Frame.io and in `cloud/delivered.json`; plan
   in `plans/done/`; clips and prep retired from the releases (run 41455343120). Its encrypted source
