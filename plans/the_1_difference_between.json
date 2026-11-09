@@ -6,7 +6,185 @@
  "duration": 708,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "WHEN-THEN-KEEPS-YOU-BROKE",
+   "region": [
+    11.0,
+    66.0
+   ],
+   "open": "When you're flat broke, change this one thing",
+   "close": "The attitude has to come first",
+   "hook": [
+    "RICH PEOPLE NEVER SAY",
+    "THESE TWO WORDS"
+   ],
+   "fixes": [],
+   "start_at": 11.77,
+   "end_at": 65.13
+  },
+  {
+   "name": "THE-MILLIONAIRE-AT-DENNYS",
+   "region": [
+    64.0,
+    140.0
+   ],
+   "open": "Years ago, I think it was probably 1979",
+   "close": "no the money doesn't give you the attitude",
+   "hook": [
+    "I ASKED A MILLIONAIRE",
+    "HIS SECRET AT DENNY'S"
+   ],
+   "fixes": [],
+   "start_at": 65.04,
+   "end_at": 138.27
+  },
+  {
+   "name": "LOSER-MENTALITY",
+   "region": [
+    148.0,
+    200.0
+   ],
+   "open": "You have to add the attitude first",
+   "close": "what you're trying to achieve",
+   "hook": [
+    "THINK MONEY WILL CHANGE YOU?",
+    "THAT'S A LOSER'S MINDSET"
+   ],
+   "fixes": [],
+   "start_at": 149.44,
+   "end_at": 198.29
+  },
+  {
+   "name": "ILL-FIGURE-IT-OUT",
+   "region": [
+    210.0,
+    246.0
+   ],
+   "open": "A successful person never says",
+   "close": "you have confidence that it will",
+   "hook": [
+    "KNOWS NOTHING ABOUT CAVIAR,",
+    "STARTS A CAVIAR BUSINESS"
+   ],
+   "short_ok": "The whole thought: the claim (successful people never say 'I don't know how'), the caviar example, and the landing that the how presents itself if you have confidence.",
+   "fixes": [],
+   "start_at": 211.51,
+   "end_at": 245.06
+  },
+  {
+   "name": "CANT-AFFORD-THAT",
+   "region": [
+    244.0,
+    311.0
+   ],
+   "open": "Another phrase that unsuccessful people always say",
+   "close": "not very liquid at the present time",
+   "hook": [
+    "FOUR WORDS THAT FREEZE",
+    "YOUR INCOME FOREVER"
+   ],
+   "fixes": [],
+   "start_at": 244.94,
+   "end_at": 309.08
+  },
+  {
+   "name": "ONE-NOTCH-OFF-COURSE",
+   "region": [
+    340.0,
+    414.0
+   ],
+   "open": "I go, \"What would happen, we just left",
+   "close": "that it remains a true statement",
+   "hook": [
+    "ONE NOTCH OFF COURSE",
+    "PUTS YOU 500 MILES AWAY"
+   ],
+   "fixes": [],
+   "start_at": 341.05,
+   "end_at": 412.83
+  },
+  {
+   "name": "THE-UNIVERSE-AGREES",
+   "region": [
+    412.0,
+    472.0
+   ],
+   "open": "The universe, the subconscious, is always working",
+   "close": "you want so that you can afford it",
+   "hook": [
+    "SAY 'I CAN'T AFFORD IT'",
+    "AND YOU NEVER WILL"
+   ],
+   "fixes": [],
+   "start_at": 413.19,
+   "end_at": 470.93
+  },
+  {
+   "name": "GRAVITY-DOESNT-NEED-BELIEF",
+   "region": [
+    469.0,
+    514.0
+   ],
+   "open": "When people say, \"Well, for those who don't believe",
+   "close": "nothing about belief or not belief",
+   "hook": [
+    "DON'T BELIEVE IN GRAVITY?",
+    "WALK OFF THE ROOF"
+   ],
+   "fixes": [],
+   "start_at": 470.81,
+   "end_at": 512.76
+  },
+  {
+   "name": "MANIFESTING-IS-A-LIE",
+   "region": [
+    518.0,
+    587.0
+   ],
+   "open": "In today's world, we hear about manifesting",
+   "close": "When your attitude's right, everything works",
+   "hook": [
+    "MANIFESTING IS A LIE",
+    "SOLD BY 'WELL-INTENTIONED MORONS'"
+   ],
+   "fixes": [],
+   "start_at": 519.2,
+   "end_at": 585.92
+  },
+  {
+   "name": "SAME-WORK-DIFFERENT-RESULTS",
+   "region": [
+    585.0,
+    665.0
+   ],
+   "open": "If your attitude is not right",
+   "close": "then everything else falls into place",
+   "hook": [
+    "TWO PEOPLE, SAME EXACT WORK.",
+    "ONLY ONE GETS RESULTS"
+   ],
+   "fixes": [],
+   "start_at": 586.14,
+   "end_at": 663.58
+  },
+  {
+   "name": "I-RAN-HIS-ADS",
+   "region": [
+    602.0,
+    665.0
+   ],
+   "open": "I've seen it in my own business",
+   "close": "then everything else falls into place",
+   "hook": [
+    "I RAN HIS EXACT ADS.",
+    "MINE GOT BETTER RESULTS."
+   ],
+   "fixes": [],
+   "start_at": 603.48,
+   "end_at": 663.58
+  }
+ ],
  "rumble": "https://rumble.com/v7fk1y0-the-1-difference-between-wanting-money-and-getting-it.html",
  "height": 2160,
  "rumble_title": "The 1 Difference Between WANTING MONEY & GETTING IT",

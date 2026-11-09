@@ -6,7 +6,122 @@
  "duration": 393,
  "autoplan": true,
  "note": "Started by vsc-new. Clips are chosen by cloud/autoplan.py from the transcript prep publishes; rules in CLAUDE.md and PLANNING.md.",
- "clips": [],
+ "clips": [
+  {
+   "name": "THE-SECRET-TO-SUCCESS",
+   "region": [
+    7.0,
+    76.0
+   ],
+   "open": "Without that depth of vision, without your ability",
+   "close": "\"Without hesitation.\" he said, \"Depth of vision.\"",
+   "hook": [
+    "RADIO SHACK'S PRESIDENT",
+    "GAVE ME ONE SECRET"
+   ],
+   "fixes": [],
+   "start_at": 8.38,
+   "end_at": 73.81
+  },
+  {
+   "name": "I-SEE-A-FOREST",
+   "region": [
+    80.0,
+    127.0
+   ],
+   "open": "I said, \"Well, give me an example.\"",
+   "close": "the ability to see far down the road.",
+   "hook": [
+    "HE SAW A FOREST",
+    "WHERE I SAW A TREE"
+   ],
+   "fixes": [],
+   "start_at": 82.12,
+   "end_at": 125.42
+  },
+  {
+   "name": "THEY-EAT-THEIR-SEED-CORN",
+   "region": [
+    123.0,
+    158.0
+   ],
+   "open": "When you look at unsuccessful people,",
+   "close": "no depth of vision. They can't see anything.",
+   "hook": [
+    "TODAY THEY EAT THE SEED.",
+    "TOMORROW THEY STARVE."
+   ],
+   "short_ok": "One whole image with its lesson: unsuccessful people eat the seed corn they need for next year's crop because they have no depth of vision - setup, picture and landing in 30 s.",
+   "fixes": [],
+   "start_at": 125.43,
+   "end_at": 155.27
+  },
+  {
+   "name": "OPPORTUNITY-ON-A-PLATTER",
+   "region": [
+    154.0,
+    227.0
+   ],
+   "open": "Most people don't recognize opportunities because of a bad self-image.",
+   "close": "you don't see yourself as a successful person",
+   "hook": [
+    "OPPORTUNITY ON A SILVER PLATTER,",
+    "AND YOU SAY NO"
+   ],
+   "fixes": [],
+   "start_at": 155.53,
+   "end_at": 225.15
+  },
+  {
+   "name": "YOU-SELF-SABOTAGE",
+   "region": [
+    209.0,
+    270.0
+   ],
+   "open": "You have a bad self-image. Inside of",
+   "close": "the attainment of what we're trying to achieve.",
+   "hook": [
+    "YOU'RE SABOTAGING YOUR SUCCESS",
+    "AND DON'T EVEN KNOW IT"
+   ],
+   "fixes": [],
+   "start_at": 210.54,
+   "end_at": 268.21
+  },
+  {
+   "name": "HOW-YOU-COUNT-YOUR-PAY",
+   "region": [
+    266.0,
+    331.0
+   ],
+   "open": "Think about it this way, and this",
+   "close": "a yearly income. That's the difference.",
+   "hook": [
+    "IF YOU THINK PER HOUR,",
+    "YOU'LL NEVER MANIFEST ANYTHING"
+   ],
+   "fixes": [],
+   "start_at": 268.81,
+   "end_at": 328.95
+  },
+  {
+   "name": "THINK-IN-YEARS",
+   "region": [
+    313.0,
+    347.0
+   ],
+   "open": "The higher income, the guy who's making",
+   "close": "You can't get to that level",
+   "hook": [
+    "$500,000 EARNERS THINK",
+    "IN YEARS, NOT HOURS"
+   ],
+   "short_ok": "Complete second telling: high earners state a yearly income, and if your mentality is not yearly you can never reach the decade level - claim, example and landing in 30 s.",
+   "fixes": [],
+   "start_at": 314.79,
+   "end_at": 345.04
+  }
+ ],
  "rumble": "https://rumble.com/v7g635m-you-keep-missing-the-biggest-opportunities.html",
  "height": 2160,
  "rumble_title": "You Keep Missing The Biggest Opportunities",
