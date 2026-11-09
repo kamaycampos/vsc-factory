@@ -132,7 +132,11 @@ def check(mp4):
 
 # What only the cloud can judge: it LISTENS to the first and last seconds of the file.
 # Text faults are not taken from it - the same live kt_qc re-judges those above.
-SOUND = ("first word heard", "last word heard", "opening:", "no pause after the close")
+# 9 Nov 2026: the cloud's "caption on screen too briefly" FAIL (edges.crushed, 1 Nov) was
+# never listed here, so ILL-FIGURE-IT-OUT and THE-UNIVERSE-AGREES walked into Clips as FAILs.
+# kt_qc does not time captions, so this gate cannot re-judge it either - take the cloud's word.
+SOUND = ("first word heard", "last word heard", "opening:", "no pause after the close",
+         "too briefly to read")
 
 
 def caption_read(mp4):

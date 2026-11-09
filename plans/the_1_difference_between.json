@@ -69,7 +69,8 @@
     ]
    ],
    "start_at": 65.04,
-   "end_at": 149.4
+   "end_at": 149.4,
+   "look_ok": "Word on screen 9/12 (9 Nov, every sampled moment probed on the source): two misses are 1.2 s windows of silence (111.19-111.81, 117.91-119.10) where whisper invents words; the third is Kevin's stammer before 'it's the same question' (heard 113.70), and the caption (112.51) already leads the real words. No caption is late."
   },
   {
    "name": "LOSER-MENTALITY",
@@ -121,6 +122,21 @@
      26.44,
      "Power will always",
      "The how will always"
+    ],
+    [
+     3.79,
+     "This guy says, I'm going to be getting",
+     "This guy says, I'm going to be getting",
+     [
+      3.79,
+      3.97,
+      4.11,
+      4.32,
+      4.41,
+      4.5,
+      4.57,
+      4.67
+     ]
     ]
    ],
    "start_at": 211.51,
@@ -151,7 +167,8 @@
     ]
    ],
    "start_at": 244.94,
-   "end_at": 319.92
+   "end_at": 319.92,
+   "look_ok": "The first caption at 0.00 s is the caption start, not the cut: start_at 244.94 sits in a measured 0.25 s gap (244.94-245.19, -71 dB, pauses map) before 'Another' at 245.20; plancheck and edge listening heard 'Another' whole."
   },
   {
    "name": "ONE-NOTCH-OFF-COURSE",
@@ -169,7 +186,7 @@
     [
      21.49,
      "what would happen? if you",
-     "what would happen if you"
+     "What would happen if you"
     ],
     [
      33.46,
@@ -200,6 +217,11 @@
      41.27,
      "it, doesn't seem like the plan. Plane moves very much.",
      "it, it doesn't seem like the plane moves very much."
+    ],
+    [
+     1.06,
+     "I get in my plane with my pilots.",
+     "I get in my plane, with my pilots."
     ]
    ],
    "start_at": 319.82,
@@ -262,6 +284,21 @@
      74.92,
      "The of flow energy",
      "of energy"
+    ],
+    [
+     57.2,
+     "increase his income. That way he has options.",
+     "increase his income. That way he has options.",
+     [
+      57.2,
+      57.56,
+      57.7,
+      57.92,
+      58.1,
+      58.24,
+      58.35,
+      58.54
+     ]
     ]
    ],
    "start_at": 385.1,

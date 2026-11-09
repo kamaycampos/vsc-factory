@@ -53,7 +53,7 @@
    ],
    "start_at": 8.38,
    "end_at": 81.15,
-   "look_ok": "Opens on the claim the Tandy story proves; 'without depth of vision you'll never take opportunity' stands alone. Ends on the definition: the matchbook/acorn example is the next clip (I-SEE-A-FOREST) because the whole story is 108 s, over 88."
+   "look_ok": "Opens on the claim the Tandy story proves; 'without depth of vision you'll never take opportunity' stands alone. Ends on the definition: the matchbook/acorn example is the next clip (I-SEE-A-FOREST) because the whole story is 108 s, over 88. Word on screen 10/12 (9 Nov): every sampled moment probed on the source matches its caption; the misses are 1.2 s windows of silence (73.90-75.39 after 'Depth of vision.') where whisper invents 'Thanks for watching'."
   },
   {
    "name": "I-SEE-A-FOREST",
@@ -76,7 +76,8 @@
    ],
    "start_at": 82.12,
    "end_at": 120.15,
-   "short_ok": "the whole matchbook/acorn example, from 'give me an example' to Kevin seeing why the forest beats the tree"
+   "short_ok": "the whole matchbook/acorn example, from 'give me an example' to Kevin seeing why the forest beats the tree",
+   "look_ok": "Split on purpose: the Tandy story from 'Without that depth of vision' to 'he could see further' is 108 s, over the 88 s maximum. SECRET ends on the definition ('the potential in things when other people can't'); this half opens on 'give me an example' and the hook names the forest/tree contrast it pays off."
   },
   {
    "name": "THEY-EAT-THEIR-SEED-CORN",
@@ -186,10 +187,21 @@
      70.73,
      "over the next A day. Decade,",
      "over the next decade,"
+    ],
+    [
+     69.6,
+     "what I am going to earn",
+     "what I'm going to earn"
+    ],
+    [
+     73.0,
+     "what we are going to earn",
+     "what I'm going to earn"
     ]
    ],
    "start_at": 268.81,
-   "end_at": 343.72
+   "end_at": 343.72,
+   "look_ok": "Kept on '...next five years.' (gap 343.56-343.80). Probed 9 Nov: no silence >= 60 ms after 'restricted.' (347.11, 'And' at 347.80) nor after 'opportunity.' (353.18, 'The difference' at 354.01), and the pause map has no cut point there; the next pause (after 'I see a forest.', 358.2) makes 89.4 s, over 88. Ending mid-run would cut over live speech."
   }
  ],
  "rumble": "https://rumble.com/v7g635m-you-keep-missing-the-biggest-opportunities.html",
