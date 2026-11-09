@@ -37,11 +37,11 @@
   {
    "name": "THE-MILLIONAIRE-AT-DENNYS",
    "region": [
-    64.0,
-    140.0
+    65,
+    149
    ],
    "open": "Years ago, I think it was probably 1979",
-   "close": "no the money doesn't give you the attitude",
+   "close": "when you're flat broke and you're behind on your rent.",
    "hook": [
     "I ASKED A MILLIONAIRE",
     "HIS SECRET AT DENNY'S"
@@ -64,22 +64,22 @@
     ]
    ],
    "start_at": 65.04,
-   "end_at": 138.27
+   "end_at": 149.4
   },
   {
    "name": "LOSER-MENTALITY",
    "region": [
-    148.0,
-    200.0
+    154,
+    198
    ],
-   "open": "You have to add the attitude first",
+   "open": "Don't you ever think that",
    "close": "what you're trying to achieve",
    "hook": [
     "THINK MONEY WILL CHANGE YOU?",
     "THAT'S A LOSER'S MINDSET"
    ],
    "fixes": [],
-   "start_at": 149.44,
+   "start_at": 153.78,
    "end_at": 198.29
   },
   {
@@ -113,11 +113,11 @@
   {
    "name": "CANT-AFFORD-THAT",
    "region": [
-    244.0,
-    311.0
+    245,
+    320
    ],
    "open": "Another phrase that unsuccessful people always say",
-   "close": "not very liquid at the present time",
+   "close": "can make a monumental difference.",
    "hook": [
     "FOUR WORDS THAT FREEZE",
     "YOUR INCOME FOREVER"
@@ -135,52 +135,52 @@
     ]
    ],
    "start_at": 244.94,
-   "end_at": 309.08
+   "end_at": 319.92
   },
   {
    "name": "ONE-NOTCH-OFF-COURSE",
    "region": [
-    340.0,
-    414.0
+    320,
+    385
    ],
-   "open": "I go, \"What would happen, we just left",
-   "close": "that it remains a true statement",
+   "open": "You're flying in a plane.",
+   "close": "They just gloss it over.",
    "hook": [
     "ONE NOTCH OFF COURSE",
     "PUTS YOU 500 MILES AWAY"
    ],
    "fixes": [
     [
-     0.26,
+     21.49,
      "what would happen? if you",
      "what would happen if you"
     ],
     [
-     12.23,
+     33.46,
      "are we going to-- B.",
      "are we going to be?"
     ],
     [
-     27.82,
+     49.05,
      "from the top the Target.",
      "from the target."
     ],
     [
-     40.0,
+     61.23,
      "nuances of the life. Little things.",
      "nuances of the little things."
     ]
    ],
-   "start_at": 341.05,
-   "end_at": 412.83
+   "start_at": 319.82,
+   "end_at": 385.0
   },
   {
    "name": "THE-UNIVERSE-AGREES",
    "region": [
-    412.0,
-    472.0
+    385,
+    471
    ],
-   "open": "The universe, the subconscious, is always working",
+   "open": "Somebody who is successful usually is looking at details",
    "close": "you want so that you can afford it",
    "hook": [
     "SAY 'I CAN'T AFFORD IT'",
@@ -188,27 +188,27 @@
    ],
    "fixes": [
     [
-     13.77,
+     41.86,
      "Six Bonsai-da,",
      "Six months later,"
     ],
     [
-     15.15,
+     43.24,
      "Twelve Bonsai-da,",
      "Twelve months later,"
     ],
     [
-     25.79,
+     53.88,
      "future. Sure.",
      "future."
     ],
     [
-     50.64,
+     78.73,
      "or manifest more. Opportunities,",
      "or manifest more opportunities,"
     ]
    ],
-   "start_at": 413.19,
+   "start_at": 385.1,
    "end_at": 470.93
   },
   {

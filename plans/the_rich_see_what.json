@@ -10,8 +10,8 @@
   {
    "name": "THE-SECRET-TO-SUCCESS",
    "region": [
-    7.0,
-    82.0
+    8,
+    81
    ],
    "open": "Without that depth of vision, without your ability",
    "close": "the potential in things when other people can't.",
@@ -52,49 +52,51 @@
     ]
    ],
    "start_at": 8.38,
-   "end_at": 81.15
+   "end_at": 81.15,
+   "look_ok": "Opens on the claim the Tandy story proves; 'without depth of vision you'll never take opportunity' stands alone. Ends on the definition: the matchbook/acorn example is the next clip (I-SEE-A-FOREST) because the whole story is 108 s, over 88."
   },
   {
    "name": "I-SEE-A-FOREST",
    "region": [
-    80.0,
-    127.0
+    82,
+    120
    ],
-   "open": "I said, \"Well, give me an example.\"",
-   "close": "the ability to see far down the road.",
+   "open": "And I said, \"Well, give me an example.\"",
+   "close": "'cause he could see further.",
    "hook": [
     "HE SAW A FOREST",
     "WHERE I SAW A TREE"
    ],
    "fixes": [],
    "start_at": 82.12,
-   "end_at": 125.42
+   "end_at": 120.15,
+   "short_ok": "the whole matchbook/acorn example, from 'give me an example' to Kevin seeing why the forest beats the tree"
   },
   {
    "name": "THEY-EAT-THEIR-SEED-CORN",
    "region": [
-    123.0,
-    158.0
+    121,
+    155
    ],
-   "open": "When you look at unsuccessful people,",
+   "open": "Depth of vision is the ability to see far down the road.",
    "close": "no depth of vision. They can't see anything.",
    "hook": [
     "TODAY THEY EAT THE SEED.",
     "TOMORROW THEY STARVE."
    ],
-   "short_ok": "One whole image with its lesson: unsuccessful people eat the seed corn they need for next year's crop because they have no depth of vision - setup, picture and landing in 30 s.",
+   "short_ok": "defines depth of vision, then the seed-corn proof of what its absence costs, landing on 'They can't see anything.'",
    "fixes": [],
-   "start_at": 125.43,
+   "start_at": 120.95,
    "end_at": 155.27
   },
   {
    "name": "OPPORTUNITY-ON-A-PLATTER",
    "region": [
-    154.0,
-    227.0
+    156,
+    212
    ],
    "open": "Most people don't recognize opportunities because of a bad self-image.",
-   "close": "you don't see yourself as a successful person",
+   "close": "You have a bad self-image.",
    "hook": [
     "OPPORTUNITY ON A SILVER PLATTER,",
     "AND YOU SAY NO"
@@ -107,15 +109,15 @@
     ]
    ],
    "start_at": 155.53,
-   "end_at": 225.15
+   "end_at": 212.15
   },
   {
    "name": "YOU-SELF-SABOTAGE",
    "region": [
-    209.0,
-    270.0
+    213,
+    268
    ],
-   "open": "You have a bad self-image. Inside of",
+   "open": "Inside of you, there is an image of",
    "close": "the attainment of what we're trying to achieve.",
    "hook": [
     "YOU'RE SABOTAGING YOUR SUCCESS",
@@ -123,22 +125,22 @@
    ],
    "fixes": [
     [
-     38.03,
+     35.82,
      "jump on it. But then",
      "jump on it, but then"
     ]
    ],
-   "start_at": 210.54,
+   "start_at": 212.75,
    "end_at": 268.21
   },
   {
    "name": "HOW-YOU-COUNT-YOUR-PAY",
    "region": [
-    266.0,
-    331.0
+    269,
+    344
    ],
    "open": "Think about it this way, and this",
-   "close": "a yearly income. That's the difference.",
+   "close": "what I'm gonna earn over the next five years.",
    "hook": [
     "IF YOU THINK PER HOUR,",
     "YOU'LL NEVER MANIFEST ANYTHING"
@@ -161,44 +163,7 @@
     ]
    ],
    "start_at": 268.81,
-   "end_at": 328.95
-  },
-  {
-   "name": "THINK-IN-YEARS",
-   "region": [
-    313.0,
-    358.0
-   ],
-   "open": "The higher income, the guy who's making",
-   "close": "I look at that same acorn, I see a forest.",
-   "hook": [
-    "$500,000 EARNERS THINK",
-    "IN YEARS, NOT HOURS"
-   ],
-   "fixes": [
-    [
-     0.28,
-     "income. The guy",
-     "income, the guy"
-    ],
-    [
-     1.88,
-     "making $300,000,",
-     "making $300,000, $400,000,"
-    ],
-    [
-     3.06,
-     "a year. When you",
-     "a year, when you"
-    ],
-    [
-     37.54,
-     "You'll never take opportunity.",
-     "you'll never take opportunity."
-    ]
-   ],
-   "start_at": 314.79,
-   "end_at": 358.2
+   "end_at": 343.72
   }
  ],
  "rumble": "https://rumble.com/v7g635m-you-keep-missing-the-biggest-opportunities.html",

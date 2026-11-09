@@ -26,6 +26,15 @@ limit (see "Token budget").
   "You can't get to that level" (now ends 358.2 on "...I see a forest."); SAME-WORK-DIFFERENT-RESULTS
   held all of I-RAN-HIS-ADS (same 60 s, same close) - removed, MANIFESTING-IS-A-LIE now runs to
   "...presented to you." (603.35). autoplan let a clip sit inside another: worth a check in autoplan.
+- Round 2 (9 Nov, from plancheck HELDs + capread LOOKs, every edge from `probe` runs): 15/17 built,
+  6 passed the gate. Restructured: rich 7 -> 6 (THINK-IN-YEARS merged into HOW-YOU-COUNT, which ends
+  on "...next five years."; the 14 s outro after it only repeats the cold open), FOREST/SEED-CORN split
+  at "Depth of vision is...", OPPORTUNITY/SELF-SABOTAGE split at "You have a bad self-image."; 1_difference:
+  DENNYS keeps its twist (ends "...behind on your rent."), LOSER opens "Don't you ever think" (prep's
+  words had dropped "He says"), CANT-AFFORD ends "...monumental difference.", ONE-NOTCH opens "You're
+  flying in a plane" / ends "...gloss it over.", UNIVERSE opens "Somebody who is successful...". Fix
+  times were shifted with each new start_at. check_plan's first-word rule no longer fires on a fix that
+  starts later in the opening line (it held the capread confirm run and Monday's cron at prep).
 - Older (still true):
 - **they_re_not_hiding: DELIVERED** (2 Nov). All 20 on Frame.io and in `cloud/delivered.json`; plan
   in `plans/done/`; clips and prep retired from the releases (run 41455343120). Its encrypted source

@@ -131,9 +131,15 @@ def check(path, delivered):
             # THE OPENING WORD IS SAID TWICE (1 Nov 2026): a fix that changes the clip's first
             # word must agree with `open`, or edge listening and the Mac gate compare the
             # caption with the old word ("Alessandro" on screen, plan "Elizondo" - held).
+            # A fix near 0 s that starts LATER in the opening line leaves the first word alone
+            # (9 Nov: "I go, What would happen" fixed at "what would happen? if you", and "The
+            # higher income," at "income. The guy" - both held the confirm run at prep).
             elif float(f[0]) <= 1.0 and str(f[2]).split() and str(c.get("open") or "").split():
                 first = lambda t: re.sub(r"[^a-z0-9]", "", t.split()[0].lower())
-                if first(str(f[2])) != first(str(c["open"])):
+                later = [re.sub(r"[^a-z0-9]", "", w.lower()) for w in str(c["open"]).split()[1:]]
+                if first(str(f[1])) in later:
+                    pass
+                elif first(str(f[2])) != first(str(c["open"])):
                     errs.append(f"{n}: fix {i} makes the first caption word "
                                 f"'{str(f[2]).split()[0]}' but open starts '{str(c['open']).split()[0]}' "
                                 "- change open to match")
