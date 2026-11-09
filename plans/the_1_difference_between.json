@@ -19,7 +19,18 @@
     "RICH PEOPLE NEVER SAY",
     "THESE TWO WORDS"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     14.21,
+     "are when\", then\".",
+     "are when, then."
+    ],
+    [
+     48.06,
+     "money or getting rich. You don't",
+     "money or getting rich, you don't"
+    ]
+   ],
    "start_at": 11.77,
    "end_at": 65.13
   },
@@ -35,7 +46,23 @@
     "I ASKED A MILLIONAIRE",
     "HIS SECRET AT DENNY'S"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     9.81,
+     "cobbly with dirt",
+     "covered with dirt"
+    ],
+    [
+     12.75,
+     "making an hourly meal. Wage.",
+     "making an hourly wage."
+    ],
+    [
+     43.39,
+     "Do You have",
+     "Do you have"
+    ]
+   ],
    "start_at": 65.04,
    "end_at": 138.27
   },
@@ -68,7 +95,18 @@
     "STARTS A CAVIAR BUSINESS"
    ],
    "short_ok": "The whole thought: the claim (successful people never say 'I don't know how'), the caviar example, and the landing that the how presents itself if you have confidence.",
-   "fixes": [],
+   "fixes": [
+    [
+     12.61,
+     "successful? in that, I will",
+     "successful in that? I will"
+    ],
+    [
+     26.44,
+     "Power will always",
+     "The how will always"
+    ]
+   ],
    "start_at": 211.51,
    "end_at": 245.06
   },
@@ -84,7 +122,18 @@
     "FOUR WORDS THAT FREEZE",
     "YOUR INCOME FOREVER"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     40.26,
+     "out of my budget. At the present time,",
+     "out of my budget at the present time,"
+    ],
+    [
+     43.24,
+     "for it's just, I can't afford",
+     "versus just, I can't afford"
+    ]
+   ],
    "start_at": 244.94,
    "end_at": 309.08
   },
@@ -100,7 +149,28 @@
     "ONE NOTCH OFF COURSE",
     "PUTS YOU 500 MILES AWAY"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     0.26,
+     "what would happen? if you",
+     "what would happen if you"
+    ],
+    [
+     12.23,
+     "are we going to-- B.",
+     "are we going to be?"
+    ],
+    [
+     27.82,
+     "from the top the Target.",
+     "from the target."
+    ],
+    [
+     40.0,
+     "nuances of the life. Little things.",
+     "nuances of the little things."
+    ]
+   ],
    "start_at": 341.05,
    "end_at": 412.83
   },
@@ -116,7 +186,28 @@
     "SAY 'I CAN'T AFFORD IT'",
     "AND YOU NEVER WILL"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     13.77,
+     "Six Bonsai-da,",
+     "Six months later,"
+    ],
+    [
+     15.15,
+     "Twelve Bonsai-da,",
+     "Twelve months later,"
+    ],
+    [
+     25.79,
+     "future. Sure.",
+     "future."
+    ],
+    [
+     50.64,
+     "or manifest more. Opportunities,",
+     "or manifest more opportunities,"
+    ]
+   ],
    "start_at": 413.19,
    "end_at": 470.93
   },
@@ -132,7 +223,13 @@
     "DON'T BELIEVE IN GRAVITY?",
     "WALK OFF THE ROOF"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     26.43,
+     "physics, because you. Because have you now microscopes",
+     "physics, because you have now microscopes"
+    ]
+   ],
    "start_at": 470.81,
    "end_at": 512.76
   },
@@ -148,7 +245,33 @@
     "MANIFESTING IS A LIE",
     "SOLD BY 'WELL-INTENTIONED MORONS'"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     13.77,
+     "Manifesting in the Law of Attraction",
+     "manifesting and the law of attraction"
+    ],
+    [
+     28.43,
+     "who. You don't know any better,",
+     "who don't know any better,"
+    ],
+    [
+     30.55,
+     "and you're just trying",
+     "and are just trying"
+    ],
+    [
+     56.13,
+     "That's... It is critical,",
+     "That's critical,"
+    ],
+    [
+     68.62,
+     "the right Actions,",
+     "the right actions,"
+    ]
+   ],
    "start_at": 519.2,
    "end_at": 603.35
   },
@@ -164,7 +287,13 @@
     "I RAN HIS EXACT ADS.",
     "MINE GOT BETTER RESULTS."
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     55.82,
+     "But you're thinking.",
+     "It's your thinking."
+    ]
+   ],
    "start_at": 603.48,
    "end_at": 663.58
   }

@@ -19,7 +19,38 @@
     "RADIO SHACK'S PRESIDENT",
     "GAVE ME ONE SECRET"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     38.81,
+     "He was a young man.",
+     "I was a young man."
+    ],
+    [
+     40.83,
+     "Are Is you it here in business?",
+     "Are you here in business?"
+    ],
+    [
+     42.95,
+     "He says, What business do you do?",
+     "I said, Oh, what business do you do?"
+    ],
+    [
+     50.66,
+     "Big, company.",
+     "Big, big company."
+    ],
+    [
+     58.5,
+     "If You don't mind",
+     "If you don't mind"
+    ],
+    [
+     67.59,
+     "What Exactly as that.",
+     "What exactly is that?"
+    ]
+   ],
    "start_at": 8.38,
    "end_at": 81.15
   },
@@ -68,7 +99,13 @@
     "OPPORTUNITY ON A SILVER PLATTER,",
     "AND YOU SAY NO"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     26.24,
+     "what. They want,",
+     "what they want,"
+    ]
+   ],
    "start_at": 155.53,
    "end_at": 225.15
   },
@@ -84,7 +121,13 @@
     "YOU'RE SABOTAGING YOUR SUCCESS",
     "AND DON'T EVEN KNOW IT"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     38.03,
+     "jump on it. But then",
+     "jump on it, but then"
+    ]
+   ],
    "start_at": 210.54,
    "end_at": 268.21
   },
@@ -100,7 +143,23 @@
     "IF YOU THINK PER HOUR,",
     "YOU'LL NEVER MANIFEST ANYTHING"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     13.23,
+     "It is the guy who says,",
+     "is the guy who says,"
+    ],
+    [
+     29.72,
+     "they... tell you",
+     "they tell you"
+    ],
+    [
+     47.97,
+     "making $300,000,",
+     "making $300,000, $400,000,"
+    ]
+   ],
    "start_at": 268.81,
    "end_at": 328.95
   },
@@ -116,7 +175,28 @@
     "$500,000 EARNERS THINK",
     "IN YEARS, NOT HOURS"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     0.28,
+     "income. The guy",
+     "income, the guy"
+    ],
+    [
+     1.88,
+     "making $300,000,",
+     "making $300,000, $400,000,"
+    ],
+    [
+     3.06,
+     "a year. When you",
+     "a year, when you"
+    ],
+    [
+     37.54,
+     "You'll never take opportunity.",
+     "you'll never take opportunity."
+    ]
+   ],
    "start_at": 314.79,
    "end_at": 358.2
   }
