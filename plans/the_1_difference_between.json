@@ -61,6 +61,11 @@
      43.39,
      "Do You have",
      "Do you have"
+    ],
+    [
+     71.41,
+     "doesn't give you. The attitude.",
+     "doesn't give you the attitude."
     ]
    ],
    "start_at": 65.04,
@@ -78,7 +83,18 @@
     "THINK MONEY WILL CHANGE YOU?",
     "THAT'S A LOSER'S MINDSET"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     13.02,
+     "Hey, Do you think",
+     "Hey, do you think"
+    ],
+    [
+     28.74,
+     "You need to Feel",
+     "You need to feel"
+    ]
+   ],
    "start_at": 153.78,
    "end_at": 198.29
   },
@@ -169,6 +185,21 @@
      61.23,
      "nuances of the life. Little things.",
      "nuances of the little things."
+    ],
+    [
+     12.88,
+     "Hey, Do you guys",
+     "Hey, do you guys"
+    ],
+    [
+     21.51,
+     "I go, what would happen?",
+     "I go, What would happen?"
+    ],
+    [
+     41.27,
+     "it, doesn't seem like the plan. Plane moves very much.",
+     "it, it doesn't seem like the plane moves very much."
     ]
    ],
    "start_at": 319.82,
@@ -206,6 +237,31 @@
      78.73,
      "or manifest more. Opportunities,",
      "or manifest more opportunities,"
+    ],
+    [
+     11.28,
+     "Not right now, That's",
+     "Not right now. That's"
+    ],
+    [
+     22.26,
+     "Okay, That's true.",
+     "Okay. That's true."
+    ],
+    [
+     66.08,
+     "And so it'll you -- free",
+     "And so you free"
+    ],
+    [
+     73.95,
+     "up the... flow.",
+     "up the flow"
+    ],
+    [
+     74.92,
+     "The of flow energy",
+     "of energy"
     ]
    ],
    "start_at": 385.1,

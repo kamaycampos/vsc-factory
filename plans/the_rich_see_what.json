@@ -67,7 +67,13 @@
     "HE SAW A FOREST",
     "WHERE I SAW A TREE"
    ],
-   "fixes": [],
+   "fixes": [
+    [
+     12.64,
+     "what do. You see.",
+     "what do you see?"
+    ]
+   ],
    "start_at": 82.12,
    "end_at": 120.15,
    "short_ok": "the whole matchbook/acorn example, from 'give me an example' to Kevin seeing why the forest beats the tree"
@@ -106,6 +112,11 @@
      26.24,
      "what. They want,",
      "what they want,"
+    ],
+    [
+     53.47,
+     "There is not ten. And there's one.",
+     "There is not ten. There's one."
     ]
    ],
    "start_at": 155.53,
@@ -128,6 +139,16 @@
      35.82,
      "jump on it. But then",
      "jump on it, but then"
+    ],
+    [
+     12.75,
+     "don't See yourself",
+     "don't see yourself"
+    ],
+    [
+     50.36,
+     "is incongruent. With the attainment",
+     "is incongruent with the attainment"
     ]
    ],
    "start_at": 212.75,
@@ -160,6 +181,11 @@
      47.97,
      "making $300,000,",
      "making $300,000, $400,000,"
+    ],
+    [
+     70.73,
+     "over the next A day. Decade,",
+     "over the next decade,"
     ]
    ],
    "start_at": 268.81,
