@@ -12,9 +12,21 @@ repositories. Do not `send_message` into the old Connector session
 (`session_018UdrEfWJonXGVYkZvfByj6`): waking a huge session is what burned the weekly
 limit (see "Token budget").
 
-## Where things stand (handoff, 1 Nov 2026 - replace this section at every handoff)
+## Where things stand (handoff, 9 Nov 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: no batch open - wait for GIN's next assignment
+### NEXT SESSION STARTS HERE: TWO batches building (7-9 Nov)
+- `the_rich_see_what` (GIN "The Rich See What You Don't" = Rumble "You Keep Missing The Biggest
+  Opportunities", 6:33; ad wall from ~6:00) and `the_1_difference_between` (same title on Rumble,
+  11:48). Both 2160p, prep done. Read the verdict table + plancheck of the run started by the
+  "hand fixes" push, then check the files before saying a clip is ready.
+- 8 Nov: the cloud's `ANTHROPIC_API_KEY` died (401 invalid x-api-key); autoplan planned nothing and
+  the run went RED. Kamay replaced it 9 Nov. A 401 in autoplan/capread = the key, not the code.
+- Hand fixes to autoplan's picks (9 Nov): SECRET-TO-SUCCESS closed on "Depth of vision." without the
+  definition (now ends 81.15 after "...when other people can't."); THINK-IN-YEARS closed mid-sentence
+  "You can't get to that level" (now ends 358.2 on "...I see a forest."); SAME-WORK-DIFFERENT-RESULTS
+  held all of I-RAN-HIS-ADS (same 60 s, same close) - removed, MANIFESTING-IS-A-LIE now runs to
+  "...presented to you." (603.35). autoplan let a clip sit inside another: worth a check in autoplan.
+- Older (still true):
 - **they_re_not_hiding: DELIVERED** (2 Nov). All 20 on Frame.io and in `cloud/delivered.json`; plan
   in `plans/done/`; clips and prep retired from the releases (run 41455343120). Its encrypted source
   is KEPT in `sources` until GIN approves the 20 (as hollywood and your_purpose_is_a), then `retire`

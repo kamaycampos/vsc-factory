@@ -140,33 +140,17 @@
    "name": "MANIFESTING-IS-A-LIE",
    "region": [
     518.0,
-    587.0
+    603.0
    ],
    "open": "In today's world, we hear about manifesting",
-   "close": "When your attitude's right, everything works",
+   "close": "will then be presented to you.",
    "hook": [
     "MANIFESTING IS A LIE",
     "SOLD BY 'WELL-INTENTIONED MORONS'"
    ],
    "fixes": [],
    "start_at": 519.2,
-   "end_at": 585.92
-  },
-  {
-   "name": "SAME-WORK-DIFFERENT-RESULTS",
-   "region": [
-    585.0,
-    665.0
-   ],
-   "open": "If your attitude is not right",
-   "close": "then everything else falls into place",
-   "hook": [
-    "TWO PEOPLE, SAME EXACT WORK.",
-    "ONLY ONE GETS RESULTS"
-   ],
-   "fixes": [],
-   "start_at": 586.14,
-   "end_at": 663.58
+   "end_at": 603.35
   },
   {
    "name": "I-RAN-HIS-ADS",
