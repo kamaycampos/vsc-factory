@@ -14,35 +14,31 @@ limit (see "Token budget").
 
 ## Where things stand (handoff, 9 Nov 2026 - replace this section at every handoff)
 
-### NEXT SESSION STARTS HERE: TWO batches building (7-9 Nov)
+### NEXT SESSION STARTS HERE: TWO batches BUILT, waiting on Kamay's upload (9 Nov)
 - `the_rich_see_what` (GIN "The Rich See What You Don't" = Rumble "You Keep Missing The Biggest
-  Opportunities", 6:33; ad wall from ~6:00) and `the_1_difference_between` (same title on Rumble,
-  11:48). Both 2160p, prep done. Read the verdict table + plancheck of the run started by the
-  "hand fixes" push, then check the files before saying a clip is ready.
-- 8 Nov: the cloud's `ANTHROPIC_API_KEY` died (401 invalid x-api-key); autoplan planned nothing and
-  the run went RED. Kamay replaced it 9 Nov. A 401 in autoplan/capread = the key, not the code.
-- Hand fixes to autoplan's picks (9 Nov): SECRET-TO-SUCCESS closed on "Depth of vision." without the
-  definition (now ends 81.15 after "...when other people can't."); THINK-IN-YEARS closed mid-sentence
-  "You can't get to that level" (now ends 358.2 on "...I see a forest."); SAME-WORK-DIFFERENT-RESULTS
-  held all of I-RAN-HIS-ADS (same 60 s, same close) - removed, MANIFESTING-IS-A-LIE now runs to
-  "...presented to you." (603.35). autoplan let a clip sit inside another: worth a check in autoplan.
-- Round 2 (9 Nov, from plancheck HELDs + capread LOOKs, every edge from `probe` runs): 15/17 built,
-  6 passed the gate. Restructured: rich 7 -> 6 (THINK-IN-YEARS merged into HOW-YOU-COUNT, which ends
-  on "...next five years."; the 14 s outro after it only repeats the cold open), FOREST/SEED-CORN split
-  at "Depth of vision is...", OPPORTUNITY/SELF-SABOTAGE split at "You have a bad self-image."; 1_difference:
-  DENNYS keeps its twist (ends "...behind on your rent."), LOSER opens "Don't you ever think" (prep's
-  words had dropped "He says"), CANT-AFFORD ends "...monumental difference.", ONE-NOTCH opens "You're
-  flying in a plane" / ends "...gloss it over.", UNIVERSE opens "Somebody who is successful...". Fix
-  times were shifted with each new start_at. check_plan's first-word rule no longer fires on a fix that
-  starts later in the opening line (it held the capread confirm run and Monday's cron at prep).
-- Round 2 result (run 42679445490, 9 Nov 19:27 UTC): 16/16 published, plancheck all OK, capread fixes
-  confirmed. Clean (pass, no LOOK): THEY-EAT, OPPORTUNITY, YOU-SELF-SABOTAGE, WHEN-THEN, LOSER, GRAVITY,
-  MANIFESTING, I-RAN-HIS-ADS. FAIL: ONE-NOTCH (caption "my plane with my" scrambled, stray stop
-  "Chicago. what"), UNIVERSE and ILL-FIGURE (a caption comes late: needs a fix with measured start
-  times). LOOK: SECRET 10/12 and DENNYS 9/12 word-on-screen; capread notes on I-SEE-A-FOREST (opens on
-  "give me an example", context in SECRET), HOW-YOU-COUNT (wants "...always restricted." - no pause
-  there per probe, 345.05-345.14 is 0.09 s), CANT-AFFORD (first caption at 0.00 - check __head.json).
-  NEXT: round 3 for those 8. The Mac had not pulled round 2 yet (last pull 13:00 local).
+  Opportunities", 6:33) 6 clips and `the_1_difference_between` (11:48) 10 clips: all 16 built after
+  round 3 (runs 42709581921 + 42713436666). 14 pass; SECRET and DENNYS read LOOK "word on screen"
+  and both carry a `look_ok` (below). No capread LOOK open. NEXT: Kamay uploads the 16 to Frame.io;
+  ONLY after he confirms, add the 16 names to `cloud/delivered.json`, move both plans to `plans/done/`,
+  and retire clips/prep (sources stay until GIN approves).
+- Round 3 (9 Nov), every time from `edges.py probe` runs (42708055691/59545/79888/83395):
+  ONE-NOTCH: "Chicago. what" was round 1's OWN fix writing lowercase "what would happen if you" - that
+  fix now writes "What"; "my plane with my" was kt_qc calling correct English a scramble - a comma.
+  UNIVERSE and ILL-FIGURE: late lines pinned with a fix's 4th field, times from the 20 ms level track
+  (whisper's two reads of one span disagreed by 0.1-0.6 s - the level track decides). HOW-YOU-COUNT:
+  captions said "I am" / "we are", Kevin says "I'm" twice. ILL-FIGURE then failed edges on "Now," -
+  the caption pass heard the tail of "how" before the cut (211.51-211.72 is -68 dB); a fix drops it.
+- **Word-on-screen LOOK can be a false alarm, and rebuilding never changes it**: `vsc_v2_onscreen`
+  samples with a fixed seed (7 + caption count), so the same captions give the same 12 moments. Rebuild
+  them locally (`random.Random(7+len(caps))`, uniform(first+0.5, last_end-1.6)) and probe each 1.2 s on
+  the source: SECRET's and DENNYS's misses were silences where whisper invents words ("Thanks for
+  watching") and a stammer - no caption late. Answer with `look_ok`; the verdict table keeps "look".
+- **Mac gate fix (9 Nov)**: it held only SOUND FAILs, so the "caption on screen too briefly" FAIL
+  walked into Clips (ILL-FIGURE, UNIVERSE in round 2). `mac/vsc_gate.py` SOUND now includes it.
+- 8 Nov: the cloud's `ANTHROPIC_API_KEY` died (401); Kamay replaced it 9 Nov. A 401 in autoplan/capread
+  = the key, not the code.
+- autoplan let a clip sit inside another (SAME-WORK-DIFFERENT-RESULTS held all of I-RAN-HIS-ADS):
+  worth a check in autoplan.
 - Older (still true):
 - **they_re_not_hiding: DELIVERED** (2 Nov). All 20 on Frame.io and in `cloud/delivered.json`; plan
   in `plans/done/`; clips and prep retired from the releases (run 41455343120). Its encrypted source
