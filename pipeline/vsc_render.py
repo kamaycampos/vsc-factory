@@ -398,7 +398,7 @@ def build(src, framejson, t0, t1, hook, words, out, speech_end=None, vis_end=Non
     # as reliably as the 128-second one, which is about graph size, not duration.
     base = ["-threads", "2", "-filter_complex_threads", "1",
             "-filter_complex", graph, "-map", "[vo]", "-map", "[ao]",
-            "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "17",
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
             "-movflags", "+faststart", out, "-loglevel", "error"]
     seek = max(0.0, t0 - 4.0)
